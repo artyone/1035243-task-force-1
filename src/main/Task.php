@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\Tasks;
+namespace app\main;
 
 
 interface iTask
