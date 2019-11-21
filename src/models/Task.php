@@ -1,18 +1,9 @@
 <?php
 
 
-namespace app\main;
+namespace app\models;
 
-
-interface iTask
-{
-    public function listAllAction();
-    public function listAllStatus();
-    public function getNewStatus($newStatus);
-
-}
-
-class Task implements iTask
+class Task
 {
     const ACTION_NEW = 'newTask';
     const ACTION_START = 'startTask';
@@ -36,6 +27,7 @@ class Task implements iTask
     {
         $this->userId = $userId;
         $this->createDate = $createDate;
+        $this->status = self::STATUS_NEW;
     }
 
     public function listAllAction()
@@ -60,9 +52,9 @@ class Task implements iTask
         ];
     }
 
-    public function getNewStatus($newStatus)
+    public function getNewStatus($action)
     {
-        switch ($newStatus) {
+        switch ($action) {
 
             case self::ACTION_NEW:
                 return $this->status = self::STATUS_NEW;
