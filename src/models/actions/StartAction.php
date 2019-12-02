@@ -6,7 +6,7 @@ namespace app\models\actions;
 use app\models\Task;
 use app\models\User;
 
-class StartAction implements actionInterface
+class StartAction implements ActionInterface
 {
 
     public static function getNameClass()

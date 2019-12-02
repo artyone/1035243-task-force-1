@@ -5,7 +5,7 @@ namespace app\models\actions;
 
 use app\models\Task;
 
-class CancelAction implements actionInterface
+class CancelAction implements ActionInterface
 {
 
     public static function getNameClass()
