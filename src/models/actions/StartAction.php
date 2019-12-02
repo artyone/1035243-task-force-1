@@ -4,6 +4,7 @@
 namespace app\models\actions;
 
 use app\models\Task;
+use app\models\User;
 
 class StartAction implements iActions
 {
@@ -20,7 +21,7 @@ class StartAction implements iActions
 
     public static function verifyAction(Task $task): bool
     {
-        if ($task->getRole() === 'executor' && $task->getStatus() === 'new') {
+        if (User::getRole($task->initiatorId) === 'executor' && $task->getStatus() === $task::STATUS_NEW) {
             return true;
         }
         return false;

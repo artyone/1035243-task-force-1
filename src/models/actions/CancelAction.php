@@ -20,7 +20,7 @@ class CancelAction implements iActions
 
     public static function verifyAction(Task $task): bool
     {
-        if ($task->user === $task->getCustomer() && $task->getStatus() === 'new') {
+        if ($task->initiatorId === $task->getCustomer() && $task->getStatus() === $task::STATUS_NEW) {
             return true;
         }
         return false;

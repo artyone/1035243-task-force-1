@@ -17,22 +17,18 @@ class Task
     const STATUS_FAILED = 'fail';
     const STATUS_DONE = 'done';
 
-    public $user;
-    private $role;
+    public $initiatorId;
     private $customer;
     private $executor;
     private $status;
     private $createDate;
     private $expirationDate;
-    private $arrayCustomer = [1, 2, 3, 4];
-    private $arrayExecutor = [5, 6, 7, 8];
 
-    public function __construct($user)
+
+    public function __construct()
     {
-        $this->user = $user;
         $this->createDate = time();
         $this->status = self::STATUS_NEW;
-        $this->role = $this->setRole($user);
     }
 
     public function getCustomer()
@@ -43,11 +39,6 @@ class Task
     public function getExecutor()
     {
         return $this->executor;
-    }
-
-    public function getRole()
-    {
-        return $this->role;
     }
 
     public function getStatus()
@@ -65,24 +56,11 @@ class Task
         $this->executor = $user;
     }
 
-    public function setUser($user)
+    public function setInitiator($user)
     {
-        $this->setRole($user);
-        $this->user = $user;
+        $this->initiatorId = $user;
     }
 
-    private function setRole(int $user): ?string
-    {
-        if (in_array($user, $this->arrayCustomer)) {
-            return $this->role = 'customer';
-        }
-        if (in_array($user, $this->arrayExecutor)) {
-            return $this->role = 'executor';
-        }
-
-        return null;
-
-    }
 
     public function listAllAction(): array
     {
@@ -144,15 +122,7 @@ class Task
         return $result;
     }
 
-    public function setNewStatus()
-    {
-        if (NewAction::verifyAction($this)) {
-            return $this->status = self::STATUS_NEW;
-        }
-        return null;
-    }
-
-    public function setStartStatus()
+    public function start()
     {
         if (StartAction::verifyAction($this)) {
             return $this->status = self::STATUS_EXECUTION;
@@ -160,7 +130,7 @@ class Task
         return null;
     }
 
-    public function setCancelStatus()
+    public function cancel()
     {
         if (CancelAction::verifyAction($this)) {
             return $this->status = self::STATUS_CANCELED;
@@ -168,7 +138,7 @@ class Task
         return null;
     }
 
-    public function setRefuseStatus()
+    public function refuse()
     {
         if (RefuseAction::verifyAction($this)) {
             return $this->status = self::STATUS_FAILED;
@@ -176,7 +146,7 @@ class Task
         return null;
     }
 
-    public function setCompleteStatus()
+    public function complete()
     {
         if (CompleteAction::verifyAction($this)) {
             return $this->status = self::STATUS_DONE;

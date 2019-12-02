@@ -20,7 +20,7 @@ class CompleteAction implements iActions
 
     public static function verifyAction(Task $task): bool
     {
-        if ($task->user === $task->getCustomer() && $task->getStatus() === 'execution') {
+        if ($task->initiatorId === $task->getCustomer() && $task->getStatus() === $task::STATUS_EXECUTION) {
             return true;
         }
         return false;
