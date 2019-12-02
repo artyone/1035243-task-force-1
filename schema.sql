@@ -8,21 +8,26 @@ CREATE TABLE categories /*Таблица категорий*/
 (
     id   INT(11)     NOT NULL AUTO_INCREMENT, /*сквозной айди*/
     name VARCHAR(50) NOT NULL, /*имя категории*/
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (name)
 );
 
 CREATE TABLE cities /*Таблица городов*/
 (
     id   INT(11)     NOT NULL AUTO_INCREMENT, /*сквозной айди*/
     name VARCHAR(50) NOT NULL, /*имя города*/
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (name)
+
 );
 
 CREATE TABLE countries /*Таблица стран*/
 (
     id   INT(11)     NOT NULL AUTO_INCREMENT, /*сквозной айди*/
     name VARCHAR(50) NOT NULL, /*имя страны*/
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (name)
+
 );
 
 CREATE TABLE locations /*Таблица локации*/
@@ -38,8 +43,8 @@ CREATE TABLE locations /*Таблица локации*/
 
 CREATE TABLE files /*Таблица с ссылками на файлы*/
 (
-    id        INT(11)     NOT NULL AUTO_INCREMENT, /*сквозной айди*/
-    file_link VARCHAR(50) NOT NULL, /*ссылка на файл*/
+    id   INT(11)     NOT NULL AUTO_INCREMENT, /*сквозной айди*/
+    link VARCHAR(50) NOT NULL, /*ссылка на файл*/
     PRIMARY KEY (id)
 );
 
@@ -138,7 +143,7 @@ CREATE TABLE tasks /*Общая таблица заданий*/
     location_id      INT(11),
     address_comments VARCHAR(500), /*комментарий для адреса*/
     description      VARCHAR(500), /*описание задания*/
-    price            INT          NOT NULL, /*цена, целое не отрицательное*/
+    price            INT                   DEFAULT NULL, /*цена, целое не отрицательное*/
     customer_id      INT(11)      NOT NULL, /*айди заказчика*/
     executor_id      INT(11), /*айди исполнителя*/
     deadline_time    DATETIME, /*дата выполнения*/
@@ -159,7 +164,7 @@ CREATE TABLE tasks_responses /*Таблица откликов на задани
     task_id       INT(11) NOT NULL, /*айди задания*/
     executor_id   INT(11) NOT NULL, /*айди исполнителя*/
     comment       VARCHAR(500), /*комментарий к отклику*/
-    price         INT     NOT NULL, /*цена, целое не отрицательное*/
+    price         INT, /*цена, целое не отрицательное*/
     FOREIGN KEY (task_id) REFERENCES tasks (id),
     FOREIGN KEY (executor_id) REFERENCES users (id),
     PRIMARY KEY (id)
@@ -178,11 +183,12 @@ CREATE TABLE tasks_files /*Таблица файлов к заданию*/
 CREATE TABLE tasks_chats /*Таблица чатов заданий*/
 (
     id            INT(11)      NOT NULL AUTO_INCREMENT, /*сквозной айди чата, уникальный*/
-    creation_time DATETIME DEFAULT CURRENT_TIMESTAMP, /*дата публикации сообщения*/
+    creation_time DATETIME   DEFAULT CURRENT_TIMESTAMP, /*дата публикации сообщения*/
     task_id       INT(11)      NOT NULL, /*айди задания*/
-    customer_id   INT(11)      NOT NULL, /*айди заказчика*/
-    executor_id   INT(11)      NOT NULL, /*айжи исполнителя*/
+    sender        INT(11)      NOT NULL, /*айди заказчика*/
+    recipient     INT(11)      NOT NULL, /*айжи исполнителя*/
     message       VARCHAR(500) NOT NULL, /*сообщение*/
+    read          TINYINT(4) DEFAULT 0, /*флаг прочитано/не прочитано */
     FOREIGN KEY (customer_id) REFERENCES users (id),
     FOREIGN KEY (executor_id) REFERENCES users (id),
     FOREIGN KEY (task_id) REFERENCES tasks (id),
