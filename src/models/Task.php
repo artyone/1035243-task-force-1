@@ -20,7 +20,6 @@ class Task
     public $initiatorId;
     private $customer;
     private $executor;
-    private $status;
     private $createDate;
     private $expirationDate;
 
@@ -64,7 +63,7 @@ class Task
 
     public function listAllAction(): array
     {
-        return $actions = [
+        return [
             NewAction::getActionName(),
             StartAction::getActionName(),
             CancelAction::getActionName(),
@@ -75,7 +74,7 @@ class Task
 
     public function listAllStatus(): array
     {
-        return $statuses = [
+        return [
             self::STATUS_NEW,
             self::STATUS_EXECUTION,
             self::STATUS_DONE,
