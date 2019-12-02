@@ -5,7 +5,7 @@ namespace app\models\actions;
 
 use app\models\Task;
 
-interface iActions
+interface actionInterface
 {
     public static function getNameClass();
     public static function getActionName();

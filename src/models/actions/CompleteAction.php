@@ -5,7 +5,7 @@ namespace app\models\actions;
 
 use app\models\Task;
 
-class CompleteAction implements iActions
+class CompleteAction implements actionInterface
 {
 
     public static function getNameClass()
