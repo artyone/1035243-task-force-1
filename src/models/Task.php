@@ -3,47 +3,94 @@
 
 namespace app\models;
 
+use app\models\actions\CancelAction;
+use app\models\actions\CompleteAction;
+use app\models\actions\NewAction;
+use app\models\actions\RefuseAction;
+use app\models\actions\StartAction;
+
 class Task
 {
-    const ACTION_NEW = 'newTask';
-    const ACTION_START = 'startTask';
-    const ACTION_CANCEL = 'cancelTask';
-    const ACTION_REFUSE = 'refuseTask';
-    const ACTION_COMPLETE = 'completeTask';
-
     const STATUS_NEW = 'new';
     const STATUS_EXECUTION = 'execution';
     const STATUS_CANCELED = 'cancel';
     const STATUS_FAILED = 'fail';
     const STATUS_DONE = 'done';
 
-    public $userId;
-    public $consumerId;
-    public $status;
-    public $createDate;
-    public $expirationDate;
+    private $creation_time;
+    private $name;
+    private $category_id;
+    private $location_id;
+    private $address_comments;
+    private $description;
+    private $price;
+    private $customer_id;
+    private $executor_id;
+    private $deadline_time;
+    private $status;
+    private $initiatorId;
 
-    public function __construct($userId = null, $createDate = null)
+    public function __construct()
     {
-        $this->userId = $userId;
-        $this->createDate = $createDate;
+        $this->creation_time = time();
         $this->status = self::STATUS_NEW;
     }
 
-    public function listAllAction()
+    public function getCustomerId(): int
     {
-        return $actions = [
-            self::ACTION_NEW,
-            self::ACTION_START,
-            self::ACTION_CANCEL,
-            self::ACTION_REFUSE,
-            self::ACTION_COMPLETE
+        return $this->customer_id;
+    }
+
+    public function getExecutorId(): int
+    {
+        return $this->executor_id;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function getDeadlineTime(): string
+    {
+        return $this->deadline_time;
+    }
+
+    public function setCustomerId(int $user)
+    {
+        $this->customer_id = $user;
+    }
+
+    public function setExecutorId(int $user)
+    {
+        $this->executor_id = $user;
+    }
+
+    public function setDeadlineTime(string $time)
+    {
+        $this->deadline_time = $time;
+    }
+
+    public function setInitiatorId(int $user)
+    {
+        $this->initiatorId = $user;
+    }
+
+
+    public function listAllAction(): array
+    {
+        return [
+            NewAction::getActionName(),
+            StartAction::getActionName(),
+            CancelAction::getActionName(),
+            RefuseAction::getActionName(),
+            CompleteAction::getActionName()
         ];
     }
 
-    public function listAllStatus()
+    public function listAllStatus(): array
     {
-        return $statuses = [
+        return [
             self::STATUS_NEW,
             self::STATUS_EXECUTION,
             self::STATUS_DONE,
@@ -52,23 +99,74 @@ class Task
         ];
     }
 
-    public function getNewStatus($action)
+    public function getNewStatus(string $action): ?string
     {
         switch ($action) {
-
-            case self::ACTION_NEW:
+            case NewAction::getActionName():
                 return $this->status = self::STATUS_NEW;
-            case self::ACTION_START:
+            case StartAction::getActionName():
                 return $this->status = self::STATUS_EXECUTION;
-            case self::ACTION_CANCEL:
+            case CancelAction::getActionName():
                 return $this->status = self::STATUS_CANCELED;
-            case self::ACTION_REFUSE:
+            case RefuseAction::getActionName():
                 return $this->status = self::STATUS_FAILED;
-            case self::ACTION_COMPLETE:
+            case CompleteAction::getActionName():
                 return $this->status = self::STATUS_DONE;
         }
-
         return null;
     }
-}
 
+    public function getAvailableActions(): array
+    {
+        $result = [];
+        if (NewAction::verifyAction($this, $this->initiatorId)) {
+            $result[] = NewAction::getActionName();
+        }
+        if (StartAction::verifyAction($this, $this->initiatorId)) {
+            $result[] = StartAction::getActionName();
+        }
+        if (CancelAction::verifyAction($this, $this->initiatorId)) {
+            $result[] = CancelAction::getActionName();
+        }
+        if (RefuseAction::verifyAction($this, $this->initiatorId)) {
+            $result[] = RefuseAction::getActionName();
+        }
+        if (CompleteAction::verifyAction($this, $this->initiatorId)) {
+            $result[] = CompleteAction::getActionName();
+        }
+        return $result;
+    }
+
+    public function start(): ?string
+    {
+        if (StartAction::verifyAction($this, $this->initiatorId)) {
+            return $this->status = self::STATUS_EXECUTION;
+        }
+        return null;
+    }
+
+    public function cancel(): ?string
+    {
+        if (CancelAction::verifyAction($this, $this->initiatorId)) {
+            return $this->status = self::STATUS_CANCELED;
+        }
+        return null;
+    }
+
+    public function refuse(): ?string
+    {
+        if (RefuseAction::verifyAction($this, $this->initiatorId)) {
+            return $this->status = self::STATUS_FAILED;
+        }
+        return null;
+    }
+
+    public function complete(): ?string
+    {
+        if (CompleteAction::verifyAction($this, $this->initiatorId)) {
+            return $this->status = self::STATUS_DONE;
+        }
+        return null;
+    }
+
+}

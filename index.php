@@ -8,14 +8,50 @@ require_once 'vendor\autoload.php';
 use app\models\Task;
 
 $task = new Task();
+$task->setInitiatorId(1);
+$task->setCustomerId(1);
+$task->setExecutorId(5);
 
-assert($task->getNewStatus(Task::ACTION_NEW) === Task::STATUS_NEW, 'При действии 
+assert($task->getNewStatus('newTask') === Task::STATUS_NEW, 'При действии
 "newTask" метод вернёт статус "new"');
-assert($task->getNewStatus(Task::ACTION_START) === Task::STATUS_EXECUTION, 'При действии 
+assert($task->getNewStatus('startTask') === Task::STATUS_EXECUTION, 'При действии
 "startTask" метод вернёт статус "execution"');
-assert($task->getNewStatus(Task::ACTION_CANCEL) === Task::STATUS_CANCELED, 'При действии 
+assert($task->getNewStatus('cancelTask') === Task::STATUS_CANCELED, 'При действии
 "cancelTask" метод вернёт статус "cancel"');
-assert($task->getNewStatus(Task::ACTION_REFUSE) === Task::STATUS_FAILED, 'При действии 
+assert($task->getNewStatus('refuseTask') === Task::STATUS_FAILED, 'При действии
 "refuseTask" метод вернёт статус "fail"');
-assert($task->getNewStatus(Task::ACTION_COMPLETE) === Task::STATUS_DONE, 'При действии 
+assert($task->getNewStatus('completeTask') === Task::STATUS_DONE, 'При действии
 "completeTask" метод вернёт статус "done"');
+
+$task->getNewStatus('newTask');
+
+assert($task->start() === null, 'При действии
+"startTask" метод вернет null так как пользователь не имеет роли executor');
+
+$task->setInitiatorId(5);
+
+assert($task->start() === Task::STATUS_EXECUTION, 'При действии
+"startTask" метод вернёт статус "execution"');
+
+assert($task->refuse() === Task::STATUS_FAILED, 'При действии
+"refuseTask" метод вернёт статус "fail"');
+
+assert($task->cancel() === null, 'При действии
+"cancelTask" метод вернёт null так как пользователь не совпадает с заказчиком и статус задачи не "в работе"');
+
+$task->setInitiatorId(1);
+$task->getNewStatus('newTask');
+
+assert($task->cancel() === Task::STATUS_CANCELED, 'При действии
+"cancelTask" метод вернёт статус "cancel"');
+assert($task->complete() === null, 'При действии
+"completeTask" метод вернёт null так как статус задачи "отменена"');
+
+$task->getNewStatus('startTask');
+
+assert($task->complete() === Task::STATUS_DONE, 'При действии
+"completeTask" метод вернёт статус "done"');
+
+print $task->getStatus();
+
+
