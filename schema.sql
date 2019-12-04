@@ -55,8 +55,8 @@ CREATE TABLE users /*Таблица пользователей*/
     password_hash VARCHAR(32)  NOT NULL, /*хэш пароля*/
     name          VARCHAR(500), /*имя пользователя*/
     creation_time DATETIME DEFAULT CURRENT_TIMESTAMP, /*дата регистрации*/
-    file_id       INT(11), /*ссылка на аватар*/
-    FOREIGN KEY (file_id) REFERENCES files (id),
+    avatar       INT(11), /*ссылка на аватар*/
+    FOREIGN KEY (avatar) REFERENCES files (id),
     PRIMARY KEY (id),
     UNIQUE (email)
 );
@@ -189,8 +189,8 @@ CREATE TABLE tasks_chats /*Таблица чатов заданий*/
     recipient     INT(11)      NOT NULL, /*айжи исполнителя*/
     message    VARCHAR(500) NOT NULL, /*сообщение*/
     `read`        TINYINT(4) DEFAULT 0, /*флаг прочитано/не прочитано */
-    FOREIGN KEY (customer_id) REFERENCES users (id),
-    FOREIGN KEY (executor_id) REFERENCES users (id),
+    FOREIGN KEY (sender) REFERENCES users (id),
+    FOREIGN KEY (recipient) REFERENCES users (id),
     FOREIGN KEY (task_id) REFERENCES tasks (id),
     PRIMARY KEY (id),
     INDEX (task_id)

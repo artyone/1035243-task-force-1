@@ -7,22 +7,30 @@ namespace app\models;
 class User
 {
     private $email;
+    private $password_hash;
     private $name;
-    private $creationTime;
-    private $role;
+    private $creation_time;
+    private $avatar;
 
-    static public function getRole(int $user): ?string
+    static public function isExecutor(int $user): bool
+    {
+        $tempArrayExecutor = [5, 6, 7, 8];
+        if (in_array($user, $tempArrayExecutor)) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    static public function isCustomer(int $user): bool
     {
         $tempArrayCustomer = [1, 2, 3, 4];
-        $tempArrayExecutor = [5, 6, 7, 8];
         if (in_array($user, $tempArrayCustomer)) {
-            return 'customer';
-        }
-        if (in_array($user, $tempArrayExecutor)) {
-            return 'executor';
+            return true;
         }
 
-        return null;
+        return false;
 
     }
 }

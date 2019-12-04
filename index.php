@@ -8,9 +8,9 @@ require_once 'vendor\autoload.php';
 use app\models\Task;
 
 $task = new Task();
-$task->setInitiator(1);
-$task->setCustomer(1);
-$task->setExecutor(5);
+$task->setInitiatorId(1);
+$task->setCustomerId(1);
+$task->setExecutorId(5);
 
 assert($task->getNewStatus('newTask') === Task::STATUS_NEW, 'При действии
 "newTask" метод вернёт статус "new"');
@@ -28,7 +28,7 @@ $task->getNewStatus('newTask');
 assert($task->start() === null, 'При действии
 "startTask" метод вернет null так как пользователь не имеет роли executor');
 
-$task->setInitiator(5);
+$task->setInitiatorId(5);
 
 assert($task->start() === Task::STATUS_EXECUTION, 'При действии
 "startTask" метод вернёт статус "execution"');
@@ -39,7 +39,7 @@ assert($task->refuse() === Task::STATUS_FAILED, 'При действии
 assert($task->cancel() === null, 'При действии
 "cancelTask" метод вернёт null так как пользователь не совпадает с заказчиком и статус задачи не "в работе"');
 
-$task->setInitiator(1);
+$task->setInitiatorId(1);
 $task->getNewStatus('newTask');
 
 assert($task->cancel() === Task::STATUS_CANCELED, 'При действии
@@ -53,3 +53,5 @@ assert($task->complete() === Task::STATUS_DONE, 'При действии
 "completeTask" метод вернёт статус "done"');
 
 print $task->getStatus();
+
+

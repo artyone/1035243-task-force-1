@@ -8,19 +8,19 @@ use app\models\Task;
 class RefuseAction implements ActionInterface
 {
 
-    public static function getNameClass()
+    public static function getNameClass(): string
     {
         return RefuseAction::class;
     }
 
-    public static function getActionName()
+    public static function getActionName(): string
     {
         return 'refuseTask';
     }
 
-    public static function verifyAction(Task $task): bool
+    public static function verifyAction(Task $task, int $userId): bool
     {
-        if ($task->initiatorId === $task->getExecutor() && $task->getStatus() === $task::STATUS_EXECUTION) {
+        if ($userId === $task->getExecutorId() && $task->getStatus() === $task::STATUS_EXECUTION) {
             return true;
         }
         return false;

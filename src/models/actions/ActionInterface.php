@@ -9,5 +9,5 @@ interface ActionInterface
 {
     public static function getNameClass();
     public static function getActionName();
-    public static function verifyAction(Task $task) :bool;
+    public static function verifyAction(Task $task, int $userId) :bool;
 }

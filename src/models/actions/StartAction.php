@@ -9,19 +9,19 @@ use app\models\User;
 class StartAction implements ActionInterface
 {
 
-    public static function getNameClass()
+    public static function getNameClass(): string
     {
         return StartAction::class;
     }
 
-    public static function getActionName()
+    public static function getActionName(): string
     {
         return 'startTask';
     }
 
-    public static function verifyAction(Task $task): bool
+    public static function verifyAction(Task $task, int $userId): bool
     {
-        if (User::getRole($task->initiatorId) === 'executor' && $task->getStatus() === $task::STATUS_NEW) {
+        if (User::isExecutor($userId) === true && $task->getStatus() === $task::STATUS_NEW) {
             return true;
         }
         return false;

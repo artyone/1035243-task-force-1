@@ -17,45 +17,61 @@ class Task
     const STATUS_FAILED = 'fail';
     const STATUS_DONE = 'done';
 
-    public $initiatorId;
-    private $customer;
-    private $executor;
-    private $createDate;
-    private $expirationDate;
-
+    private $creation_time;
+    private $name;
+    private $category_id;
+    private $location_id;
+    private $address_comments;
+    private $description;
+    private $price;
+    private $customer_id;
+    private $executor_id;
+    private $deadline_time;
+    private $status;
+    private $initiatorId;
 
     public function __construct()
     {
-        $this->createDate = time();
+        $this->creation_time = time();
         $this->status = self::STATUS_NEW;
     }
 
-    public function getCustomer()
+    public function getCustomerId(): int
     {
-        return $this->customer;
+        return $this->customer_id;
     }
 
-    public function getExecutor()
+    public function getExecutorId(): int
     {
-        return $this->executor;
+        return $this->executor_id;
     }
 
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    public function setCustomer($user)
+    public function getDeadlineTime(): string
     {
-        $this->customer = $user;
+        return $this->deadline_time;
     }
 
-    public function setExecutor($user)
+    public function setCustomerId(int $user)
     {
-        $this->executor = $user;
+        $this->customer_id = $user;
     }
 
-    public function setInitiator($user)
+    public function setExecutorId(int $user)
+    {
+        $this->executor_id = $user;
+    }
+
+    public function setDeadlineTime(string $time)
+    {
+        $this->deadline_time = $time;
+    }
+
+    public function setInitiatorId(int $user)
     {
         $this->initiatorId = $user;
     }
@@ -103,51 +119,51 @@ class Task
     public function getAvailableActions(): array
     {
         $result = [];
-        if (NewAction::verifyAction($this)) {
+        if (NewAction::verifyAction($this, $this->initiatorId)) {
             $result[] = NewAction::getActionName();
         }
-        if (StartAction::verifyAction($this)) {
+        if (StartAction::verifyAction($this, $this->initiatorId)) {
             $result[] = StartAction::getActionName();
         }
-        if (CancelAction::verifyAction($this)) {
+        if (CancelAction::verifyAction($this, $this->initiatorId)) {
             $result[] = CancelAction::getActionName();
         }
-        if (RefuseAction::verifyAction($this)) {
+        if (RefuseAction::verifyAction($this, $this->initiatorId)) {
             $result[] = RefuseAction::getActionName();
         }
-        if (CompleteAction::verifyAction($this)) {
+        if (CompleteAction::verifyAction($this, $this->initiatorId)) {
             $result[] = CompleteAction::getActionName();
         }
         return $result;
     }
 
-    public function start()
+    public function start(): ?string
     {
-        if (StartAction::verifyAction($this)) {
+        if (StartAction::verifyAction($this, $this->initiatorId)) {
             return $this->status = self::STATUS_EXECUTION;
         }
         return null;
     }
 
-    public function cancel()
+    public function cancel(): ?string
     {
-        if (CancelAction::verifyAction($this)) {
+        if (CancelAction::verifyAction($this, $this->initiatorId)) {
             return $this->status = self::STATUS_CANCELED;
         }
         return null;
     }
 
-    public function refuse()
+    public function refuse(): ?string
     {
-        if (RefuseAction::verifyAction($this)) {
+        if (RefuseAction::verifyAction($this, $this->initiatorId)) {
             return $this->status = self::STATUS_FAILED;
         }
         return null;
     }
 
-    public function complete()
+    public function complete(): ?string
     {
-        if (CompleteAction::verifyAction($this)) {
+        if (CompleteAction::verifyAction($this, $this->initiatorId)) {
             return $this->status = self::STATUS_DONE;
         }
         return null;
