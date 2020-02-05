@@ -8,6 +8,9 @@ use app\models\actions\CompleteAction;
 use app\models\actions\NewAction;
 use app\models\actions\RefuseAction;
 use app\models\actions\StartAction;
+use app\exception\StatusException;
+use app\exception\RoleException;
+use app\exception\ActionException;
 
 class Task
 {
@@ -139,34 +142,34 @@ class Task
 
     public function start(): ?string
     {
-        if (StartAction::verifyAction($this, $this->initiatorId)) {
-            return $this->status = self::STATUS_EXECUTION;
+        if (!StartAction::verifyAction($this, $this->initiatorId)) {
+            throw new StatusException('Ошибка при установке статуса '. self::STATUS_EXECUTION);
         }
-        return null;
+        return $this->status = self::STATUS_EXECUTION;
     }
 
     public function cancel(): ?string
     {
-        if (CancelAction::verifyAction($this, $this->initiatorId)) {
-            return $this->status = self::STATUS_CANCELED;
+        if (!CancelAction::verifyAction($this, $this->initiatorId)) {
+            throw new StatusException('Ошибка при установке статуса ' . self::STATUS_CANCELED);
         }
-        return null;
+        return $this->status = self::STATUS_CANCELED;
     }
 
     public function refuse(): ?string
     {
-        if (RefuseAction::verifyAction($this, $this->initiatorId)) {
-            return $this->status = self::STATUS_FAILED;
+        if (!RefuseAction::verifyAction($this, $this->initiatorId)) {
+            throw new StatusException('Ошибка при установке статуса ' . self::STATUS_FAILED);
         }
-        return null;
+        return $this->status = self::STATUS_FAILED;
     }
 
     public function complete(): ?string
     {
-        if (CompleteAction::verifyAction($this, $this->initiatorId)) {
-            return $this->status = self::STATUS_DONE;
+        if (!CompleteAction::verifyAction($this, $this->initiatorId)) {
+            throw new StatusException('Ошибка при установке статуса ' . self::STATUS_DONE);
         }
-        return null;
+        return $this->status = self::STATUS_DONE;
     }
 
 }

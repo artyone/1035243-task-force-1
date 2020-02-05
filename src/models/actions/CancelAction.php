@@ -3,6 +3,8 @@
 
 namespace app\models\actions;
 
+use app\exception\RoleException;
+use app\exception\ActionException;
 use app\models\Task;
 
 class CancelAction implements ActionInterface
@@ -20,9 +22,12 @@ class CancelAction implements ActionInterface
 
     public static function verifyAction(Task $task, int $userId): bool
     {
-        if ($userId === $task->getCustomerId() && $task->getStatus() === $task::STATUS_NEW) {
-            return true;
+        if ($userId !== $task->getCustomerId()) {
+            throw new RoleException('Ошибка. Выбранный пользователь не иницицатор задачи');
         }
-        return false;
+        if ($task->getStatus() !== $task::STATUS_NEW) {
+            throw new ActionException('Ошибка. Статус задачи не ' . $task::STATUS_NEW);
+        }
+        return true;
     }
 }
