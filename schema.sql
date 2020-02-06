@@ -8,14 +8,17 @@ CREATE TABLE categories /*Таблица категорий*/
 (
     id   INT(11)     NOT NULL AUTO_INCREMENT, /*сквозной айди*/
     name VARCHAR(50) NOT NULL, /*имя категории*/
+    icon VARCHAR(50) NOT NULL, /*иконка*/
     PRIMARY KEY (id),
     UNIQUE (name)
 );
 
 CREATE TABLE cities /*Таблица городов*/
 (
-    id   INT(11)     NOT NULL AUTO_INCREMENT, /*сквозной айди*/
-    name VARCHAR(50) NOT NULL, /*имя города*/
+    id        INT(11)     NOT NULL AUTO_INCREMENT, /*сквозной айди*/
+    name      VARCHAR(50) NOT NULL, /*имя города*/
+    latitude  VARCHAR(50) NOT NULL,
+    longitude VARCHAR(50) NOT NULL,
     PRIMARY KEY (id),
     UNIQUE (name)
 
@@ -55,7 +58,7 @@ CREATE TABLE users /*Таблица пользователей*/
     password_hash VARCHAR(32)  NOT NULL, /*хэш пароля*/
     name          VARCHAR(500), /*имя пользователя*/
     creation_time DATETIME DEFAULT CURRENT_TIMESTAMP, /*дата регистрации*/
-    avatar       INT(11), /*ссылка на аватар*/
+    avatar        INT(11), /*ссылка на аватар*/
     FOREIGN KEY (avatar) REFERENCES files (id),
     PRIMARY KEY (id),
     UNIQUE (email)
@@ -66,10 +69,11 @@ CREATE TABLE users_data /*Таблица данных пользователей
     id               INT(11) NOT NULL AUTO_INCREMENT, /*сквозной айди*/
     user_id          INT(11) NOT NULL, /*айди пользователя*/
     location_id      INT(11), /*локация пользователя*/
+    address          VARCHAR(500),
     birthday         DATETIME, /*дата рождения*/
     phone            VARCHAR(20), /*мобильный телефон*/
     skype            VARCHAR(50), /*скайп*/
-    biography        VARCHAR(500), /*биография*/
+    about            VARCHAR(500), /*биография*/
     last_online_time DATETIME, /*дата последнего онлайн*/
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (location_id) REFERENCES locations (id),
@@ -141,6 +145,8 @@ CREATE TABLE tasks /*Общая таблица заданий*/
     name             VARCHAR(500) NOT NULL, /*имя задания*/
     category_id      INT(11)      NOT NULL, /*айди категории задания*/
     location_id      INT(11),
+    latitude         INT,
+    longitude        INT,
     address_comments VARCHAR(500), /*комментарий для адреса*/
     description      VARCHAR(500), /*описание задания*/
     price            INT                   DEFAULT NULL, /*цена, целое не отрицательное*/
@@ -163,7 +169,7 @@ CREATE TABLE tasks_responses /*Таблица откликов на задани
     creation_time DATETIME DEFAULT CURRENT_TIMESTAMP, /*дата создания*/
     task_id       INT(11) NOT NULL, /*айди задания*/
     executor_id   INT(11) NOT NULL, /*айди исполнителя*/
-    comment       VARCHAR(500), /*комментарий к отклику*/
+    description       VARCHAR(500), /*комментарий к отклику*/
     price         INT, /*цена, целое не отрицательное*/
     FOREIGN KEY (task_id) REFERENCES tasks (id),
     FOREIGN KEY (executor_id) REFERENCES users (id),
@@ -187,7 +193,7 @@ CREATE TABLE tasks_chats /*Таблица чатов заданий*/
     task_id       INT(11)      NOT NULL, /*айди задания*/
     sender        INT(11)      NOT NULL, /*айди заказчика*/
     recipient     INT(11)      NOT NULL, /*айжи исполнителя*/
-    message    VARCHAR(500) NOT NULL, /*сообщение*/
+    message       VARCHAR(500) NOT NULL, /*сообщение*/
     `read`        TINYINT(4) DEFAULT 0, /*флаг прочитано/не прочитано */
     FOREIGN KEY (sender) REFERENCES users (id),
     FOREIGN KEY (recipient) REFERENCES users (id),
@@ -203,7 +209,7 @@ CREATE TABLE tasks_completed_feedback /*Таблица отклика выпол
     user_id         INT(11)    NOT NULL, /*айди пользователя, которому оставили комментарий*/
     commentators_id INT(11)    NOT NULL, /*айди пользователя, оставившего отклик*/
     task_id         INT(11)    NOT NULL, /*айди задания*/
-    feedback        VARCHAR(500), /*текст отклика*/
+    description     VARCHAR(500), /*текст отклика*/
     rating          TINYINT(4) NOT NULL, /*рейтинг*/
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (commentators_id) REFERENCES users (id),
