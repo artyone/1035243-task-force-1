@@ -10,7 +10,7 @@ use app\models\ConvertCsv;
 
 foreach (glob('data/*.csv') as $pathFile) {
     $file = new ConvertCsv($pathFile);
-    $file->import();
+    $file->convert();
 }
 
 
