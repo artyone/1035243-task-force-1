@@ -7,7 +7,7 @@ use app\models\Task;
 
 interface ActionInterface
 {
-    public static function getNameClass();
-    public static function getActionName();
-    public static function verifyAction(Task $task, int $userId) :bool;
+    public static function getNameClass(): string;
+    public static function getActionName(): string;
+    public static function verifyAction(Task $task, int $userId): bool;
 }

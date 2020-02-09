@@ -5,14 +5,29 @@ ini_set('display_startup_errors', 1);
 
 require_once 'vendor\autoload.php';
 
+use app\exception\ActionException;
+use app\exception\RoleException;
+use app\exception\StatusException;
 use app\models\Task;
 
-$task = new Task();
-$task->setInitiatorId(1);
-$task->setCustomerId(1);
-$task->setExecutorId(5);
+try {
+    $task = new Task();
+    $task->setInitiatorId(1);
+    $task->setCustomerId(1);
+    $task->setExecutorId(5);
+    $task->getNewStatus('newTask');
+    $task->start();
+} catch (ActionException $exception){
+    print $exception->getMessage() . "\n";
+} catch (RoleException $exception){
+    print $exception->getMessage() . "\n";
+} catch (StatusException $exception){
+    print $exception->getMessage() . "\n";
+}
 
-assert($task->getNewStatus('newTask') === Task::STATUS_NEW, 'При действии
+
+
+/*assert($task->getNewStatus('newTask') === Task::STATUS_NEW, 'При действии
 "newTask" метод вернёт статус "new"');
 assert($task->getNewStatus('startTask') === Task::STATUS_EXECUTION, 'При действии
 "startTask" метод вернёт статус "execution"');
@@ -50,7 +65,7 @@ assert($task->complete() === null, 'При действии
 $task->getNewStatus('startTask');
 
 assert($task->complete() === Task::STATUS_DONE, 'При действии
-"completeTask" метод вернёт статус "done"');
+"completeTask" метод вернёт статус "done"');*/
 
 print $task->getStatus();
 
