@@ -18,20 +18,20 @@ class ConvertCsv
         $this->fileDir = pathinfo($pathFile)['dirname'];
     }
 
-    private function getHeader()
+    private function getHeader(): array
     {
         $this->fileInput->rewind();
         return $this->fileInput->current();
     }
 
-    private function getData()
+    private function getData(): iterable
     {
         while (!$this->fileInput->eof()) {
             yield $this->fileInput->fgetcsv();
         }
     }
 
-    private function writeData($file, $values)
+    private function writeData(SplFileObject $file, array $values): void
     {
         if ($values[0]) {
             $values = '"' . implode('","', $values) . '"';
@@ -40,7 +40,7 @@ class ConvertCsv
         }
     }
 
-    private function writeHeader($file, $headers)
+    private function writeHeader(SplFileObject $file, array $headers): void
     {
         $headers = implode(',', $headers);
         $string = "INSERT INTO $this->fileName ($headers)\nVALUES";
@@ -49,7 +49,6 @@ class ConvertCsv
 
     public function convert()
     {
-
         $this->fileInput = new SplFileObject("$this->fileDir/$this->fileName.csv");
         $this->fileInput->setFlags(SplFileObject::READ_CSV);
 
