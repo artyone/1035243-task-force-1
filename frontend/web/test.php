@@ -5,20 +5,15 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
 require_once __DIR__ . '/../../vendor/autoload.php';
-require __DIR__ . '/../../vendor/yiisoft/yii2/Yii.php';
-require __DIR__ . '/../../common/config/bootstrap.php';
 
-use frontend\models\Cities;
-
-
-/*use app\models\ConvertCsv;
+use app\models\ConvertCsv;
 
 foreach (glob('data/*.csv') as $pathFile) {
     $file = new ConvertCsv($pathFile);
     $file->convert();
-}*/
+}
 
-/*use app\exception\ActionException;
+use app\exception\ActionException;
 use app\exception\RoleException;
 use app\exception\StatusException;
 use app\models\Task;
@@ -36,11 +31,9 @@ try {
     print $exception->getMessage() . "\n";
 } catch (StatusException $exception){
     print $exception->getMessage() . "\n";
-}*/
+}
 
-$cities = new Cities();
-$city = $cities->find()->one();
-echo $city->name;
+
 
 
 
