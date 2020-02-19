@@ -160,4 +160,44 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TasksResponses::className(), ['task_id' => 'id']);
     }
+
+    private function getTimeHoursAgo()
+    {
+        $time = strtotime("now") - strtotime($this->creation_time);
+        $time = $time/60/60;
+        return $time;
+    }
+
+    public function getStringHoursAgo()
+    {
+        $endingArray = ['менее часа назад',' час назад',' часа назад', ' часов назад', 'больше суток назад'];
+
+        $number = $this->getTimeHoursAgo() % 100;
+
+        if ($number == 0) {
+            $ending=$endingArray[0];
+            return $ending;
+        }
+
+        if ($number > 23) {
+            $ending=$endingArray[4];
+            return $ending;
+        }
+
+        if ($number>=11 && $number<=19) {
+            $ending=$endingArray[3];
+        }
+        else {
+            $i = $number % 10;
+            switch ($i)
+            {
+                case (1): $ending = $endingArray[1]; break;
+                case (2):
+                case (3):
+                case (4): $ending = $endingArray[2]; break;
+                default: $ending = $endingArray[3];
+            }
+        }
+        return ($number . $ending);
+    }
 }

@@ -157,19 +157,19 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersCategories()
+    public function getUserCategories()
     {
         return $this->hasMany(UsersCategory::className(), ['user_id' => 'id']);
     }
 
     /**
-     * Gets query for [[UsersDatas]].
+     * Gets query for [[UsersData]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersDatas()
+    public function getUserData()
     {
-        return $this->hasMany(UsersData::className(), ['user_id' => 'id']);
+        return $this->hasOne(UsersData::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -177,7 +177,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersFavorites()
+    public function getUserFavorites()
     {
         return $this->hasMany(UsersFavorites::className(), ['user_id' => 'id']);
     }
@@ -187,7 +187,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersFavorites0()
+    public function getUserFavorites0()
     {
         return $this->hasMany(UsersFavorites::className(), ['favorite_id' => 'id']);
     }
@@ -197,7 +197,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersNotifications()
+    public function getUserNotifications()
     {
         return $this->hasMany(UsersNotifications::className(), ['user_id' => 'id']);
     }
@@ -207,7 +207,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersVisibles()
+    public function getUserVisibles()
     {
         return $this->hasMany(UsersVisible::className(), ['user_id' => 'id']);
     }
@@ -217,8 +217,48 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersWorkPhotos()
+    public function getUserWorkPhotos()
     {
         return $this->hasMany(UsersWorkPhotos::className(), ['user_id' => 'id']);
+    }
+
+    private function getTimeHoursAgo()
+    {
+        $time = strtotime("now") - strtotime($this->creation_time);
+        $time = $time/60/60;
+        return $time;
+    }
+
+    public function getStringHoursAgo()
+    {
+        $endingArray = ['менее часа назад',' час назад',' часа назад', ' часов назад', 'больше суток назад'];
+
+        $number = $this->getTimeHoursAgo() % 100;
+
+        if ($number == 0) {
+            $ending=$endingArray[0];
+            return $ending;
+        }
+
+        if ($number > 23) {
+            $ending=$endingArray[4];
+            return $ending;
+        }
+
+        if ($number>=11 && $number<=19) {
+            $ending=$endingArray[3];
+        }
+        else {
+            $i = $number % 10;
+            switch ($i)
+            {
+                case (1): $ending = $endingArray[1]; break;
+                case (2):
+                case (3):
+                case (4): $ending = $endingArray[2]; break;
+                default: $ending = $endingArray[3];
+            }
+        }
+        return ($number . $ending);
     }
 }
