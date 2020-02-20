@@ -53,7 +53,13 @@ class Users extends \yii\db\ActiveRecord
             [['password_hash'], 'string', 'max' => 32],
             [['name'], 'string', 'max' => 500],
             [['email'], 'unique'],
-            [['avatar'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['avatar' => 'id']],
+            [
+                ['avatar'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Files::className(),
+                'targetAttribute' => ['avatar' => 'id']
+            ],
         ];
     }
 
@@ -73,21 +79,21 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Tasks]].
+     * Gets query for [[TasksCustomer]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks()
+    public function getTasksCustomer()
     {
         return $this->hasMany(Tasks::className(), ['customer_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Tasks0]].
+     * Gets query for [[TasksExecutor]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks0()
+    public function getTasksExecutor()
     {
         return $this->hasMany(Tasks::className(), ['executor_id' => 'id']);
     }
@@ -113,23 +119,23 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TasksCompletedFeedbacks]].
+     * Gets query for [[TasksCompletedFeedbackExecutor]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksCompletedFeedbacks()
+    public function getTasksCompletedFeedbackExecutor()
     {
-        return $this->hasMany(TasksCompletedFeedback::className(), ['user_id' => 'id']);
+        return $this->hasMany(TasksCompletedFeedback::className(), ['executor_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TasksCompletedFeedbacks0]].
+     * Gets query for [[TasksCompletedFeedbackCommentator]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksCompletedFeedbacks0()
+    public function getTasksCompletedFeedbackCommentator()
     {
-        return $this->hasMany(TasksCompletedFeedback::className(), ['commentators_id' => 'id']);
+        return $this->hasMany(TasksCompletedFeedback::className(), ['commentator_id' => 'id']);
     }
 
     /**
@@ -143,11 +149,11 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Avatar0]].
+     * Gets query for [[FileAvatar]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getAvatar0()
+    public function getFileAvatar()
     {
         return $this->hasOne(Files::className(), ['id' => 'avatar']);
     }
@@ -157,19 +163,19 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersCategories()
+    public function getUserCategories()
     {
         return $this->hasMany(UsersCategory::className(), ['user_id' => 'id']);
     }
 
     /**
-     * Gets query for [[UsersDatas]].
+     * Gets query for [[UsersData]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersDatas()
+    public function getUserData()
     {
-        return $this->hasMany(UsersData::className(), ['user_id' => 'id']);
+        return $this->hasOne(UsersData::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -177,7 +183,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersFavorites()
+    public function getUserFavorites()
     {
         return $this->hasMany(UsersFavorites::className(), ['user_id' => 'id']);
     }
@@ -187,7 +193,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersFavorites0()
+    public function getUserFavorites0()
     {
         return $this->hasMany(UsersFavorites::className(), ['favorite_id' => 'id']);
     }
@@ -197,7 +203,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersNotifications()
+    public function getUserNotifications()
     {
         return $this->hasMany(UsersNotifications::className(), ['user_id' => 'id']);
     }
@@ -207,7 +213,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersVisibles()
+    public function getUserVisibles()
     {
         return $this->hasMany(UsersVisible::className(), ['user_id' => 'id']);
     }
@@ -217,7 +223,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersWorkPhotos()
+    public function getUserWorkPhotos()
     {
         return $this->hasMany(UsersWorkPhotos::className(), ['user_id' => 'id']);
     }

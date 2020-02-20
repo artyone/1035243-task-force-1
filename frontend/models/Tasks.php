@@ -49,12 +49,48 @@ class Tasks extends \yii\db\ActiveRecord
         return [
             [['creation_time', 'deadline_time'], 'safe'],
             [['name', 'category_id', 'customer_id'], 'required'],
-            [['category_id', 'location_id', 'latitude', 'longitude', 'price', 'customer_id', 'executor_id', 'status'], 'integer'],
+            [
+                [
+                    'category_id',
+                    'location_id',
+                    'latitude',
+                    'longitude',
+                    'price',
+                    'customer_id',
+                    'executor_id',
+                    'status'
+                ],
+                'integer'
+            ],
             [['name', 'address_comments', 'description'], 'string', 'max' => 500],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categories::className(), 'targetAttribute' => ['category_id' => 'id']],
-            [['location_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::className(), 'targetAttribute' => ['location_id' => 'id']],
-            [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['customer_id' => 'id']],
-            [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['executor_id' => 'id']],
+            [
+                ['category_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Categories::className(),
+                'targetAttribute' => ['category_id' => 'id']
+            ],
+            [
+                ['location_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Cities::className(),
+                'targetAttribute' => ['location_id' => 'id']
+            ],
+            [
+                ['customer_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Users::className(),
+                'targetAttribute' => ['customer_id' => 'id']
+            ],
+            [
+                ['executor_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Users::className(),
+                'targetAttribute' => ['executor_id' => 'id']
+            ],
         ];
     }
 
@@ -160,4 +196,5 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TasksResponses::className(), ['task_id' => 'id']);
     }
+
 }
