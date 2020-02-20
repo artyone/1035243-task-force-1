@@ -20,7 +20,7 @@ class TasksController extends Controller
         $query = Tasks::find();
 
         $tasks = $query->orderBy('creation_time')
-            ->where('status' == self::STATUS_NEW)
+            ->where(['status' => self::STATUS_NEW])
             ->all();
 
         return $this->render('index', [
