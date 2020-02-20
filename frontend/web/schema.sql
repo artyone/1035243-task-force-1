@@ -206,16 +206,16 @@ CREATE TABLE tasks_completed_feedback /*Таблица отклика выпол
 (
     id              INT(11)    NOT NULL AUTO_INCREMENT, /*сквозной айди отклика, уникальный*/
     creation_time   DATETIME DEFAULT CURRENT_TIMESTAMP, /*дата публикации отклика*/
-    user_id         INT(11)    NOT NULL, /*айди пользователя, которому оставили комментарий*/
+    executor_id     INT(11)    NOT NULL, /*айди пользователя, которому оставили комментарий*/
     commentators_id INT(11)    NOT NULL, /*айди пользователя, оставившего отклик*/
     task_id         INT(11)    NOT NULL, /*айди задания*/
     description     VARCHAR(500), /*текст отклика*/
     rating          TINYINT(4) NOT NULL, /*рейтинг*/
-    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (executor_id) REFERENCES users (id),
     FOREIGN KEY (commentators_id) REFERENCES users (id),
     FOREIGN KEY (task_id) REFERENCES tasks (id),
     PRIMARY KEY (id),
-    INDEX (user_id)
+    INDEX (executor_id)
 );
 
 

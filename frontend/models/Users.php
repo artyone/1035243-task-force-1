@@ -53,7 +53,13 @@ class Users extends \yii\db\ActiveRecord
             [['password_hash'], 'string', 'max' => 32],
             [['name'], 'string', 'max' => 500],
             [['email'], 'unique'],
-            [['avatar'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['avatar' => 'id']],
+            [
+                ['avatar'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Files::className(),
+                'targetAttribute' => ['avatar' => 'id']
+            ],
         ];
     }
 
@@ -73,21 +79,21 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Tasks]].
+     * Gets query for [[TasksCustomer]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks()
+    public function getTasksCustomer()
     {
         return $this->hasMany(Tasks::className(), ['customer_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Tasks0]].
+     * Gets query for [[TasksExecutor]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks0()
+    public function getTasksExecutor()
     {
         return $this->hasMany(Tasks::className(), ['executor_id' => 'id']);
     }
@@ -113,23 +119,23 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TasksCompletedFeedbacks]].
+     * Gets query for [[TasksCompletedFeedbackExecutor]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksCompletedFeedbacks()
+    public function getTasksCompletedFeedbackExecutor()
     {
-        return $this->hasMany(TasksCompletedFeedback::className(), ['user_id' => 'id']);
+        return $this->hasMany(TasksCompletedFeedback::className(), ['executor_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TasksCompletedFeedbacks0]].
+     * Gets query for [[TasksCompletedFeedbackCommentator]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksCompletedFeedbacks0()
+    public function getTasksCompletedFeedbackCommentator()
     {
-        return $this->hasMany(TasksCompletedFeedback::className(), ['commentators_id' => 'id']);
+        return $this->hasMany(TasksCompletedFeedback::className(), ['commentator_id' => 'id']);
     }
 
     /**
@@ -143,11 +149,11 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Avatar0]].
+     * Gets query for [[FileAvatar]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getAvatar0()
+    public function getFileAvatar()
     {
         return $this->hasOne(Files::className(), ['id' => 'avatar']);
     }
@@ -222,43 +228,24 @@ class Users extends \yii\db\ActiveRecord
         return $this->hasMany(UsersWorkPhotos::className(), ['user_id' => 'id']);
     }
 
-    private function getTimeHoursAgo()
+    public function getRating()
     {
-        $time = strtotime("now") - strtotime($this->creation_time);
-        $time = $time/60/60;
-        return $time;
+        $allRating = 0;
+        foreach ($this->tasksCompletedFeedbackExecutor as $feedback) {
+            $allRating += $feedback->rating;
+        }
+        if ($count = count($this->tasksCompletedFeedbackExecutor)) {
+            $rating = $allRating / $count;
+        } else {
+            $rating = 0;
+        }
+
+        return $rating;
     }
 
-    public function getStringHoursAgo()
+    public function getCompletedTaskExecutor()
     {
-        $endingArray = ['менее часа назад',' час назад',' часа назад', ' часов назад', 'больше суток назад'];
-
-        $number = $this->getTimeHoursAgo() % 100;
-
-        if ($number == 0) {
-            $ending=$endingArray[0];
-            return $ending;
-        }
-
-        if ($number > 23) {
-            $ending=$endingArray[4];
-            return $ending;
-        }
-
-        if ($number>=11 && $number<=19) {
-            $ending=$endingArray[3];
-        }
-        else {
-            $i = $number % 10;
-            switch ($i)
-            {
-                case (1): $ending = $endingArray[1]; break;
-                case (2):
-                case (3):
-                case (4): $ending = $endingArray[2]; break;
-                default: $ending = $endingArray[3];
-            }
-        }
-        return ($number . $ending);
+        $count = count($this->getTasksExecutor()->where(['status' => 5])->all());
+        return $count;
     }
 }

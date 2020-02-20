@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use frontend\helpers\StringEndings;
 
 ?>
 
@@ -20,44 +21,49 @@ use yii\helpers\Html;
         </ul>
     </div>
     <?php foreach ($users as $user): ?>
-    <div class="content-view__feedback-card user__search-wrapper">
-        <div class="feedback-card__top">
-            <div class="user__search-icon">
-                <a href="#"><img src="./img/man-glasses.jpg" width="65" height="65"></a>
-                <span>17 заданий</span>
-                <span>6 отзывов</span>
+        <?php if ($user->userCategories): ?>
+            <div class="content-view__feedback-card user__search-wrapper">
+                <div class="feedback-card__top">
+                    <div class="user__search-icon">
+                        <a href="#"><img src=".<?= $user->fileAvatar->link ?>" width="65" height="65"></a>
+                        <span><?= StringEndings::getStringTask($user->getCompletedTaskExecutor()) ?></span>
+                        <span><?= StringEndings::getStringFeedbacks(count($user->tasksCompletedFeedbackExecutor)) ?></span>
+                    </div>
+                    <div class="feedback-card__top--name user__search-card">
+                        <p class="link-name"><a href="#" class="link-regular"><?= $user->name ?></a></p>
+                        <?php foreach(range(0,4) as $value): ?>
+                            <span <?= $value < $user->getRating() ? '' : 'class="star-disabled"' ?>></span>
+                        <?php endforeach; ?>
+                        <b><?= $user->getRating() ?></b>
+                        <p class="user__search-content"><?= $user->userData->about ?></p>
+                    </div>
+                    <span class="new-task__time">Был на сайте <?= StringEndings::getStringMinutes($user->userData->last_online_time) ?></span>
+                </div>
+                <div class="link-specialization user__search-link--bottom">
+                    <?php foreach ($user->userCategories as $userCategory): ?>
+                        <a href="#" class="link-regular"><?= $userCategory->category->name ?></a>
+                    <?php endforeach; ?>
+                </div>
             </div>
-            <div class="feedback-card__top--name user__search-card">
-                <p class="link-name"><a href="#" class="link-regular"><?= $user->name ?></a></p>
-                <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
-                <b>4.25</b>
-                <p class="user__search-content"><?= $user->userData->about ?></p>
-            </div>
-            <span class="new-task__time">Был на сайте <?= $user->getStringHoursAgo() ?></span>
-        </div>
-        <div class="link-specialization user__search-link--bottom">
-            <?php foreach ($user->userCategories as $userCategory): ?>
-            <a href="#" class="link-regular"><?= $userCategory->category->name ?></a>
-            <?php endforeach; ?>
-        </div>
-    </div>
+        <?php endif; ?>
     <?php endforeach; ?>
 </section>
-<section  class="search-task">
+<section class="search-task">
     <div class="search-task__wrapper">
         <form class="search-task__form" name="users" method="post" action="#">
             <fieldset class="search-task__categories">
                 <legend>Категории</legend>
-                <input class="visually-hidden checkbox__input" id="101" type="checkbox" name="" value="" checked disabled>
+                <input class="visually-hidden checkbox__input" id="101" type="checkbox" name="" value="" checked
+                       disabled>
                 <label for="101">Курьерские услуги </label>
                 <input class="visually-hidden checkbox__input" id="102" type="checkbox" name="" value="" checked>
-                <label  for="102">Грузоперевозки </label>
+                <label for="102">Грузоперевозки </label>
                 <input class="visually-hidden checkbox__input" id="103" type="checkbox" name="" value="">
-                <label  for="103">Переводы </label>
+                <label for="103">Переводы </label>
                 <input class="visually-hidden checkbox__input" id="104" type="checkbox" name="" value="">
-                <label  for="104">Строительство и ремонт </label>
+                <label for="104">Строительство и ремонт </label>
                 <input class="visually-hidden checkbox__input" id="105" type="checkbox" name="" value="">
-                <label  for="105">Выгул животных </label>
+                <label for="105">Выгул животных </label>
             </fieldset>
             <fieldset class="search-task__categories">
                 <legend>Дополнительно</legend>
