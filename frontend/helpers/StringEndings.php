@@ -66,7 +66,7 @@ class StringEndings
         return $string;
     }
 
-    static function getStringTask($number)
+    static function getStringTasks($number)
     {
         $endingFeedback = ['нет заданий',' задание',' задания', ' заданий', ''];
         $string = StringEndings::getEnding($number, $endingFeedback, PHP_INT_MAX);

@@ -230,11 +230,12 @@ class Users extends \yii\db\ActiveRecord
 
     public function getRating()
     {
-        $allRating = 0;
-        foreach ($this->tasksCompletedFeedbackExecutor as $feedback) {
-            $allRating += $feedback->rating;
-        }
         if ($count = count($this->tasksCompletedFeedbackExecutor)) {
+
+            $allRating = 0;
+            foreach ($this->tasksCompletedFeedbackExecutor as $feedback) {
+                $allRating += $feedback->rating;
+            }
             $rating = $allRating / $count;
         } else {
             $rating = 0;
@@ -245,7 +246,7 @@ class Users extends \yii\db\ActiveRecord
 
     public function getCompletedTaskExecutor()
     {
-        $count = count($this->getTasksExecutor()->where(['status' => 5])->all());
-        return $count;
+        return $this->getTasksExecutor()->where(['status' => 5])->all();
+
     }
 }
