@@ -26,10 +26,10 @@ use Yii;
  * @property Cities $location
  * @property Users $customer
  * @property Users $executor
- * @property TasksChats[] $tasksChats
- * @property TasksCompletedFeedback[] $tasksCompletedFeedbacks
- * @property TasksFiles[] $tasksFiles
- * @property TasksResponses[] $tasksResponses
+ * @property TasksChats[] $taskChat
+ * @property TasksCompletedFeedback[] $taskCompletedFeedback
+ * @property TasksFiles[] $taskFiles
+ * @property TasksResponses[] $taskResponses
  */
 class Tasks extends \yii\db\ActiveRecord
 {
@@ -158,41 +158,41 @@ class Tasks extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TasksChats]].
+     * Gets query for [[TaskChats]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksChats()
+    public function getTaskChat()
     {
         return $this->hasMany(TasksChats::className(), ['task_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TasksCompletedFeedbacks]].
+     * Gets query for [[TasksCompletedFeedback]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksCompletedFeedbacks()
+    public function getTaskCompletedFeedback()
     {
-        return $this->hasMany(TasksCompletedFeedback::className(), ['task_id' => 'id']);
+        return $this->hasOne(TasksCompletedFeedback::className(), ['task_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TasksFiles]].
+     * Gets query for [[TaskFiles]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksFiles()
+    public function getTaskFiles()
     {
         return $this->hasMany(TasksFiles::className(), ['task_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TasksResponses]].
+     * Gets query for [[TaskResponses]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksResponses()
+    public function getTaskResponses()
     {
         return $this->hasMany(TasksResponses::className(), ['task_id' => 'id']);
     }

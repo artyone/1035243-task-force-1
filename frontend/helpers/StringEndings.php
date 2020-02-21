@@ -16,7 +16,7 @@ class StringEndings
             return $string;
         }
 
-        if ($number > $const) {
+        if ($number >= $const) {
             $string = $endings[4];
             return $string;
         }
@@ -41,10 +41,10 @@ class StringEndings
         $endingsSeconds = ['меньше минуты назад','минуту назад','минуты назад','минут назад','больше часа назад'];
         $minutes = strtotime("now") - strtotime($time);
         $minutes = (int)($minutes/60);
-        if ($minutes > 60) {
-            $string = StringEndings::getStringHours($time);
+        if ($minutes >= self::MINUTES_IN_HOUR) {
+            $string = self::getStringHours($time);
         } else {
-            $string = StringEndings::getEnding($minutes, $endingsSeconds, self::MINUTES_IN_HOUR);
+            $string = self::getEnding($minutes, $endingsSeconds, self::MINUTES_IN_HOUR);
         }
         return $string;
 
@@ -55,21 +55,21 @@ class StringEndings
         $endingHours = ['меньше часа назад',' час назад',' часа назад', ' часов назад', 'больше суток назад'];
         $hours = strtotime("now") - strtotime($time);
         $hours = (int)($hours/60/60);
-        $string = StringEndings::getEnding($hours, $endingHours, self::HOURS_IN_DAY);
+        $string = self::getEnding($hours, $endingHours, self::HOURS_IN_DAY);
         return $string;
     }
 
     static function getStringFeedbacks($number)
     {
         $endingFeedback = ['нет отзывов',' отзыв',' отзыва', ' отзывов', ''];
-        $string = StringEndings::getEnding($number, $endingFeedback, PHP_INT_MAX);
+        $string = self::getEnding($number, $endingFeedback, PHP_INT_MAX);
         return $string;
     }
 
     static function getStringTasks($number)
     {
         $endingFeedback = ['нет заданий',' задание',' задания', ' заданий', ''];
-        $string = StringEndings::getEnding($number, $endingFeedback, PHP_INT_MAX);
+        $string = self::getEnding($number, $endingFeedback, PHP_INT_MAX);
         return $string;
     }
 }

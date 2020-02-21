@@ -27,7 +27,7 @@ use frontend\helpers\StringEndings;
                     <div class="user__search-icon">
                         <a href="#"><img src=".<?= $user->fileAvatar->link ?>" width="65" height="65"></a>
                         <span><?= StringEndings::getStringTasks(count($user->completedTaskExecutor)) ?></span>
-                        <span><?= StringEndings::getStringFeedbacks(count($user->tasksCompletedFeedbackExecutor)) ?></span>
+                        <span><?= StringEndings::getStringFeedbacks(count($user->taskCompletedFeedbackExecutor)) ?></span>
                     </div>
                     <div class="feedback-card__top--name user__search-card">
                         <p class="link-name"><a href="#" class="link-regular"><?= $user->name ?></a></p>
@@ -41,7 +41,7 @@ use frontend\helpers\StringEndings;
                 </div>
                 <div class="link-specialization user__search-link--bottom">
                     <?php foreach ($user->userCategories as $userCategory): ?>
-                        <a href="#" class="link-regular"><?= $userCategory->category->name ?></a>
+                        <a href="#" class="link-regular"><?= $userCategory->name ?></a>
                     <?php endforeach; ?>
                 </div>
             </div>

@@ -15,8 +15,8 @@ use Yii;
  * @property string $message
  * @property int|null $read
  *
- * @property Users $sender0
- * @property Users $recipient0
+ * @property Users $userSender
+ * @property Users $userRecipient
  * @property Tasks $task
  */
 class TasksChats extends \yii\db\ActiveRecord
@@ -62,11 +62,11 @@ class TasksChats extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Sender0]].
+     * Gets query for [[UserSender]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getSender0()
+    public function getUserSender()
     {
         return $this->hasOne(Users::className(), ['id' => 'sender']);
     }
@@ -76,7 +76,7 @@ class TasksChats extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getRecipient0()
+    public function getUserRecipient()
     {
         return $this->hasOne(Users::className(), ['id' => 'recipient']);
     }
