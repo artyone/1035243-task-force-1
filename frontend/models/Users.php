@@ -14,21 +14,21 @@ use Yii;
  * @property string|null $creation_time
  * @property int|null $avatar
  *
- * @property Tasks[] $tasks
- * @property Tasks[] $tasks0
- * @property TasksChats[] $tasksChats
- * @property TasksChats[] $tasksChats0
- * @property TasksCompletedFeedback[] $tasksCompletedFeedbacks
- * @property TasksCompletedFeedback[] $tasksCompletedFeedbacks0
- * @property TasksResponses[] $tasksResponses
- * @property Files $avatar0
- * @property UsersCategory[] $usersCategories
- * @property UsersData[] $usersDatas
- * @property UsersFavorites[] $usersFavorites
- * @property UsersFavorites[] $usersFavorites0
- * @property UsersNotifications[] $usersNotifications
- * @property UsersVisible[] $usersVisibles
- * @property UsersWorkPhotos[] $usersWorkPhotos
+ * @property Tasks[] $taskCustomer
+ * @property Tasks[] $tasksExecutor
+ * @property TasksChats[] $tasksChatsSender
+ * @property TasksChats[] $tasksChatsRecipient
+ * @property TasksCompletedFeedback[] $taskCompletedFeedbackExecutor
+ * @property TasksCompletedFeedback[] $taskCompletedFeedbackCommentator
+ * @property TasksResponses[] $taskResponses
+ * @property Files $fileAvatar
+ * @property UsersCategory[] $userCategories
+ * @property UsersData[] $userData
+ * @property UsersFavorites[] $userFavorites
+ * @property UsersFavorites[] $userInFavorites
+ * @property UsersNotifications[] $userNotifications
+ * @property UsersVisible[] $usersVisible
+ * @property UsersWorkPhotos[] $userWorkPhotos
  */
 class Users extends \yii\db\ActiveRecord
 {
@@ -79,71 +79,71 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TasksCustomer]].
+     * Gets query for [[TaskCustomer]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksCustomer()
+    public function getTaskCustomer()
     {
         return $this->hasMany(Tasks::className(), ['customer_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TasksExecutor]].
+     * Gets query for [[TaskExecutor]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksExecutor()
+    public function getTaskExecutor()
     {
         return $this->hasMany(Tasks::className(), ['executor_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TasksChats]].
+     * Gets query for [[TasksChatsSender]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksChats()
+    public function getTasksChatsSender()
     {
         return $this->hasMany(TasksChats::className(), ['sender' => 'id']);
     }
 
     /**
-     * Gets query for [[TasksChats0]].
+     * Gets query for [[TaskChatRecipient]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksChats0()
+    public function getTaskChatRecipient()
     {
         return $this->hasMany(TasksChats::className(), ['recipient' => 'id']);
     }
 
     /**
-     * Gets query for [[TasksCompletedFeedbackExecutor]].
+     * Gets query for [[TaskCompletedFeedbackExecutor]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksCompletedFeedbackExecutor()
+    public function getTaskCompletedFeedbackExecutor()
     {
         return $this->hasMany(TasksCompletedFeedback::className(), ['executor_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TasksCompletedFeedbackCommentator]].
+     * Gets query for [[TaskCompletedFeedbackCommentator]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksCompletedFeedbackCommentator()
+    public function getTaskCompletedFeedbackCommentator()
     {
         return $this->hasMany(TasksCompletedFeedback::className(), ['commentator_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TasksResponses]].
+     * Gets query for [[TaskResponses]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksResponses()
+    public function getTaskResponses()
     {
         return $this->hasMany(TasksResponses::className(), ['executor_id' => 'id']);
     }
@@ -159,17 +159,20 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[UsersCategories]].
+     * Gets query for [[UserCategories]].
      *
      * @return \yii\db\ActiveQuery
      */
+
     public function getUserCategories()
     {
-        return $this->hasMany(UsersCategory::className(), ['user_id' => 'id']);
+        return $this->hasMany(Categories::className(), ['id' => 'category_id'])
+            ->viaTable('users_category', ['user_id' => 'id']);
     }
 
+
     /**
-     * Gets query for [[UsersData]].
+     * Gets query for [[UserData]].
      *
      * @return \yii\db\ActiveQuery
      */
@@ -189,11 +192,11 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[UsersFavorites0]].
+     * Gets query for [[UsersInFavorites]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserFavorites0()
+    public function getUserInFavorites()
     {
         return $this->hasMany(UsersFavorites::className(), ['favorite_id' => 'id']);
     }
@@ -209,11 +212,11 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[UsersVisibles]].
+     * Gets query for [[UsersVisible]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserVisibles()
+    public function getUserVisible()
     {
         return $this->hasMany(UsersVisible::className(), ['user_id' => 'id']);
     }
