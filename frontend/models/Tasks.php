@@ -31,8 +31,15 @@ use Yii;
  * @property TasksFiles[] $taskFiles
  * @property TasksResponses[] $taskResponses
  */
+
 class Tasks extends \yii\db\ActiveRecord
 {
+    const STATUS_NEW = 1;
+    const STATUS_EXECUTION = 2;
+    const STATUS_CANCELED = 3;
+    const STATUS_FAILED = 4;
+    const STATUS_DONE = 5;
+
     /**
      * {@inheritdoc}
      */

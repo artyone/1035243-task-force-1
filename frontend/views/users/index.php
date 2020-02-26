@@ -26,13 +26,13 @@ use frontend\helpers\StringEndings;
                 <div class="feedback-card__top">
                     <div class="user__search-icon">
                         <a href="#"><img src=".<?= $user->fileAvatar->link ?>" width="65" height="65"></a>
-                        <span><?= StringEndings::getStringTasks(count($user->completedTaskExecutor)) ?></span>
+                        <span><?= StringEndings::getStringTasks(count($user->completedTasksExecutor)) ?></span>
                         <span><?= StringEndings::getStringFeedbacks(count($user->taskCompletedFeedbackExecutor)) ?></span>
                     </div>
                     <div class="feedback-card__top--name user__search-card">
                         <p class="link-name"><a href="#" class="link-regular"><?= $user->name ?></a></p>
-                        <?php foreach(range(0,4) as $value): ?>
-                            <span <?= $value < $user->rating ? '' : 'class="star-disabled"' ?>></span>
+                        <?php foreach(range(1,5) as $value): ?>
+                            <span <?= $value <= $user->rating ? '' : 'class="star-disabled"' ?>></span>
                         <?php endforeach; ?>
                         <b><?= $user->rating ?></b>
                         <p class="user__search-content"><?= $user->userData->about ?></p>
