@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use frontend\helpers\StringEndings;
+use yii\widgets\ActiveForm;
+use frontend\models\Categories;
 
 ?>
 
@@ -18,7 +20,8 @@ use frontend\helpers\StringEndings;
                 <p class="new-task_description">
                     <?= $task->description ?>
                 </p>
-                <b class="new-task__price new-task__price--<?= $task->category->icon ?>"><?= $task->price ?> <b> ₽</b></b>
+                <b class="new-task__price new-task__price--<?= $task->category->icon ?>"><?= $task->price ?> <b>
+                        ₽</b></b>
                 <p class="new-task__place"><?= Html::encode("{$task->location->name}, {$task->address_comments}") ?></p>
                 <span class="new-task__time"><?= StringEndings::getStringHours($task->creation_time) ?></span>
             </div>
@@ -37,7 +40,65 @@ use frontend\helpers\StringEndings;
 </section>
 <section class="search-task">
     <div class="search-task__wrapper">
-        <form class="search-task__form" name="test" method="post" action="#">
+        <?php
+
+        $form = ActiveForm::begin([
+            'id' => 'filter-form',
+            'options' => ['class' => 'search-task__form'],
+            'method' => 'get'
+        ]);
+
+        ?>
+        <fieldset class="search-task__categories">
+            <legend>Категории</legend>
+
+            <?php
+
+            echo $form->field($model, 'categories', ['options' => ['class' => '']])
+                ->checkboxList(Categories::find()->select(['name'])->column(), [
+                    'item' => function ($index, $label, $name, $checked, $value) use ($model) {
+                        if (!empty($model['categories']) && in_array($value, $model['categories'])) {
+                            $checked = 'checked';
+                        }
+                        return '<input class="visually-hidden checkbox__input" id="categories_' . $value . '"
+                         type="checkbox" name="' . $name . '" value="' . $value . '" ' . $checked . '>
+                                        <label for="categories_' . $value . '">' . $label . '</label>';
+                    },
+                    'unselect' => null
+                ])->label(false);
+
+            ?>
+        </fieldset>
+
+        <fieldset class="search-task__categories">
+            <legend>Дополнительно</legend>
+
+            <?php
+
+            echo $form->field($model, 'noResponse', [
+                'template' => '{input}{label}',
+                'options' => ['class' => '']
+            ])
+                ->checkbox(['class' => 'visually-hidden checkbox__input'], false);
+
+            echo $form->field($model, 'remoteWork', [
+                'template' => '{input}{label}',
+                'options' => ['class' => '']
+            ])
+                ->checkbox(['class' => 'visually-hidden checkbox__input'], false);
+
+            ?>
+
+        </fieldset>
+
+        <?= Html::submitButton('Искать', ['class' => 'button']) ?>
+
+        <?php ActiveForm::end() ?>
+    </div>
+</section>
+
+<!--
+<form class="search-task__form" name="test" method="post" action="#">
             <fieldset class="search-task__categories">
                 <legend>Категории</legend>
                 <input class="visually-hidden checkbox__input" id="1" type="checkbox" name="" value="" checked>
@@ -68,6 +129,4 @@ use frontend\helpers\StringEndings;
             <input class="input-middle input" id="9" type="search" name="q" placeholder="">
             <button class="button" type="submit">Искать</button>
         </form>
-    </div>
-</section>
-
+        -->
