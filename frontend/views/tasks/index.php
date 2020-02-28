@@ -6,7 +6,7 @@ use frontend\models\Categories;
 use frontend\helpers\Pluralize;
 
 ?>
-
+<div><?= print_r($_GET) ?></div>
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1>Новые задания</h1>
@@ -20,7 +20,8 @@ use frontend\helpers\Pluralize;
                 <p class="new-task_description">
                     <?= $task->description ?>
                 </p>
-                <b class="new-task__price new-task__price--<?= $task->category->icon ?>"><?= $task->price ?> <b> ₽</b></b>
+                <b class="new-task__price new-task__price--<?= $task->category->icon ?>"><?= $task->price ?> <b>
+                        ₽</b></b>
                 <p class="new-task__place"><?= Html::encode("{$task->location->name}, {$task->address_comments}") ?></p>
                 <span class="new-task__time"><?= Pluralize::getStringTimeAgo($task->creation_time) ?> назад</span>
             </div>
@@ -44,6 +45,7 @@ use frontend\helpers\Pluralize;
         $form = ActiveForm::begin([
             'id' => 'filter-form',
             'options' => ['class' => 'search-task__form'],
+            'action' => [''],
             'method' => 'get'
         ]);
 
@@ -71,7 +73,6 @@ use frontend\helpers\Pluralize;
 
         <fieldset class="search-task__categories">
             <legend>Дополнительно</legend>
-
             <?php
 
             echo $form->field($model, 'noResponse', [
@@ -87,12 +88,37 @@ use frontend\helpers\Pluralize;
                 ->checkbox(['class' => 'visually-hidden checkbox__input'], false);
 
             ?>
-
         </fieldset>
+        <?php
 
-        <?= Html::submitButton('Искать', ['class' => 'button']) ?>
+        echo $form->field($model, 'period', [
+            'template' => '{label}{input}',
+            'options' => ['class' => ''],
+            'labelOptions' => ['class' => 'search-task__name']
+        ])
+            ->dropDownList([
+                '0' => 'За день',
+                '1' => 'За неделю',
+                '2' => 'За месяц'
+            ], [
+                'class' => 'multiple-select input',
+                'style' => 'width: 100%',
+                'prompt' => 'Выберите период'
+            ]);
 
-        <?php ActiveForm::end() ?>
+        echo $form->field($model, 'search', [
+            'template' => '{label}{input}',
+            'options' => ['class' => ''],
+            'labelOptions' => ['class' => 'search-task__name']
+        ])
+            ->input('search', [
+                'class' => 'input-middle input',
+                'style' => 'width: 100%'
+            ]);
+
+        echo Html::submitButton('Искать', ['class' => 'button']);
+        ActiveForm::end()
+        ?>
     </div>
 </section>
 

@@ -31,4 +31,9 @@ class TasksFilter extends Model
             [['categories', 'noResponse', 'remoteWork', 'period', 'search'], 'safe'],
         ];
     }
+
+    public function formName()
+    {
+        return '';
+    }
 }
