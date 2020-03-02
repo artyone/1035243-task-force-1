@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use frontend\helpers\Pluralize;
+use frontend\helpers\WordHelper;
 
 ?>
 
@@ -26,8 +26,8 @@ use frontend\helpers\Pluralize;
                 <div class="feedback-card__top">
                     <div class="user__search-icon">
                         <a href="#"><img src=".<?= $user->fileAvatar->link ?>" width="65" height="65"></a>
-                        <span><?= Pluralize::getStringTasks(count($user->completedTasksExecutor)) ?></span>
-                        <span><?= Pluralize::getStringFeedbacks(count($user->taskCompletedFeedbackExecutor)) ?></span>
+                        <span><?= WordHelper::getStringTasks(count($user->completedTasksExecutor)) ?></span>
+                        <span><?= WordHelper::getStringFeedbacks(count($user->taskCompletedFeedbackExecutor)) ?></span>
                     </div>
                     <div class="feedback-card__top--name user__search-card">
                         <p class="link-name"><a href="#" class="link-regular"><?= $user->name ?></a></p>
@@ -37,7 +37,7 @@ use frontend\helpers\Pluralize;
                         <b><?= $user->rating ?></b>
                         <p class="user__search-content"><?= $user->userData->about ?></p>
                     </div>
-                    <span class="new-task__time">Был на сайте <?= Pluralize::getStringTimeAgo($user->userData->last_online_time) ?> назад</span>
+                    <span class="new-task__time">Был на сайте <?= WordHelper::getStringTimeAgo($user->userData->last_online_time) ?> назад</span>
                 </div>
                 <div class="link-specialization user__search-link--bottom">
                     <?php foreach ($user->userCategories as $userCategory): ?>
