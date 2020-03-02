@@ -6,7 +6,6 @@ use frontend\models\Categories;
 use frontend\helpers\Pluralize;
 
 ?>
-<div><?= print_r($_GET) ?></div>
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1>Новые задания</h1>
@@ -56,7 +55,7 @@ use frontend\helpers\Pluralize;
             <?php
 
             echo $form->field($model, 'categories', ['options' => ['class' => '']])
-                ->checkboxList(Categories::find()->select(['name'])->column(), [
+                ->checkboxList(Categories::find()->select(['name', 'id'])->indexBy('id')->column(), [
                     'item' => function ($index, $label, $name, $checked, $value) use ($model) {
                         if (!empty($model['categories']) && in_array($value, $model['categories'])) {
                             $checked = 'checked';
@@ -77,7 +76,7 @@ use frontend\helpers\Pluralize;
 
             echo $form->field($model, 'noResponse', [
                 'template' => '{input}{label}',
-                'options' => ['class' => '']
+                'options' => ['class' => ''],
             ])
                 ->checkbox(['class' => 'visually-hidden checkbox__input'], false);
 
@@ -97,9 +96,9 @@ use frontend\helpers\Pluralize;
             'labelOptions' => ['class' => 'search-task__name']
         ])
             ->dropDownList([
-                '0' => 'За день',
-                '1' => 'За неделю',
-                '2' => 'За месяц'
+                '1' => 'За день',
+                '2' => 'За неделю',
+                '3' => 'За месяц'
             ], [
                 'class' => 'multiple-select input',
                 'style' => 'width: 100%',

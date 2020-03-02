@@ -14,6 +14,12 @@ class TasksFilter extends Model
     public $period;
     public $search;
 
+    private $availablePeriod = [
+        1 => '1 day',
+        2 => '1 week',
+        3 => '1 month'
+    ];
+
     public function attributeLabels()
     {
         return [
@@ -35,5 +41,13 @@ class TasksFilter extends Model
     public function formName()
     {
         return '';
+    }
+
+    public function getPeriodTime($period)
+    {
+        $date = new \DateTime();
+        $date->sub(\DateInterval::createFromDateString($this->availablePeriod[$period]));
+        $result = $date->format('Y-m-d H:i:s');
+        return $result;
     }
 }
