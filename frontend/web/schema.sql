@@ -15,32 +15,10 @@ CREATE TABLE categories /*Таблица категорий*/
 
 CREATE TABLE cities /*Таблица городов*/
 (
-    id        INT(11)     NOT NULL AUTO_INCREMENT, /*сквозной айди*/
-    name      VARCHAR(50) NOT NULL, /*имя города*/
-    latitude  VARCHAR(50) NOT NULL,
-    longitude VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE (name)
-
-);
-
-CREATE TABLE countries /*Таблица стран*/
-(
     id   INT(11)     NOT NULL AUTO_INCREMENT, /*сквозной айди*/
-    name VARCHAR(50) NOT NULL, /*имя страны*/
-    PRIMARY KEY (id),
-    UNIQUE (name)
-
-);
-
-CREATE TABLE locations /*Таблица локации*/
-(
-    id         INT(11) NOT NULL AUTO_INCREMENT, /*сквозной айди*/
-    country_id INT(11) NOT NULL, /*айди страны*/
-    city_id    INT(11) NOT NULL, /*айди города*/
-    location   VARCHAR(500), /*геолокация*/
-    FOREIGN KEY (country_id) REFERENCES countries (id),
-    FOREIGN KEY (city_id) REFERENCES cities (id),
+    name VARCHAR(50) NOT NULL, /*имя города*/
+    latitude VARCHAR(50),
+    longitude VARCHAR(50),
     PRIMARY KEY (id)
 );
 
@@ -68,7 +46,7 @@ CREATE TABLE users_data /*Таблица данных пользователей
 (
     id               INT(11) NOT NULL AUTO_INCREMENT, /*сквозной айди*/
     user_id          INT(11) NOT NULL, /*айди пользователя*/
-    location_id      INT(11), /*локация пользователя*/
+    city_id          INT(11), /*локация пользователя*/
     address          VARCHAR(500),
     birthday         DATETIME, /*дата рождения*/
     phone            VARCHAR(20), /*мобильный телефон*/
@@ -76,11 +54,11 @@ CREATE TABLE users_data /*Таблица данных пользователей
     about            VARCHAR(500), /*биография*/
     last_online_time DATETIME, /*дата последнего онлайн*/
     FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (location_id) REFERENCES locations (id),
+    FOREIGN KEY (city_id) REFERENCES cities (id),
     PRIMARY KEY (id)
 );
 
-CREATE TABLE users_work_photos /*Таблица с ссылками на работы по заданиям*/
+CREATE TABLE users_photo /*Таблица с ссылками на работы по заданиям*/
 (
     id      INT(11) NOT NULL AUTO_INCREMENT, /*сквозной айди фотографии*/
     user_id INT(11) NOT NULL, /*айди пользователя*/
@@ -91,7 +69,7 @@ CREATE TABLE users_work_photos /*Таблица с ссылками на раб�
     INDEX (user_id)
 );
 
-CREATE TABLE users_notifications /*таблица настроек уведомлений*/
+CREATE TABLE users_notification /*таблица настроек уведомлений*/
 (
     id           INT(11) NOT NULL AUTO_INCREMENT, /*сквозной айди*/
     user_id      INT(11) NOT NULL, /*айди пользователя*/
@@ -127,7 +105,7 @@ CREATE TABLE users_category /*Таблица отмеченных категор
     INDEX (user_id)
 );
 
-CREATE TABLE users_favorites /*Таблица избранного пользователя*/
+CREATE TABLE users_favorite /*Таблица избранного пользователя*/
 (
     id          INT(11) NOT NULL AUTO_INCREMENT, /*сквозной айди*/
     user_id     INT(11) NOT NULL, /*айди пользователя*/
@@ -144,7 +122,7 @@ CREATE TABLE tasks /*Общая таблица заданий*/
     creation_time    DATETIME              DEFAULT CURRENT_TIMESTAMP, /*дата создания криэйшн тайм*/
     name             VARCHAR(500) NOT NULL, /*имя задания*/
     category_id      INT(11)      NOT NULL, /*айди категории задания*/
-    location_id      INT(11),
+    city_id          INT(11),
     latitude         INT,
     longitude        INT,
     address_comments VARCHAR(500), /*комментарий для адреса*/
@@ -155,7 +133,7 @@ CREATE TABLE tasks /*Общая таблица заданий*/
     deadline_time    DATETIME, /*дата выполнения*/
     status           TINYINT      NOT NULL DEFAULT 0, /*статус*/
     FOREIGN KEY (category_id) REFERENCES categories (id),
-    FOREIGN KEY (location_id) REFERENCES cities (id),
+    FOREIGN KEY (city_id) REFERENCES cities (id),
     FOREIGN KEY (customer_id) REFERENCES users (id),
     FOREIGN KEY (executor_id) REFERENCES users (id),
     PRIMARY KEY (id),
@@ -163,20 +141,20 @@ CREATE TABLE tasks /*Общая таблица заданий*/
     INDEX (category_id)
 );
 
-CREATE TABLE tasks_responses /*Таблица откликов на задания*/
+CREATE TABLE tasks_response /*Таблица откликов на задания*/
 (
     id            INT(11) NOT NULL AUTO_INCREMENT, /*сквозной айди задания, уникальный*/
     creation_time DATETIME DEFAULT CURRENT_TIMESTAMP, /*дата создания*/
     task_id       INT(11) NOT NULL, /*айди задания*/
     executor_id   INT(11) NOT NULL, /*айди исполнителя*/
-    description       VARCHAR(500), /*комментарий к отклику*/
+    description   VARCHAR(500), /*комментарий к отклику*/
     price         INT, /*цена, целое не отрицательное*/
     FOREIGN KEY (task_id) REFERENCES tasks (id),
     FOREIGN KEY (executor_id) REFERENCES users (id),
     PRIMARY KEY (id)
 );
 
-CREATE TABLE tasks_files /*Таблица файлов к заданию*/
+CREATE TABLE tasks_file /*Таблица файлов к заданию*/
 (
     id      INT(11) NOT NULL AUTO_INCREMENT, /*сквозной айди, уникальный*/
     task_id INT(11) NOT NULL, /*айди задания*/
@@ -186,36 +164,36 @@ CREATE TABLE tasks_files /*Таблица файлов к заданию*/
     PRIMARY KEY (id)
 );
 
-CREATE TABLE tasks_chats /*Таблица чатов заданий*/
+CREATE TABLE tasks_chat /*Таблица чатов заданий*/
 (
     id            INT(11)      NOT NULL AUTO_INCREMENT, /*сквозной айди чата, уникальный*/
     creation_time DATETIME   DEFAULT CURRENT_TIMESTAMP, /*дата публикации сообщения*/
     task_id       INT(11)      NOT NULL, /*айди задания*/
-    sender        INT(11)      NOT NULL, /*айди заказчика*/
-    recipient     INT(11)      NOT NULL, /*айжи исполнителя*/
+    customer_id   INT(11)      NOT NULL, /*айди заказчика*/
+    executor_id   INT(11)      NOT NULL, /*айжи исполнителя*/
     message       VARCHAR(500) NOT NULL, /*сообщение*/
     `read`        TINYINT(4) DEFAULT 0, /*флаг прочитано/не прочитано */
-    FOREIGN KEY (sender) REFERENCES users (id),
-    FOREIGN KEY (recipient) REFERENCES users (id),
+    FOREIGN KEY (customer_id) REFERENCES users (id),
+    FOREIGN KEY (executor_id) REFERENCES users (id),
     FOREIGN KEY (task_id) REFERENCES tasks (id),
     PRIMARY KEY (id),
     INDEX (task_id)
 );
 
-CREATE TABLE tasks_completed_feedback /*Таблица отклика выполненного задания*/
+CREATE TABLE tasks_feedback /*Таблица отклика выполненного задания*/
 (
-    id              INT(11)    NOT NULL AUTO_INCREMENT, /*сквозной айди отклика, уникальный*/
-    creation_time   DATETIME DEFAULT CURRENT_TIMESTAMP, /*дата публикации отклика*/
-    user_id         INT(11)    NOT NULL, /*айди пользователя, которому оставили комментарий*/
-    commentators_id INT(11)    NOT NULL, /*айди пользователя, оставившего отклик*/
-    task_id         INT(11)    NOT NULL, /*айди задания*/
-    description     VARCHAR(500), /*текст отклика*/
-    rating          TINYINT(4) NOT NULL, /*рейтинг*/
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (commentators_id) REFERENCES users (id),
+    id            INT(11)    NOT NULL AUTO_INCREMENT, /*сквозной айди отклика, уникальный*/
+    creation_time DATETIME DEFAULT CURRENT_TIMESTAMP, /*дата публикации отклика*/
+    customer_id   INT(11)    NOT NULL, /*айди пользователя, которому оставили комментарий*/
+    executor_id   INT(11)    NOT NULL, /*айди пользователя, оставившего отклик*/
+    task_id       INT(11)    NOT NULL, /*айди задания*/
+    description   VARCHAR(500), /*текст отклика*/
+    rating        TINYINT(4) NOT NULL, /*рейтинг*/
+    FOREIGN KEY (customer_id) REFERENCES users (id),
+    FOREIGN KEY (executor_id) REFERENCES users (id),
     FOREIGN KEY (task_id) REFERENCES tasks (id),
     PRIMARY KEY (id),
-    INDEX (user_id)
+    INDEX (executor_id)
 );
 
 
