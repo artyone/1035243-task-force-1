@@ -239,10 +239,10 @@ class Users extends \yii\db\ActiveRecord
      */
     public function getRating(): int
     {
-        if ($count = count($this->taskCompletedFeedbackExecutor)) {
+        if ($count = count($this->tasksFeedbackExecutor)) {
 
             $allRating = 0;
-            foreach ($this->taskCompletedFeedbackExecutor as $feedback) {
+            foreach ($this->tasksFeedbackExecutor as $feedback) {
                 $allRating += $feedback->rating;
             }
             $rating = round($allRating / $count, 2);

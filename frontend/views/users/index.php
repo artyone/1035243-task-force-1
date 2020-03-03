@@ -27,7 +27,7 @@ use frontend\helpers\WordHelper;
                     <div class="user__search-icon">
                         <a href="#"><img src=".<?= $user->fileAvatar->link ?>" width="65" height="65"></a>
                         <span><?= WordHelper::getStringTasks(count($user->completedTasksExecutor)) ?></span>
-                        <span><?= WordHelper::getStringFeedbacks(count($user->taskCompletedFeedbackExecutor)) ?></span>
+                        <span><?= WordHelper::getStringFeedbacks(count($user->tasksFeedbackExecutor)) ?></span>
                     </div>
                     <div class="feedback-card__top--name user__search-card">
                         <p class="link-name"><a href="#" class="link-regular"><?= $user->name ?></a></p>

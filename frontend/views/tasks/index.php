@@ -19,7 +19,7 @@ use frontend\helpers\WordHelper;
                     <?= $task->description ?>
                 </p>
                 <b class="new-task__price new-task__price--<?= $task->category->icon ?>"><?= $task->price ?> <b> ₽</b></b>
-                <p class="new-task__place"><?= Html::encode("{$task->location->name}, {$task->address_comments}") ?></p>
+                <p class="new-task__place"><?= Html::encode("{$task->city->name}, {$task->address_comments}, {$task->latitude}-{$task->longitude}") ?></p>
                 <span class="new-task__time"><?= WordHelper::getStringTimeAgo($task->creation_time) ?> назад</span>
             </div>
         <?php endforeach; ?>
