@@ -11,7 +11,7 @@ use Yii;
  * @property string|null $creation_time
  * @property string $name
  * @property int $category_id
- * @property int|null $location_id
+ * @property int|null $city_id
  * @property int|null $latitude
  * @property int|null $longitude
  * @property string|null $address_comments
@@ -23,13 +23,13 @@ use Yii;
  * @property int $status
  *
  * @property Categories $category
- * @property Cities $location
+ * @property Cities $city
  * @property Users $customer
  * @property Users $executor
- * @property TasksChats[] $taskChat
- * @property TasksCompletedFeedback[] $taskCompletedFeedback
- * @property TasksFiles[] $taskFiles
- * @property TasksResponses[] $taskResponses
+ * @property TasksChat[] $taskChat
+ * @property TasksFeedback[] $tasksFeedback
+ * @property TasksFile[] $tasksFile
+ * @property TasksResponse[] $tasksResponse
  */
 class Tasks extends \yii\db\ActiveRecord
 {
@@ -52,7 +52,7 @@ class Tasks extends \yii\db\ActiveRecord
             [
                 [
                     'category_id',
-                    'location_id',
+                    'city_id',
                     'latitude',
                     'longitude',
                     'price',
@@ -71,11 +71,11 @@ class Tasks extends \yii\db\ActiveRecord
                 'targetAttribute' => ['category_id' => 'id']
             ],
             [
-                ['location_id'],
+                ['city_id'],
                 'exist',
                 'skipOnError' => true,
                 'targetClass' => Cities::className(),
-                'targetAttribute' => ['location_id' => 'id']
+                'targetAttribute' => ['city_id' => 'id']
             ],
             [
                 ['customer_id'],
@@ -104,7 +104,7 @@ class Tasks extends \yii\db\ActiveRecord
             'creation_time' => 'Creation Time',
             'name' => 'Name',
             'category_id' => 'Category ID',
-            'location_id' => 'Location ID',
+            'city_id' => 'City ID',
             'latitude' => 'Latitude',
             'longitude' => 'Longitude',
             'address_comments' => 'Address Comments',
@@ -128,13 +128,13 @@ class Tasks extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Location]].
+     * Gets query for [[City]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLocation()
+    public function getCity()
     {
-        return $this->hasOne(Cities::className(), ['id' => 'location_id']);
+        return $this->hasOne(Cities::className(), ['id' => 'city_id']);
     }
 
     /**
@@ -158,43 +158,43 @@ class Tasks extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TaskChats]].
+     * Gets query for [[TaskChat]].
      *
      * @return \yii\db\ActiveQuery
      */
     public function getTaskChat()
     {
-        return $this->hasMany(TasksChats::className(), ['task_id' => 'id']);
+        return $this->hasMany(TasksChat::className(), ['task_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TasksCompletedFeedback]].
+     * Gets query for [[TasksFeedback]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTaskCompletedFeedback()
+    public function getTasksFeedback()
     {
-        return $this->hasOne(TasksCompletedFeedback::className(), ['task_id' => 'id']);
+        return $this->hasOne(TasksFeedback::className(), ['task_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TaskFiles]].
+     * Gets query for [[TasksFile]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTaskFiles()
+    public function getTasksFile()
     {
-        return $this->hasMany(TasksFiles::className(), ['task_id' => 'id']);
+        return $this->hasMany(TasksFile::className(), ['task_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TaskResponses]].
+     * Gets query for [[TasksResponse]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTaskResponses()
+    public function getTasksResponse()
     {
-        return $this->hasMany(TasksResponses::className(), ['task_id' => 'id']);
+        return $this->hasMany(TasksResponse::className(), ['task_id' => 'id']);
     }
 
 }

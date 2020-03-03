@@ -10,9 +10,9 @@ use Yii;
  * @property int $id
  * @property string $link
  *
- * @property TasksFiles[] $tasksFiles
+ * @property TasksFile[] $tasksId
  * @property Users[] $users
- * @property UsersWorkPhotos[] $usersWorkPhotos
+ * @property UsersPhoto[] $userPhoto
  */
 class Files extends \yii\db\ActiveRecord
 {
@@ -47,13 +47,13 @@ class Files extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TasksFiles]].
+     * Gets query for [[TaskFiles]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksFiles()
+    public function getTasksId()
     {
-        return $this->hasMany(TasksFiles::className(), ['file_id' => 'id']);
+        return $this->hasMany(TasksFile::className(), ['file_id' => 'id']);
     }
 
     /**
@@ -67,12 +67,12 @@ class Files extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[UsersWorkPhotos]].
+     * Gets query for [[UsersPhoto]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersWorkPhotos()
+    public function getUsersPhoto()
     {
-        return $this->hasMany(UsersWorkPhotos::className(), ['file_id' => 'id']);
+        return $this->hasMany(UsersPhoto::className(), ['file_id' => 'id']);
     }
 }

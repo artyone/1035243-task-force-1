@@ -5,28 +5,28 @@ namespace frontend\models;
 use Yii;
 
 /**
- * This is the model class for table "tasks_chats".
+ * This is the model class for table "tasks_chat".
  *
  * @property int $id
  * @property string|null $creation_time
  * @property int $task_id
- * @property int $sender
- * @property int $recipient
+ * @property int $customer_id
+ * @property int $executor_id
  * @property string $message
  * @property int|null $read
  *
- * @property Users $userSender
- * @property Users $userRecipient
+ * @property Users $userCustomer
+ * @property Users $userExecutor
  * @property Tasks $task
  */
-class TasksChats extends \yii\db\ActiveRecord
+class TasksChat extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'tasks_chats';
+        return 'tasks_chat';
     }
 
     /**
@@ -36,22 +36,22 @@ class TasksChats extends \yii\db\ActiveRecord
     {
         return [
             [['creation_time'], 'safe'],
-            [['task_id', 'sender', 'recipient', 'message'], 'required'],
-            [['task_id', 'sender', 'recipient', 'read'], 'integer'],
+            [['task_id', 'customer_id', 'executor_id', 'message'], 'required'],
+            [['task_id', 'customer_id', 'executor_id', 'read'], 'integer'],
             [['message'], 'string', 'max' => 500],
             [
-                ['sender'],
+                ['customer_id'],
                 'exist',
                 'skipOnError' => true,
                 'targetClass' => Users::className(),
-                'targetAttribute' => ['sender' => 'id']
+                'targetAttribute' => ['customer_id' => 'id']
             ],
             [
-                ['recipient'],
+                ['executor_id'],
                 'exist',
                 'skipOnError' => true,
                 'targetClass' => Users::className(),
-                'targetAttribute' => ['recipient' => 'id']
+                'targetAttribute' => ['executor_id' => 'id']
             ],
             [
                 ['task_id'],
@@ -72,31 +72,31 @@ class TasksChats extends \yii\db\ActiveRecord
             'id' => 'ID',
             'creation_time' => 'Creation Time',
             'task_id' => 'Task ID',
-            'sender' => 'Sender',
-            'recipient' => 'Recipient',
+            'customer_id' => 'Customer',
+            'executor_id' => 'Executor',
             'message' => 'Message',
             'read' => 'Read',
         ];
     }
 
     /**
-     * Gets query for [[UserSender]].
+     * Gets query for [[UserCustomer]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserSender()
+    public function getUserCustomer()
     {
-        return $this->hasOne(Users::className(), ['id' => 'sender']);
+        return $this->hasOne(Users::className(), ['id' => 'customer_id']);
     }
 
     /**
-     * Gets query for [[Recipient0]].
+     * Gets query for [[UserExecutor]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserRecipient()
+    public function getUserExecutor()
     {
-        return $this->hasOne(Users::className(), ['id' => 'recipient']);
+        return $this->hasOne(Users::className(), ['id' => 'executor_id']);
     }
 
     /**

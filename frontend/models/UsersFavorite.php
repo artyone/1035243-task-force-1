@@ -5,7 +5,7 @@ namespace frontend\models;
 use Yii;
 
 /**
- * This is the model class for table "users_favorites".
+ * This is the model class for table "users_favorite".
  *
  * @property int $id
  * @property int $user_id
@@ -14,14 +14,14 @@ use Yii;
  * @property Users $user
  * @property Users $favorite
  */
-class UsersFavorites extends \yii\db\ActiveRecord
+class UsersFavorite extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'users_favorites';
+        return 'users_favorite';
     }
 
     /**
