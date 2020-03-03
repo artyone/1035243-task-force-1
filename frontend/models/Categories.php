@@ -12,7 +12,7 @@ use Yii;
  * @property string $icon
  *
  * @property Tasks[] $tasks
- * @property UsersCategory[] $usersCategories
+ * @property UsersCategory[] $usersId
  */
 class Categories extends \yii\db\ActiveRecord
 {
@@ -59,11 +59,11 @@ class Categories extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[UsersCategories]].
+     * Gets query for [[UsersCategory]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUsersCategories()
+    public function getUsersId()
     {
         return $this->hasMany(UsersCategory::className(), ['category_id' => 'id']);
     }

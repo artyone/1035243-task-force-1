@@ -18,7 +18,7 @@ use Yii;
  * @property string|null $last_online_time
  *
  * @property Users $user
- * @property Locations $location
+ * @property Cities $city
  */
 class UsersData extends \yii\db\ActiveRecord
 {
@@ -43,7 +43,7 @@ class UsersData extends \yii\db\ActiveRecord
             [['phone'], 'string', 'max' => 20],
             [['skype'], 'string', 'max' => 50],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
-            [['location_id'], 'exist', 'skipOnError' => true, 'targetClass' => Locations::className(), 'targetAttribute' => ['location_id' => 'id']],
+            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::className(), 'targetAttribute' => ['city_id' => 'id']],
         ];
     }
 
@@ -55,7 +55,7 @@ class UsersData extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'location_id' => 'Location ID',
+            'city_id' => 'City ID',
             'address' => 'Address',
             'birthday' => 'Birthday',
             'phone' => 'Phone',
@@ -80,8 +80,8 @@ class UsersData extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLocation()
+    public function getCity()
     {
-        return $this->hasOne(Locations::className(), ['id' => 'location_id']);
+        return $this->hasOne(Cities::className(), ['id' => 'city_id']);
     }
 }
