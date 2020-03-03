@@ -3,6 +3,7 @@
 namespace frontend\models;
 
 use Yii;
+use frontend\models\Tasks;
 
 /**
  * This is the model class for table "users".
@@ -229,5 +230,37 @@ class Users extends \yii\db\ActiveRecord
     public function getUsersPhoto()
     {
         return $this->hasMany(UsersPhoto::className(), ['user_id' => 'id']);
+    }
+
+    /**
+     * Gets rating user
+     *
+     * @return int
+     */
+    public function getRating(): int
+    {
+        if ($count = count($this->tasksFeedbackExecutor)) {
+
+            $allRating = 0;
+            foreach ($this->tasksFeedbackExecutor as $feedback) {
+                $allRating += $feedback->rating;
+            }
+            $rating = round($allRating / $count, 2);
+        } else {
+            $rating = 0;
+        }
+
+        return $rating;
+    }
+
+    /**
+     * Gets query completed tasks for user
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getCompletedTasksExecutor()
+    {
+        return $this->getTaskExecutor()->where(['status' => Tasks::STATUS_DONE])->all();
+
     }
 }

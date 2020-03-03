@@ -33,6 +33,12 @@ use Yii;
  */
 class Tasks extends \yii\db\ActiveRecord
 {
+    const STATUS_NEW = 1;
+    const STATUS_EXECUTION = 2;
+    const STATUS_CANCELED = 3;
+    const STATUS_FAILED = 4;
+    const STATUS_DONE = 5;
+
     /**
      * {@inheritdoc}
      */
@@ -158,11 +164,11 @@ class Tasks extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TaskChat]].
+     * Gets query for [[TasksChat]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTaskChat()
+    public function getTasksChat()
     {
         return $this->hasMany(TasksChat::className(), ['task_id' => 'id']);
     }
@@ -196,5 +202,4 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TasksResponse::className(), ['task_id' => 'id']);
     }
-
 }
