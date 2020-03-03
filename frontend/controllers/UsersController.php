@@ -4,6 +4,7 @@
 namespace frontend\controllers;
 
 use frontend\models\Users;
+use frontend\models\Tasks;
 use yii\db\Query;
 use yii\web\Controller;
 use frontend\models\UsersFilter;
@@ -31,25 +32,29 @@ class UsersController extends Controller
                         break;
                     case 'free':
                         $query->joinWith('taskExecutor');
-                        $query->andWhere(['tasks.id' => NULL]);
+                        $query->andWhere(['or',['tasks.id' => NULL],['tasks.status' => Tasks::STATUS_DONE]]);
                         break;
                     case 'online':
                         $query->joinWith('userData');
                         $query->andWhere(['>', 'users_data.last_online_time', $model->getOnlineTime()]);
                         break;
-
                     case 'hasFeedback':
-                        $query->joinWith('taskCompletedFeedbackExecutor');
-                        $query->andWhere(['is not','tasks_completed_feedback.task_id', NULL]);
+                        $query->joinWith('tasksFeedbackExecutor');
+                        $query->andWhere(['is not','tasks_feedback.task_id', NULL]);
                         break;
-
                     case 'inFavorites':
                         //@todo разработать по созданию аккаунта
                         break;
+                    case 'search':
+                        $query->andWhere(['like','users.name',$data]);
+                        break;
+                    case 'sort':
+                        $query->joinWith('userData');
+                        $query->orderBy(["users_data.$data" => SORT_DESC]);
+                        break;
+                    }
                 }
             }
-        }
-
         $users = $query
             ->all();
 

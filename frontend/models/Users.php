@@ -15,8 +15,8 @@ use frontend\models\Tasks;
  * @property string|null $creation_time
  * @property int|null $avatar
  *
- * @property Tasks[] $taskCustomer
- * @property Tasks[] $taskExecutor
+ * @property Tasks[] $tasksCustomer
+ * @property Tasks[] $tasksExecutor
  * @property TasksChat[] $tasksChatCustomer
  * @property TasksChat[] $tasksChatExecutor
  * @property TasksFeedback[] $tasksFeedbackCustomer
@@ -90,11 +90,11 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TaskExecutor]].
+     * Gets query for [[TasksExecutor]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTaskExecutor()
+    public function getTasksExecutor()
     {
         return $this->hasMany(Tasks::className(), ['executor_id' => 'id']);
     }
@@ -237,7 +237,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return int
      */
-    public function getRating(): int
+    public function getRatingByFeedback(): int
     {
         if ($count = count($this->tasksFeedbackExecutor)) {
 
@@ -260,7 +260,7 @@ class Users extends \yii\db\ActiveRecord
      */
     public function getCompletedTasksExecutor()
     {
-        return $this->getTaskExecutor()->where(['status' => Tasks::STATUS_DONE])->all();
+        return $this->getTasksExecutor()->where(['status' => Tasks::STATUS_DONE])->all();
 
     }
 }

@@ -14,6 +14,7 @@ class UsersFilter extends Model
     public $hasFeedback;
     public $inFavorites;
     public $search;
+    public $sort;
 
     public function attributeLabels()
     {
@@ -23,14 +24,15 @@ class UsersFilter extends Model
             'online' => 'Сейчас онлайн',
             'hasFeedback' => 'Есть отзывы',
             'inFavorites' => 'В избранном',
-            'search' => 'Поиск по имени'
+            'search' => 'Поиск по имени',
+            'sort' => 'Сортировать по'
         ];
     }
 
     public function rules()
     {
         return [
-            [['categories', 'free','online', 'hasFeedback', 'inFavorites', 'search'], 'safe'],
+            [['categories', 'free','online', 'hasFeedback', 'inFavorites', 'search', 'sort'], 'safe'],
         ];
     }
 

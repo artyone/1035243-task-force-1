@@ -17,7 +17,8 @@ class TasksFilter extends Model
     private $availablePeriod = [
         1 => '1 day',
         2 => '1 week',
-        3 => '1 month'
+        3 => '1 month',
+        4 => '100 years'
     ];
 
     public function attributeLabels()

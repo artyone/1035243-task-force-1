@@ -25,20 +25,20 @@ class TasksController extends Controller
             if ($data) {
                 switch ($key) {
                     case 'categories':
-                        $query->andWhere(['category_id' => $data]);
+                        $query->andWhere(['tasks.category_id' => $data]);
                         break;
                     case 'noResponse':
-                        $query->joinWith('taskResponses');
-                        $query->andWhere(['tasks_responses.executor_id' => NULL]);
+                        $query->joinWith('tasksResponse');
+                        $query->andWhere(['tasks_response.executor_id' => NULL]);
                         break;
                     case 'remoteWork':
-                        $query->andWhere(['latitude' => NULL]);
+                        $query->andWhere(['tasks.city_id' => NULL]);
                         break;
                     case 'period':
-                        $query->andWhere(['>', 'creation_time', $model->getPeriodTime($data)]);
+                        $query->andWhere(['>', 'tasks.creation_time', $model->getPeriodTime($data)]);
                         break;
                     case 'search':
-                        $query->andWhere(['like','name',$data]);
+                        $query->andWhere(['like','tasks.name',$data]);
                         break;
                 }
             }

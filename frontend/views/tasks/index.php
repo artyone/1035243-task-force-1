@@ -77,13 +77,13 @@ use frontend\models\Categories;
                 'template' => '{input}{label}',
                 'options' => ['class' => ''],
             ])
-                ->checkbox(['class' => 'visually-hidden checkbox__input'], false);
+                ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false);
 
             echo $form->field($model, 'remoteWork', [
                 'template' => '{input}{label}',
                 'options' => ['class' => '']
             ])
-                ->checkbox(['class' => 'visually-hidden checkbox__input'], false);
+                ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false);
 
             ?>
         </fieldset>
@@ -97,7 +97,8 @@ use frontend\models\Categories;
             ->dropDownList([
                 '1' => 'За день',
                 '2' => 'За неделю',
-                '3' => 'За месяц'
+                '3' => 'За месяц',
+                '4' => 'За все время'
             ], [
                 'class' => 'multiple-select input',
                 'style' => 'width: 100%',
