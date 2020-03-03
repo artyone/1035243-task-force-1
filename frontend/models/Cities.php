@@ -9,11 +9,9 @@ use Yii;
  *
  * @property int $id
  * @property string $name
- * @property string $latitude
- * @property string $longitude
  *
- * @property Locations[] $locations
  * @property Tasks[] $tasks
+ * @property UsersData[] $userData
  */
 class Cities extends \yii\db\ActiveRecord
 {
@@ -31,9 +29,8 @@ class Cities extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'latitude', 'longitude'], 'required'],
-            [['name', 'latitude', 'longitude'], 'string', 'max' => 50],
-            [['name'], 'unique'],
+            [['name'], 'required'],
+            [['name'], 'string', 'max' => 50]
         ];
     }
 
@@ -44,20 +41,8 @@ class Cities extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'latitude' => 'Latitude',
-            'longitude' => 'Longitude',
+            'name' => 'Name'
         ];
-    }
-
-    /**
-     * Gets query for [[Locations]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getLocations()
-    {
-        return $this->hasMany(Locations::className(), ['city_id' => 'id']);
     }
 
     /**
@@ -67,6 +52,18 @@ class Cities extends \yii\db\ActiveRecord
      */
     public function getTasks()
     {
-        return $this->hasMany(Tasks::className(), ['location_id' => 'id']);
+        return $this->hasMany(Tasks::className(), ['city_id' => 'id']);
+    }
+
+    /**
+     * Gets query for [[UsersData]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsersData()
+    {
+        return $this->hasMany(UsersData::className(), ['city_id' => 'id']);
     }
 }
+
+

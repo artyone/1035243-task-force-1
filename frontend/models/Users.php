@@ -16,20 +16,20 @@ use frontend\models\Tasks;
  * @property int|null $avatar
  *
  * @property Tasks[] $taskCustomer
- * @property Tasks[] $tasksExecutor
- * @property TasksChats[] $tasksChatsSender
- * @property TasksChats[] $tasksChatsRecipient
- * @property TasksCompletedFeedback[] $taskCompletedFeedbackExecutor
- * @property TasksCompletedFeedback[] $taskCompletedFeedbackCommentator
- * @property TasksResponses[] $taskResponses
+ * @property Tasks[] $taskExecutor
+ * @property TasksChat[] $tasksChatCustomer
+ * @property TasksChat[] $tasksChatExecutor
+ * @property TasksFeedback[] $tasksFeedbackCustomer
+ * @property TasksFeedback[] $tasksFeedbackExecutor
+ * @property TasksResponse[] $tasksResponseExecutor
  * @property Files $fileAvatar
  * @property UsersCategory[] $userCategories
  * @property UsersData[] $userData
- * @property UsersFavorites[] $userFavorites
- * @property UsersFavorites[] $userInFavorites
- * @property UsersNotifications[] $userNotifications
+ * @property UsersFavorite[] $usersFavorite
+ * @property UsersFavorite[] $usersInFavorite
+ * @property UsersNotification[] $usersNotification
  * @property UsersVisible[] $usersVisible
- * @property UsersWorkPhotos[] $userWorkPhotos
+ * @property UsersPhoto[] $usersPhoto
  */
 class Users extends \yii\db\ActiveRecord
 {
@@ -100,53 +100,53 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TasksChatsSender]].
+     * Gets query for [[TasksChatsCustomer]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasksChatsSender()
+    public function getTasksChatCustomer()
     {
-        return $this->hasMany(TasksChats::className(), ['sender' => 'id']);
+        return $this->hasMany(TasksChat::className(), ['customer_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TaskChatRecipient]].
+     * Gets query for [[TasksChatExecutor]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTaskChatRecipient()
+    public function getTasksChatExecutor()
     {
-        return $this->hasMany(TasksChats::className(), ['recipient' => 'id']);
+        return $this->hasMany(TasksChat::className(), ['executor_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TaskCompletedFeedbackExecutor]].
+     * Gets query for [[TasksFeedbackCustomer]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTaskCompletedFeedbackExecutor()
+    public function getTasksFeedbackCustomer()
     {
-        return $this->hasMany(TasksCompletedFeedback::className(), ['executor_id' => 'id']);
+        return $this->hasMany(TasksFeedback::className(), ['customer_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TaskCompletedFeedbackCommentator]].
+     * Gets query for [[TasksFeedbackExecutor]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTaskCompletedFeedbackCommentator()
+    public function getTasksFeedbackExecutor()
     {
-        return $this->hasMany(TasksCompletedFeedback::className(), ['commentator_id' => 'id']);
+        return $this->hasMany(TasksFeedback::className(), ['executor_id' => 'id']);
     }
 
     /**
-     * Gets query for [[TaskResponses]].
+     * Gets query for [[TasksResponseExecutor]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTaskResponses()
+    public function getTasksResponseExecutor()
     {
-        return $this->hasMany(TasksResponses::className(), ['executor_id' => 'id']);
+        return $this->hasMany(TasksResponse::className(), ['executor_id' => 'id']);
     }
 
     /**
@@ -183,33 +183,33 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[UsersFavorites]].
+     * Gets query for [[UsersFavorite]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserFavorites()
+    public function getUsersFavorite()
     {
-        return $this->hasMany(UsersFavorites::className(), ['user_id' => 'id']);
+        return $this->hasMany(UsersFavorite::className(), ['user_id' => 'id']);
     }
 
     /**
-     * Gets query for [[UsersInFavorites]].
+     * Gets query for [[UsersInFavorite]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserInFavorites()
+    public function getUsersInFavorite()
     {
-        return $this->hasMany(UsersFavorites::className(), ['favorite_id' => 'id']);
+        return $this->hasMany(UsersFavorite::className(), ['favorite_id' => 'id']);
     }
 
     /**
-     * Gets query for [[UsersNotifications]].
+     * Gets query for [[UsersNotification]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserNotifications()
+    public function getUsersNotification()
     {
-        return $this->hasMany(UsersNotifications::className(), ['user_id' => 'id']);
+        return $this->hasMany(UsersNotification::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -217,19 +217,19 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserVisible()
+    public function getUsersVisible()
     {
         return $this->hasMany(UsersVisible::className(), ['user_id' => 'id']);
     }
 
     /**
-     * Gets query for [[UsersWorkPhotos]].
+     * Gets query for [[UsersPhoto]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getUserWorkPhotos()
+    public function getUsersPhoto()
     {
-        return $this->hasMany(UsersWorkPhotos::className(), ['user_id' => 'id']);
+        return $this->hasMany(UsersPhoto::className(), ['user_id' => 'id']);
     }
 
     /**
@@ -239,10 +239,10 @@ class Users extends \yii\db\ActiveRecord
      */
     public function getRating(): int
     {
-        if ($count = count($this->taskCompletedFeedbackExecutor)) {
+        if ($count = count($this->tasksFeedbackExecutor)) {
 
             $allRating = 0;
-            foreach ($this->taskCompletedFeedbackExecutor as $feedback) {
+            foreach ($this->tasksFeedbackExecutor as $feedback) {
                 $allRating += $feedback->rating;
             }
             $rating = round($allRating / $count, 2);

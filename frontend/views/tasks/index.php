@@ -1,9 +1,9 @@
 <?php
 
 use yii\helpers\Html;
+use frontend\helpers\WordHelper;
 use yii\widgets\ActiveForm;
 use frontend\models\Categories;
-use frontend\helpers\Pluralize;
 
 ?>
 <section class="new-task">
@@ -19,10 +19,9 @@ use frontend\helpers\Pluralize;
                 <p class="new-task_description">
                     <?= $task->description ?>
                 </p>
-                <b class="new-task__price new-task__price--<?= $task->category->icon ?>"><?= $task->price ?> <b>
-                        ₽</b></b>
-                <p class="new-task__place"><?= Html::encode("{$task->location->name}, {$task->address_comments}") ?></p>
-                <span class="new-task__time"><?= Pluralize::getStringTimeAgo($task->creation_time) ?> назад</span>
+                <b class="new-task__price new-task__price--<?= $task->category->icon ?>"><?= $task->price ?> <b> ₽</b></b>
+                <p class="new-task__place"><?= Html::encode("{$task->city->name}, {$task->address_comments}, {$task->latitude}-{$task->longitude}") ?></p>
+                <span class="new-task__time"><?= WordHelper::getStringTimeAgo($task->creation_time) ?> назад</span>
             </div>
         <?php endforeach; ?>
     </div>

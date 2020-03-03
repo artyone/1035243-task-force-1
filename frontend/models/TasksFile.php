@@ -14,14 +14,14 @@ use Yii;
  * @property Tasks $task
  * @property Files $file
  */
-class TasksFiles extends \yii\db\ActiveRecord
+class TasksFile extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'tasks_files';
+        return 'tasks_file';
     }
 
     /**

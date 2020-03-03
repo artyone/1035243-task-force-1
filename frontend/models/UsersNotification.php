@@ -5,23 +5,26 @@ namespace frontend\models;
 use Yii;
 
 /**
- * This is the model class for table "users_work_photos".
+ * This is the model class for table "users_notifications".
  *
  * @property int $id
  * @property int $user_id
- * @property int $file_id
+ * @property int $new_feedback
+ * @property int $new_chat
+ * @property int $new_refuse
+ * @property int $start_task
+ * @property int $finish_task
  *
  * @property Users $user
- * @property Files $file
  */
-class UsersWorkPhotos extends \yii\db\ActiveRecord
+class UsersNotification extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'users_work_photos';
+        return 'users_notification';
     }
 
     /**
@@ -30,10 +33,9 @@ class UsersWorkPhotos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'file_id'], 'required'],
-            [['user_id', 'file_id'], 'integer'],
+            [['user_id'], 'required'],
+            [['user_id', 'new_feedback', 'new_chat', 'new_refuse', 'start_task', 'finish_task'], 'integer'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
-            [['file_id'], 'exist', 'skipOnError' => true, 'targetClass' => Files::className(), 'targetAttribute' => ['file_id' => 'id']],
         ];
     }
 
@@ -45,7 +47,11 @@ class UsersWorkPhotos extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'file_id' => 'File ID',
+            'new_feedback' => 'New Feedback',
+            'new_chat' => 'New Chat',
+            'new_refuse' => 'New Refuse',
+            'start_task' => 'Start Task',
+            'finish_task' => 'Finish Task',
         ];
     }
 
@@ -57,15 +63,5 @@ class UsersWorkPhotos extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
-    }
-
-    /**
-     * Gets query for [[File]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getFile()
-    {
-        return $this->hasOne(Files::className(), ['id' => 'file_id']);
     }
 }

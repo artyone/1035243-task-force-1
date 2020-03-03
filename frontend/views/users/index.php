@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use frontend\helpers\Pluralize;
+use frontend\helpers\WordHelper;
 use yii\widgets\ActiveForm;
 use frontend\models\Categories;
 
@@ -23,29 +23,31 @@ use frontend\models\Categories;
         </ul>
     </div>
     <?php foreach ($users as $user): ?>
-        <div class="content-view__feedback-card user__search-wrapper">
-            <div class="feedback-card__top">
-                <div class="user__search-icon">
-                    <a href="#"><img src=".<?= $user->fileAvatar->link ?>" width="65" height="65"></a>
-                    <span><?= Pluralize::getStringTasks(count($user->completedTasksExecutor)) ?></span>
-                    <span><?= Pluralize::getStringFeedbacks(count($user->taskCompletedFeedbackExecutor)) ?></span>
+        <?php if ($user->userCategories): ?>
+            <div class="content-view__feedback-card user__search-wrapper">
+                <div class="feedback-card__top">
+                    <div class="user__search-icon">
+                        <a href="#"><img src=".<?= $user->fileAvatar->link ?>" width="65" height="65"></a>
+                        <span><?= WordHelper::getStringTasks(count($user->completedTasksExecutor)) ?></span>
+                        <span><?= WordHelper::getStringFeedbacks(count($user->tasksFeedbackExecutor)) ?></span>
+                    </div>
+                    <div class="feedback-card__top--name user__search-card">
+                        <p class="link-name"><a href="#" class="link-regular"><?= $user->name ?></a></p>
+                        <?php foreach(range(1,5) as $value): ?>
+                            <span <?= $value <= $user->rating ? '' : 'class="star-disabled"' ?>></span>
+                        <?php endforeach; ?>
+                        <b><?= $user->rating ?></b>
+                        <p class="user__search-content"><?= $user->userData->about ?></p>
+                    </div>
+                    <span class="new-task__time">Был на сайте <?= WordHelper::getStringTimeAgo($user->userData->last_online_time) ?> назад</span>
                 </div>
-                <div class="feedback-card__top--name user__search-card">
-                    <p class="link-name"><a href="#" class="link-regular"><?= $user->name ?></a></p>
-                    <?php foreach (range(1, 5) as $value): ?>
-                        <span <?= $value <= $user->rating ? '' : 'class="star-disabled"' ?>></span>
+                <div class="link-specialization user__search-link--bottom">
+                    <?php foreach ($user->userCategories as $userCategory): ?>
+                        <a href="#" class="link-regular"><?= $userCategory->name ?></a>
                     <?php endforeach; ?>
-                    <b><?= $user->rating ?></b>
-                    <p class="user__search-content"><?= $user->userData->about ?></p>
                 </div>
-                <span class="new-task__time">Был на сайте <?= Pluralize::getStringTimeAgo($user->userData->last_online_time) ?> назад</span>
             </div>
-            <div class="link-specialization user__search-link--bottom">
-                <?php foreach ($user->userCategories as $userCategory): ?>
-                    <a href="#" class="link-regular"><?= $userCategory->name ?></a>
-                <?php endforeach; ?>
-            </div>
-        </div>
+        <?php endif; ?>
     <?php endforeach; ?>
 </section>
 <section class="search-task">
