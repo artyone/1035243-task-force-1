@@ -80,11 +80,11 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[TaskCustomer]].
+     * Gets query for [[TasksCustomer]].
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTaskCustomer()
+    public function getTasksCustomer()
     {
         return $this->hasMany(Tasks::className(), ['customer_id' => 'id']);
     }
@@ -229,7 +229,8 @@ class Users extends \yii\db\ActiveRecord
      */
     public function getUsersPhoto()
     {
-        return $this->hasMany(UsersPhoto::className(), ['user_id' => 'id']);
+        return $this->hasMany(Files::className(), ['id' => 'file_id'])
+            ->viaTable('users_photo', ['user_id' => 'id']);
     }
 
     /**
