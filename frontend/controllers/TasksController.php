@@ -19,7 +19,7 @@ class TasksController extends Controller
             ->where(['status' => Tasks::STATUS_NEW]);
 
         $model = new TasksFilter();
-        $model->load($_GET);
+        $model->load(Yii::$app->request->get());
 
         foreach ($model as $key => $data) {
             if ($data) {

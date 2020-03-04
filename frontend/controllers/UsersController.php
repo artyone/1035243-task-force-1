@@ -8,6 +8,7 @@ use frontend\models\Tasks;
 use yii\db\Query;
 use yii\web\Controller;
 use frontend\models\UsersFilter;
+use yii;
 
 
 class UsersController extends Controller
@@ -22,7 +23,7 @@ class UsersController extends Controller
             ->where(['is not','categories.id', NULL]);
 
         $model = new UsersFilter();
-        $model->load($_GET);
+        $model->load(Yii::$app->request->get());
 
         foreach ($model as $key => $data) {
             if ($data) {
