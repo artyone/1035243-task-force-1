@@ -5,6 +5,7 @@ namespace frontend\controllers;
 
 use frontend\models\Users;
 use frontend\models\Tasks;
+use yii\data\Pagination;
 use yii\db\Query;
 use yii\web\Controller;
 use frontend\models\UsersFilter;
@@ -24,6 +25,13 @@ class UsersController extends Controller
 
         $model = new UsersFilter();
         $model->load(Yii::$app->request->get());
+
+        $pagination = new Pagination([
+            'defaultPageSize' => 5,
+            'totalCount' => $query->count(),
+        ]);
+        $query->offset($pagination->offset);
+        $query->limit($pagination->limit);
 
         foreach ($model as $key => $data) {
             if ($data) {
@@ -57,7 +65,8 @@ class UsersController extends Controller
 
         return $this->render('index', [
             'users' => $users,
-            'model' => $model
+            'model' => $model,
+            'pagination' => $pagination
         ]);
     }
 
@@ -71,6 +80,13 @@ class UsersController extends Controller
         $model = new UsersFilter();
         $model->load(Yii::$app->request->get());
 
+        $pagination = new Pagination([
+            'defaultPageSize' => 5,
+            'totalCount' => $query->count(),
+        ]);
+        $query->offset($pagination->offset);
+        $query->limit($pagination->limit);
+
         if ($sort) {
             $query->joinWith('userData');
             $query->orderBy(["users_data.$sort" => SORT_DESC]);
@@ -81,7 +97,8 @@ class UsersController extends Controller
 
         return $this->render('index', [
             'users' => $users,
-            'model' => $model
+            'model' => $model,
+            'pagination' => $pagination
         ]);
     }
 }

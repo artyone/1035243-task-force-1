@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use frontend\helpers\WordHelper;
 use yii\widgets\ActiveForm;
 use frontend\models\Categories;
+use yii\widgets\LinkPager;
 
 ?>
 
@@ -49,6 +50,21 @@ use frontend\models\Categories;
             </div>
         <?php endif; ?>
     <?php endforeach; ?>
+    <div class="pagination">
+        <?= LinkPager::widget([
+            'pagination' => $pagination,
+            'options' => [
+                'class' => 'new-task__pagination-list',
+            ],
+            'activePageCssClass' => 'pagination__item--current',
+            'pageCssClass' => 'pagination__item',
+            'prevPageCssClass' => 'pagination__item',
+            'nextPageCssClass' => 'pagination__item',
+            'nextPageLabel' => '',
+            'prevPageLabel' => '',
+            'hideOnSinglePage' => false
+        ]) ?>
+    </div>
 </section>
 <section class="search-task">
     <div class="search-task__wrapper">

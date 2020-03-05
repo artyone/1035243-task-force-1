@@ -4,8 +4,10 @@ use yii\helpers\Html;
 use frontend\helpers\WordHelper;
 use yii\widgets\ActiveForm;
 use frontend\models\Categories;
+use yii\widgets\LinkPager;
 
 ?>
+
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1>Новые задания</h1>
@@ -19,22 +21,30 @@ use frontend\models\Categories;
                 <p class="new-task_description">
                     <?= $task->description ?>
                 </p>
-                <b class="new-task__price new-task__price--<?= $task->category->icon ?>"><?= $task->price ?> <b> ₽</b></b>
+                <b class="new-task__price new-task__price--<?= $task->category->icon ?>"><?= $task->price ?> <b>
+                        ₽</b></b>
                 <p class="new-task__place"><?= Html::encode("{$task->city->name}, {$task->address_comments}, {$task->latitude}-{$task->longitude}") ?></p>
                 <span class="new-task__time"><?= WordHelper::getStringTimeAgo($task->creation_time) ?> назад</span>
             </div>
         <?php endforeach; ?>
     </div>
+
     <div class="new-task__pagination">
-        <ul class="new-task__pagination-list">
-            <li class="pagination__item"><a href="#"></a></li>
-            <li class="pagination__item pagination__item--current">
-                <a>1</a></li>
-            <li class="pagination__item"><a href="#">2</a></li>
-            <li class="pagination__item"><a href="#">3</a></li>
-            <li class="pagination__item"><a href="#"></a></li>
-        </ul>
+        <?= LinkPager::widget([
+            'pagination' => $pagination,
+            'options' => [
+                'class' => 'new-task__pagination-list',
+            ],
+            'activePageCssClass' => 'pagination__item--current',
+            'pageCssClass' => 'pagination__item',
+            'prevPageCssClass' => 'pagination__item',
+            'nextPageCssClass' => 'pagination__item',
+            'nextPageLabel' => '',
+            'prevPageLabel' => '',
+            'hideOnSinglePage' => false
+        ]) ?>
     </div>
+
 </section>
 <section class="search-task">
     <div class="search-task__wrapper">
