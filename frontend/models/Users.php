@@ -264,4 +264,11 @@ class Users extends \yii\db\ActiveRecord
         return $this->getTasksExecutor()->where(['status' => Tasks::STATUS_DONE])->all();
 
     }
+
+    public function setPassword($password)
+    {
+        $this->password_hash = $password;
+        //TODO разобраться с генерацией хэша
+        //Yii::$app->security->generatePasswordHash($password);
+    }
 }

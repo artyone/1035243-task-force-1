@@ -3,10 +3,10 @@
 use yii\helpers\Html;
 use frontend\helpers\WordHelper;
 use yii\widgets\ActiveForm;
-use frontend\models\Categories;
+use frontend\models\Cities;
 
 ?>
-<!--<pre><?/*= print_r($error) */?></pre>-->
+
 <section class="registration__user">
     <h1>Регистрация аккаунта</h1>
     <div class="registration-wrapper">
@@ -15,61 +15,54 @@ use frontend\models\Categories;
             'id' => 'form-signup',
             'options' => ['class' => 'registration__user-form form-create'],
             'action' => ['registration/'],
-            'method' => 'post'
+            'method' => 'post',
         ]) ?>
 
         <?= $form->field($model, 'email', [
-            'template' => '{label}{input}',
             'options' => ['class' => 'form'],
-            'labelOptions' => ['class' => '']
         ])
-            ->textarea([
+            ->textinput([
                 'class' => 'input textarea',
-                'style' => 'width: 100%',
-                'rows' => 1
-            ]) ?>
+                'style' => 'width: 100%'
+            ])
+            ->error(['tag'=>'span']) ?>
 
         <?= $form->field($model, 'name', [
-            'template' => '{label}{input}',
             'options' => ['class' => ''],
-            'labelOptions' => ['class' => '']
         ])
-            ->textarea([
+            ->textinput([
                 'class' => 'input textarea',
-                'style' => 'width: 100%',
-                'rows' => 1
-            ]) ?>
-        <?= $form->field($model, 'city', [
-            'template' => '{label}{input}',
-            'options' => ['class' => ''],
-            'labelOptions' => ['class' => '']
+                'style' => 'width: 100%'
+            ])
+            ->error(['tag'=>'span']) ?>
+
+
+        <?php echo $form->field($model, 'city', [
+            'options' => ['class' => '']
         ])
-            ->textarea([
-                'class' => 'input textarea',
-                'style' => 'width: 100%',
-                'rows' => 1
-            ]) ?>
+            ->dropDownList(
+                Cities::find()->select(['name', 'id'])->indexBy('id')->column(),
+                [
+                    'class' => "multiple-select input town-select registration-town",
+                    'style' => 'width: 100%',
+                    'prompt' => ['text' => 'Выберите город', 'options' => [ 'class' => '']],
+                    'options' => [$model['city'] => ['selected' => true]]]
+            )
+            ->error(['tag'=>'span']) ?>
 
         <?= $form->field($model, 'password', [
-            'template' => '{label}{input}',
-            'options' => ['class' => '23'],
-            'labelOptions' => ['class' => 'input-danger']
+            'options' => ['class' => ''],
         ])
             ->passwordInput([
                 'class' => 'input textarea',
                 'style' => 'width: 100%',
                 'type' => 'password'
-            ]) ?>
+            ])
+            ->error(['tag'=>'span']) ?>
 
-
-
-        <?= $form->field($model, 'name') ?>
-        <?= $form->field($model, 'city') ?>
-
-        <?= $form->field($model, 'password')->passwordInput() ?>
 
         <div class="form-group">
-            <?= Html::submitButton('Signup', ['class' => 'button button__registration', 'name' => 'signup-button']) ?>
+            <?= Html::submitButton('Создать аккаунт', ['class' => 'button button__registration', 'name' => 'signup-button']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>
