@@ -83,29 +83,6 @@ use frontend\helpers\WordHelper;
                     </div>
                 </div>
             <?php endforeach; ?>
-            <div class="content-view__feedback-card">
-                <div class="feedback-card__top">
-                    <a href="#"><img src="/img/man-blond.jpg" width="55" height="55"></a>
-                    <div class="feedback-card__top--name">
-                        <p class="link-name"><a href="#" class="link-regular">Богатырев Дмитрий</a></p>
-                        <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
-                        <b>4.25</b>
-                    </div>
-                    <span class="new-task__time">25 минут назад</span>
-                </div>
-                <div class="feedback-card__content">
-                    <p>
-                        Примусь за выполнение задания в течение часа, сделаю быстро и качественно.
-                    </p>
-                    <span>1500 ₽</span>
-                </div>
-                <div class="feedback-card__actions">
-                    <a class="button__small-color request-button button"
-                       type="button">Подтвердить</a>
-                    <a class="button__small-color refusal-button button"
-                       type="button">Отказать</a>
-                </div>
-            </div>
         </div>
     </div>
 </section>
