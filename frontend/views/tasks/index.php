@@ -43,7 +43,7 @@ use frontend\models\Categories;
         $form = ActiveForm::begin([
             'id' => 'filter-form',
             'options' => ['class' => 'search-task__form'],
-            'action' => [''],
+            'action' => ['/tasks'],
             'method' => 'get'
         ]);
 

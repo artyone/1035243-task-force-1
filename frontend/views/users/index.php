@@ -12,13 +12,13 @@ use frontend\models\Categories;
         <p>Сортировать по:</p>
         <ul class="user__search-list">
             <li class="user__search-item <?= $model->sort == 'rating' ? 'user__search-item--current' : '' ?>">
-                <a href="/users/index?sort=rating" class="link-regular">Рейтингу</a>
+                <a href="/users/sort/rating" class="link-regular">Рейтингу</a>
             </li>
             <li class="user__search-item <?= $model->sort == 'tasks_count' ? 'user__search-item--current' : '' ?>">
-                <a href="/users/index?sort=tasks_count" class="link-regular">Числу заказов</a>
+                <a href="/users/sort/tasks_count" class="link-regular">Числу заказов</a>
             </li>
             <li class="user__search-item <?= $model->sort == 'popularity' ? 'user__search-item--current' : '' ?>">
-                <a href="/users/index?sort=popularity" class="link-regular">Популярности</a>
+                <a href="/users/sort/popularity" class="link-regular">Популярности</a>
             </li>
         </ul>
     </div>
@@ -57,7 +57,7 @@ use frontend\models\Categories;
         $form = ActiveForm::begin([
             'id' => 'filter-form',
             'options' => ['class' => 'search-task__form'],
-            'action' => [''],
+            'action' => ['/users'],
             'method' => 'get'
         ]);
 

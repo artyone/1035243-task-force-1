@@ -13,7 +13,8 @@ return [
             'rules' => [
                 '//' => '/',
                 'tasks' => 'tasks/index',
-                'users' => 'users/index'
+                'users' => 'users/index',
+                'users/sort/<sort:\w+>' => 'users/sort'
             ]
         ],
         'cache' => [

@@ -20,7 +20,7 @@ class UsersController extends Controller
         $query = Users::find()
             ->orderBy(['creation_time' => SORT_DESC])
             ->joinWith('userCategories')
-            ->where(['is not','categories.id', NULL]);
+            ->where(['is not', 'categories.id', null]);
 
         $model = new UsersFilter();
         $model->load(Yii::$app->request->get());
@@ -33,7 +33,7 @@ class UsersController extends Controller
                         break;
                     case 'free':
                         $query->joinWith('taskExecutor');
-                        $query->andWhere(['or',['tasks.id' => NULL],['tasks.status' => Tasks::STATUS_DONE]]);
+                        $query->andWhere(['or', ['tasks.id' => null], ['tasks.status' => Tasks::STATUS_DONE]]);
                         break;
                     case 'online':
                         $query->joinWith('userData');
@@ -41,21 +41,17 @@ class UsersController extends Controller
                         break;
                     case 'hasFeedback':
                         $query->joinWith('tasksFeedbackExecutor');
-                        $query->andWhere(['is not','tasks_feedback.task_id', NULL]);
+                        $query->andWhere(['is not', 'tasks_feedback.task_id', null]);
                         break;
                     case 'inFavorites':
                         //@todo разработать по созданию аккаунта
                         break;
                     case 'search':
-                        $query->andWhere(['like','users.name',$data]);
+                        $query->andWhere(['like', 'users.name', $data]);
                         break;
-                    case 'sort':
-                        $query->joinWith('userData');
-                        $query->orderBy(["users_data.$data" => SORT_DESC]);
-                        break;
-                    }
                 }
             }
+        }
         $users = $query
             ->all();
 
@@ -65,4 +61,27 @@ class UsersController extends Controller
         ]);
     }
 
+    public function actionSort($sort)
+    {
+        $query = Users::find()
+            ->orderBy(['creation_time' => SORT_DESC])
+            ->joinWith('userCategories')
+            ->where(['is not', 'categories.id', null]);
+
+        $model = new UsersFilter();
+        $model->load(Yii::$app->request->get());
+
+        if ($sort) {
+            $query->joinWith('userData');
+            $query->orderBy(["users_data.$sort" => SORT_DESC]);
+
+        }
+        $users = $query
+            ->all();
+
+        return $this->render('index', [
+            'users' => $users,
+            'model' => $model
+        ]);
+    }
 }
