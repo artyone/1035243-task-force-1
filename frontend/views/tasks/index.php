@@ -39,9 +39,9 @@ use yii\widgets\LinkPager;
             'pageCssClass' => 'pagination__item',
             'prevPageCssClass' => 'pagination__item',
             'nextPageCssClass' => 'pagination__item',
-            'nextPageLabel' => '',
-            'prevPageLabel' => '',
-            'hideOnSinglePage' => false
+            'nextPageLabel' => '⠀',
+            'prevPageLabel' => '⠀',
+            'hideOnSinglePage' => true
         ]) ?>
     </div>
 

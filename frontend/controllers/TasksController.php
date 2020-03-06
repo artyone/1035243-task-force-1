@@ -22,13 +22,6 @@ class TasksController extends Controller
         $model = new TasksFilter();
         $model->load(Yii::$app->request->get());
 
-        $pagination = new Pagination([
-            'defaultPageSize' => 5,
-            'totalCount' => $query->count(),
-        ]);
-        $query->offset($pagination->offset);
-        $query->limit($pagination->limit);
-
         foreach ($model as $key => $data) {
             if ($data) {
                 switch ($key) {
@@ -51,6 +44,13 @@ class TasksController extends Controller
                 }
             }
         }
+
+        $pagination = new Pagination([
+            'defaultPageSize' => 5,
+            'totalCount' => $query->count(),
+        ]);
+        $query->offset($pagination->offset);
+        $query->limit($pagination->limit);
 
         $tasks = $query
             ->all();
