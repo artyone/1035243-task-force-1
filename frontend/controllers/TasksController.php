@@ -16,7 +16,7 @@ class TasksController extends Controller
     public function actionIndex()
     {
         $query = Tasks::find()
-            ->orderBy('creation_time')
+            ->orderBy(['creation_time' => SORT_DESC])
             ->where(['status' => Tasks::STATUS_NEW]);
 
         $model = new TasksFilter();

@@ -22,13 +22,14 @@ AppAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
+<!--    --><?php //$this->head() ?>
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <?php $this->beginBody() ?>
 <div class="table-layout">
+    <?php if (!in_array(Yii::$app->request->resolve()[0], ['registration','landing'])): ?>
     <header class="page-header">
         <div class="main-container page-header__container">
             <div class="page-header__logo">
@@ -89,7 +90,6 @@ AppAsset::register($this);
                     </li>
                 </ul>
             </div>
-            <?php if (Yii::$app->request->resolve()[0] !== 'registration'): ?>
                 <div class="header__town">
                     <select class="multiple-select input town-select" size="1" name="town[]">
                         <option value="Moscow">Москва</option>
@@ -138,8 +138,8 @@ AppAsset::register($this);
                         </li>
                     </ul>
                 </div>
-            <?php endif; ?>
         </div>
+        <?php endif; ?>
     </header>
     <main class="page-main">
         <div class="main-container page-container">
