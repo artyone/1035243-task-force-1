@@ -15,7 +15,6 @@ use yii\web\HttpException;
 
 class UsersController extends Controller
 {
-
     public function actionIndex()
     {
 
@@ -27,40 +26,44 @@ class UsersController extends Controller
         $model = new UsersFilter();
         $model->load(Yii::$app->request->get());
 
+        if ($search = $model->search) {
+            $query->andWhere(['like', 'users.name', $search]);
+            $model = new UsersFilter();
+            $model->search = $search;
+        } else {
+            foreach ($model as $key => $data) {
+                if ($data) {
+                    switch ($key) {
+                        case 'categories':
+                            $query->andWhere(['categories.id' => $data]);
+                            break;
+                        case 'free':
+                            $query->joinWith('tasksExecutor');
+                            $query->andWhere(['or', ['tasks.id' => null], ['tasks.status' => Tasks::STATUS_DONE]]);
+                            break;
+                        case 'online':
+                            $query->joinWith('userData');
+                            $query->andWhere(['>', 'users_data.last_online_time', $model->getOnlineTime()]);
+                            break;
+                        case 'hasFeedback':
+                            $query->joinWith('tasksFeedbackExecutor');
+                            $query->andWhere(['is not', 'tasks_feedback.task_id', null]);
+                            break;
+                        case 'inFavorites':
+                            //@todo разработать по созданию аккаунта
+                            break;
+                    }
+                }
+            }
+        }
+
         $pagination = new Pagination([
             'defaultPageSize' => 5,
             'totalCount' => $query->count(),
         ]);
-        $query->offset($pagination->offset);
-        $query->limit($pagination->limit);
+        $query->offset($pagination->offset)
+            ->limit($pagination->limit);
 
-        foreach ($model as $key => $data) {
-            if ($data) {
-                switch ($key) {
-                    case 'categories':
-                        $query->andWhere(['categories.id' => $data]);
-                        break;
-                    case 'free':
-                        $query->joinWith('taskExecutor');
-                        $query->andWhere(['or', ['tasks.id' => null], ['tasks.status' => Tasks::STATUS_DONE]]);
-                        break;
-                    case 'online':
-                        $query->joinWith('userData');
-                        $query->andWhere(['>', 'users_data.last_online_time', $model->getOnlineTime()]);
-                        break;
-                    case 'hasFeedback':
-                        $query->joinWith('tasksFeedbackExecutor');
-                        $query->andWhere(['is not', 'tasks_feedback.task_id', null]);
-                        break;
-                    case 'inFavorites':
-                        //@todo разработать по созданию аккаунта
-                        break;
-                    case 'search':
-                        $query->andWhere(['like', 'users.name', $data]);
-                        break;
-                }
-            }
-        }
         $users = $query
             ->all();
 
@@ -81,6 +84,11 @@ class UsersController extends Controller
         $model = new UsersFilter();
         $model->load(Yii::$app->request->get());
 
+        if ($sort) {
+            $query->joinWith('userData');
+            $query->orderBy(["users_data.$sort" => SORT_DESC]);
+        }
+
         $pagination = new Pagination([
             'defaultPageSize' => 5,
             'totalCount' => $query->count(),
@@ -88,11 +96,6 @@ class UsersController extends Controller
         $query->offset($pagination->offset);
         $query->limit($pagination->limit);
 
-        if ($sort) {
-            $query->joinWith('userData');
-            $query->orderBy(["users_data.$sort" => SORT_DESC]);
-
-        }
         $users = $query
             ->all();
 
