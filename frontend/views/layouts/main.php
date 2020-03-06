@@ -152,7 +152,7 @@ AppAsset::register($this);
         <div class="main-container page-footer__container">
             <div class="page-footer__info">
                 <p class="page-footer__info-copyright">
-                    © 2019, ООО «ТаскФорс»
+                    © 2020, ООО «ТаскФорс»
                     Все права защищены
                 </p>
                 <p class="page-footer__info-use">
@@ -185,7 +185,7 @@ AppAsset::register($this);
             <div class="page-footer__copyright">
                 <a>
                     <img class="copyright-logo"
-                         src="./img/academy-logo.png"
+                         src="/img/academy-logo.png"
                          width="185" height="63"
                          alt="Логотип HTML Academy">
                 </a>

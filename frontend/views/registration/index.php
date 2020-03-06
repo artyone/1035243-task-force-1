@@ -14,8 +14,8 @@ use frontend\models\Cities;
         <?php $form = ActiveForm::begin([
             'id' => 'form-signup',
             'options' => ['class' => 'registration__user-form form-create'],
-            'action' => ['registration/'],
-            'method' => 'post',
+            'action' => ['/registration'],
+            'method' => 'post'
         ]) ?>
 
         <?= $form->field($model, 'email', [
@@ -23,7 +23,8 @@ use frontend\models\Cities;
         ])
             ->textinput([
                 'class' => 'input textarea',
-                'style' => 'width: 100%'
+                'style' => 'width: 100%',
+                'placeholder' => 'ivanov@mail.ru'
             ])
             ->error(['tag'=>'span']) ?>
 
@@ -32,7 +33,8 @@ use frontend\models\Cities;
         ])
             ->textinput([
                 'class' => 'input textarea',
-                'style' => 'width: 100%'
+                'style' => 'width: 100%',
+                'placeholder' => 'Иван Иванов'
             ])
             ->error(['tag'=>'span']) ?>
 
