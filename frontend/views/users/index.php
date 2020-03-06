@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use frontend\helpers\WordHelper;
 use yii\widgets\ActiveForm;
 use frontend\models\Categories;
+use yii\widgets\LinkPager;
 
 ?>
 
@@ -12,13 +13,13 @@ use frontend\models\Categories;
         <p>Сортировать по:</p>
         <ul class="user__search-list">
             <li class="user__search-item <?= $model->sort == 'rating' ? 'user__search-item--current' : '' ?>">
-                <a href="/users/index?sort=rating" class="link-regular">Рейтингу</a>
+                <a href="/users/sort/rating" class="link-regular">Рейтингу</a>
             </li>
             <li class="user__search-item <?= $model->sort == 'tasks_count' ? 'user__search-item--current' : '' ?>">
-                <a href="/users/index?sort=tasks_count" class="link-regular">Числу заказов</a>
+                <a href="/users/sort/tasks_count" class="link-regular">Числу заказов</a>
             </li>
             <li class="user__search-item <?= $model->sort == 'popularity' ? 'user__search-item--current' : '' ?>">
-                <a href="/users/index?sort=popularity" class="link-regular">Популярности</a>
+                <a href="/users/sort/popularity" class="link-regular">Популярности</a>
             </li>
         </ul>
     </div>
@@ -49,6 +50,21 @@ use frontend\models\Categories;
             </div>
         <?php endif; ?>
     <?php endforeach; ?>
+    <div class="pagination">
+        <?= LinkPager::widget([
+            'pagination' => $pagination,
+            'options' => [
+                'class' => 'new-task__pagination-list',
+            ],
+            'activePageCssClass' => 'pagination__item--current',
+            'pageCssClass' => 'pagination__item',
+            'prevPageCssClass' => 'pagination__item',
+            'nextPageCssClass' => 'pagination__item',
+            'nextPageLabel' => '',
+            'prevPageLabel' => '',
+            'hideOnSinglePage' => false
+        ]) ?>
+    </div>
 </section>
 <section class="search-task">
     <div class="search-task__wrapper">
@@ -57,7 +73,7 @@ use frontend\models\Categories;
         $form = ActiveForm::begin([
             'id' => 'filter-form',
             'options' => ['class' => 'search-task__form'],
-            'action' => ['users/'],
+            'action' => ['/users'],
             'method' => 'get'
         ]);
 
