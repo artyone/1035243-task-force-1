@@ -53,22 +53,19 @@ class UsersController extends Controller
         ]);
     }
 
-    public function actionSort($sort)
+    public function actionSort()
     {
         $query = Users::find()
             ->orderBy(['creation_time' => SORT_DESC])
             ->joinWith('userCategories')
             ->where(['is not', 'categories.id', null]);
 
-        $fomrModel = new UsersFilter();
+        $formModel = new UsersFilter();
         if (Yii::$app->request->get()) {
-            $fomrModel->load(Yii::$app->request->get());
+            $formModel->load(Yii::$app->request->get());
         }
 
-        if ($sort) {
-            $query->joinWith('userData');
-            $query->orderBy(["users_data.$sort" => SORT_DESC]);
-        }
+        $query = $formModel->applyFilters($query);
 
         $pagination = new Pagination([
             'defaultPageSize' => 5,
@@ -82,7 +79,7 @@ class UsersController extends Controller
 
         return $this->render('index', [
             'users' => $users,
-            'formModel' => $fomrModel,
+            'formModel' => $formModel,
             'pagination' => $pagination
         ]);
     }

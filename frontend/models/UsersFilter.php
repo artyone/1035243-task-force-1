@@ -70,6 +70,10 @@ class UsersFilter extends Model
         if ($this->inFavorites) {
             //@todo разработать по созданию аккаунта
         }
+        if ($this->sort) {
+            $query->joinWith('userData');
+            $query->orderBy(["users_data.$this->sort" => SORT_DESC]);
+        }
 
         return $query;
     }
