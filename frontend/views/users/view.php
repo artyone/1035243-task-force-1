@@ -1,6 +1,7 @@
 <?php
 
 use frontend\helpers\WordHelper;
+use yii\helpers\Url;
 
 ?>
 <section class="content-view">
@@ -59,14 +60,14 @@ use frontend\helpers\WordHelper;
             <?php foreach ($user->tasksFeedbackExecutor as $feedback): ?>
                 <div class="feedback-card__reviews">
                     <p class="link-task link">Задание
-                        <a href="/task/view/<?= $feedback->task->id ?>"
+                        <a href="<?= Url::to(['tasks/view', 'id' => $feedback->task->id]) ?>"
                            class="link-regular"><?= $feedback->task->name ?></a>
                     </p>
                     <div class="card__review">
                         <a href="#"><img src="<?= $feedback->task->customer->fileAvatar->link ?>" width="55"
                                          height="54"></a>
                         <div class="feedback-card__reviews-content">
-                            <p class="link-name link"><a href="/user/view/<?= $feedback->task->customer->id ?>"
+                            <p class="link-name link"><a href="<?= Url::to(['users/view', 'id' => $feedback->task->customer->id]) ?>"
                                                          class="link-regular">
                                     <?= $feedback->task->customer->name ?></a></p>
                             <p class="review-text">

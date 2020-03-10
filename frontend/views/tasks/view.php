@@ -1,6 +1,7 @@
 <?php
 
 use frontend\helpers\WordHelper;
+use yii\helpers\Url;
 
 ?>
 <section class="content-view">
@@ -61,9 +62,11 @@ use frontend\helpers\WordHelper;
             <?php foreach ($task->tasksResponse as $response): ?>
                 <div class="content-view__feedback-card">
                     <div class="feedback-card__top">
-                        <a href="#"><img src="<?= $response->executor->fileAvatar->link ?>" width="55" height="55"></a>
+                        <a href="<?= Url::to(['users/view', 'id' => $response->executor_id]) ?>">
+                            <img src="<?= $response->executor->fileAvatar->link ?>" width="55" height="55"></a>
                         <div class="feedback-card__top--name">
-                            <p><a href="#" class="link-regular"><?= $response->executor->name ?></a></p>
+                            <p><a href="<?= Url::to(['users/view', 'id' => $response->executor_id]) ?>" class="link-regular">
+                                    <?= $response->executor->name ?></a></p>
                             <?php foreach (range(1, 5) as $value): ?>
                                 <span <?= $value <= $response->executor->userData->rating ? '' : 'class="star-disabled"' ?>></span>
                             <?php endforeach; ?>
@@ -100,7 +103,7 @@ use frontend\helpers\WordHelper;
                 <span><?= WordHelper::getStringTasks(count($task->customer->tasksCustomer)) ?></span>
                 <span class="last-"><?= WordHelper::getStringTimeAgo($task->customer->creation_time) ?> на сайте</span>
             </p>
-            <a href="/user/view/<?= $task->customer->id ?>" class="link-regular">Смотреть профиль</a>
+            <a href="<?= Url::to(['users/view', 'id' => $task->customer->id]) ?>" class="link-regular">Смотреть профиль</a>
         </div>
     </div>
     <div class="connect-desk__chat">

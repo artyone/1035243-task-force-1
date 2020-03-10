@@ -24,37 +24,16 @@ class UsersController extends Controller
             ->where(['is not', 'categories.id', null]);
 
         $model = new UsersFilter();
-        $model->load(Yii::$app->request->get());
+        if (Yii::$app->request->get()) {
+            $model->load(Yii::$app->request->get());
+        }
 
         if ($search = $model->search) {
             $query->andWhere(['like', 'users.name', $search]);
             $model = new UsersFilter();
             $model->search = $search;
         } else {
-            foreach ($model as $key => $data) {
-                if ($data) {
-                    switch ($key) {
-                        case 'categories':
-                            $query->andWhere(['categories.id' => $data]);
-                            break;
-                        case 'free':
-                            $query->joinWith('tasksExecutor');
-                            $query->andWhere(['or', ['tasks.id' => null], ['tasks.status' => Tasks::STATUS_DONE]]);
-                            break;
-                        case 'online':
-                            $query->joinWith('userData');
-                            $query->andWhere(['>', 'users_data.last_online_time', $model->getOnlineTime()]);
-                            break;
-                        case 'hasFeedback':
-                            $query->joinWith('tasksFeedbackExecutor');
-                            $query->andWhere(['is not', 'tasks_feedback.task_id', null]);
-                            break;
-                        case 'inFavorites':
-                            //@todo разработать по созданию аккаунта
-                            break;
-                    }
-                }
-            }
+            $query = $model->applyFilters($query);
         }
 
         $pagination = new Pagination([
@@ -82,7 +61,9 @@ class UsersController extends Controller
             ->where(['is not', 'categories.id', null]);
 
         $model = new UsersFilter();
-        $model->load(Yii::$app->request->get());
+        if (Yii::$app->request->get()) {
+            $model->load(Yii::$app->request->get());
+        }
 
         if ($sort) {
             $query->joinWith('userData');

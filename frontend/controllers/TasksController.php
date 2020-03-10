@@ -21,30 +21,11 @@ class TasksController extends Controller
             ->where(['status' => Tasks::STATUS_NEW]);
 
         $model = new TasksFilter();
-        $model->load(Yii::$app->request->get());
-
-        foreach ($model as $key => $data) {
-            if ($data) {
-                switch ($key) {
-                    case 'categories':
-                        $query->andWhere(['tasks.category_id' => $data]);
-                        break;
-                    case 'noResponse':
-                        $query->joinWith('tasksResponse');
-                        $query->andWhere(['tasks_response.executor_id' => NULL]);
-                        break;
-                    case 'remoteWork':
-                        $query->andWhere(['tasks.city_id' => NULL]);
-                        break;
-                    case 'period':
-                        $query->andWhere(['>', 'tasks.creation_time', $model->getPeriodTime($data)]);
-                        break;
-                    case 'search':
-                        $query->andWhere(['like','tasks.name',$data]);
-                        break;
-                }
-            }
+        if (Yii::$app->request->get()) {
+            $model->load(Yii::$app->request->get());
         }
+
+        $query = $model->applyFilters($query);
 
         $pagination = new Pagination([
             'defaultPageSize' => 5,

@@ -5,6 +5,7 @@ use frontend\helpers\WordHelper;
 use yii\widgets\ActiveForm;
 use frontend\models\Categories;
 use yii\widgets\LinkPager;
+use yii\helpers\Url;
 
 ?>
 
@@ -13,13 +14,13 @@ use yii\widgets\LinkPager;
         <p>Сортировать по:</p>
         <ul class="user__search-list">
             <li class="user__search-item <?= $model->sort == 'rating' ? 'user__search-item--current' : '' ?>">
-                <a href="/users/sort/rating" class="link-regular">Рейтингу</a>
+                <a href="<?= Url::to(['users/sort', 'sort' => 'rating']) ?>" class="link-regular">Рейтингу</a>
             </li>
             <li class="user__search-item <?= $model->sort == 'tasks_count' ? 'user__search-item--current' : '' ?>">
-                <a href="/users/sort/tasks_count" class="link-regular">Числу заказов</a>
+                <a href="<?= Url::to(['users/sort', 'sort' => 'tasks_count']) ?>" class="link-regular">Числу заказов</a>
             </li>
             <li class="user__search-item <?= $model->sort == 'popularity' ? 'user__search-item--current' : '' ?>">
-                <a href="/users/sort/popularity" class="link-regular">Популярности</a>
+                <a href="<?= Url::to(['users/sort', 'sort' => 'popularity']) ?>" class="link-regular">Популярности</a>
             </li>
         </ul>
     </div>
@@ -28,12 +29,12 @@ use yii\widgets\LinkPager;
             <div class="content-view__feedback-card user__search-wrapper">
                 <div class="feedback-card__top">
                     <div class="user__search-icon">
-                        <a href="/user/view/<?= $user->id ?>"><img src="<?= $user->fileAvatar->link ?>" width="65" height="65"></a>
+                        <a href="<?= Url::to(['users/view', 'id' => $user->id]) ?>"><img src="<?= $user->fileAvatar->link ?>" width="65" height="65"></a>
                         <span><?= WordHelper::getStringTasks($user->userData->tasks_count) ?></span>
                         <span><?= WordHelper::getStringFeedbacks(count($user->tasksFeedbackExecutor)) ?></span>
                     </div>
                     <div class="feedback-card__top--name user__search-card">
-                        <p class="link-name"><a href="/user/view/<?= $user->id ?>" class="link-regular"><?= $user->name ?></a></p>
+                        <p class="link-name"><a href="<?= Url::to(['users/view', 'id' => $user->id]) ?>" class="link-regular"><?= $user->name ?></a></p>
                         <?php foreach (range(1, 5) as $value): ?>
                             <span <?= $value <= $user->userData->rating ? '' : 'class="star-disabled"' ?>></span>
                         <?php endforeach; ?>
