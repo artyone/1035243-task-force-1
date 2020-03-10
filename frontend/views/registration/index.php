@@ -26,7 +26,7 @@ use frontend\models\Cities;
                 'style' => 'width: 100%',
                 'placeholder' => 'ivanov@mail.ru'
             ])
-            ->error(['tag'=>'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
+            ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
 
         <?= $form->field($model, 'name', [
             'options' => ['class' => '']
@@ -36,21 +36,20 @@ use frontend\models\Cities;
                 'style' => 'width: 100%',
                 'placeholder' => 'Иван Иванов'
             ])
-            ->error(['tag'=>'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
+            ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
 
 
-        <?php echo $form->field($model, 'city', [
+        <?= $form->field($model, 'city', [
             'options' => ['class' => '']
         ])
             ->dropDownList(
-                Cities::find()->select(['name', 'id'])->indexBy('id')->column(),
-                [
-                    'class' => 'multiple-select input town-select registration-town',
-                    'style' => 'width: 100%',
-                    'prompt' => ['text' => 'Выберите город', 'options' => [ 'class' => '']],
-                    'options' => [$model['city'] => ['selected' => true]]]
-            )
-            ->error(['tag'=>'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
+                Cities::find()->select(['name', 'id'])->indexBy('id')->column(), [
+                'class' => 'multiple-select input town-select registration-town',
+                'style' => 'width: 100%',
+                'prompt' => ['text' => 'Выберите город', 'options' => ['class' => '']],
+                'options' => [$model['city'] => ['selected' => true]]
+            ])
+            ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
 
         <?= $form->field($model, 'password', [
             'options' => ['class' => '']
@@ -60,11 +59,12 @@ use frontend\models\Cities;
                 'style' => 'width: 100%',
                 'type' => 'password'
             ])
-            ->error(['tag'=>'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
+            ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
 
 
         <div class="form-group">
-            <?= Html::submitButton('Создать аккаунт', ['class' => 'button button__registration', 'name' => 'signup-button']) ?>
+            <?= Html::submitButton('Создать аккаунт',
+                ['class' => 'button button__registration', 'name' => 'signup-button']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

@@ -5,6 +5,7 @@
 /* @var $content string */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
@@ -22,14 +23,14 @@ AppAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
-<!--    --><?php //$this->head() ?>
+    <!--    --><?php //$this->head() ?>
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <?php $this->beginBody() ?>
 <div class="table-layout">
-    <?php if (!in_array(Yii::$app->request->resolve()[0], ['registration','landing'])): ?>
+    <?php if (!in_array(Url::to(), ['/registration', '/landing'])): ?>
     <header class="page-header">
         <div class="main-container page-header__container">
             <div class="page-header__logo">
@@ -77,10 +78,10 @@ AppAsset::register($this);
             <div class="header__nav">
                 <ul class="header-nav__list site-list">
                     <li class="site-list__item">
-                        <a href="/tasks">Задания</a>
+                        <a href="<?= Url::to(['tasks/index']) ?>">Задания</a>
                     </li>
                     <li class="site-list__item">
-                        <a href="/users">Исполнители</a>
+                        <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
                     </li>
                     <li class="site-list__item">
                         <a href="#">Создать задание</a>
@@ -90,54 +91,54 @@ AppAsset::register($this);
                     </li>
                 </ul>
             </div>
-                <div class="header__town">
-                    <select class="multiple-select input town-select" size="1" name="town[]">
-                        <option value="Moscow">Москва</option>
-                        <option selected value="SPB">Санкт-Петербург</option>
-                        <option value="Krasnodar">Краснодар</option>
-                        <option value="Irkutsk">Иркутск</option>
-                        <option value="Vladivostok">Владивосток</option>
-                    </select>
-                </div>
-                <div class="header__lightbulb"></div>
-                <div class="lightbulb__pop-up">
-                    <h3>Новые события</h3>
-                    <p class="lightbulb__new-task lightbulb__new-task--message">
-                        Новое сообщение в чате
-                        <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                    </p>
-                    <p class="lightbulb__new-task lightbulb__new-task--executor">
-                        Выбран исполнитель для
-                        <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                    </p>
-                    <p class="lightbulb__new-task lightbulb__new-task--close">
-                        Завершено задание
-                        <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                    </p>
-                </div>
-                <div class="header__account">
-                    <a class="header__account-photo">
-                        <img src="/img/user-photo.png"
-                             width="43" height="44"
-                             alt="Аватар пользователя">
-                    </a>
-                    <span class="header__account-name">
+            <div class="header__town">
+                <select class="multiple-select input town-select" size="1" name="town[]">
+                    <option value="Moscow">Москва</option>
+                    <option selected value="SPB">Санкт-Петербург</option>
+                    <option value="Krasnodar">Краснодар</option>
+                    <option value="Irkutsk">Иркутск</option>
+                    <option value="Vladivostok">Владивосток</option>
+                </select>
+            </div>
+            <div class="header__lightbulb"></div>
+            <div class="lightbulb__pop-up">
+                <h3>Новые события</h3>
+                <p class="lightbulb__new-task lightbulb__new-task--message">
+                    Новое сообщение в чате
+                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
+                </p>
+                <p class="lightbulb__new-task lightbulb__new-task--executor">
+                    Выбран исполнитель для
+                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
+                </p>
+                <p class="lightbulb__new-task lightbulb__new-task--close">
+                    Завершено задание
+                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
+                </p>
+            </div>
+            <div class="header__account">
+                <a class="header__account-photo">
+                    <img src="/img/user-photo.png"
+                         width="43" height="44"
+                         alt="Аватар пользователя">
+                </a>
+                <span class="header__account-name">
                  Василий
              </span>
-                </div>
-                <div class="account__pop-up">
-                    <ul class="account__pop-up-list">
-                        <li>
-                            <a href="#">Мои задания</a>
-                        </li>
-                        <li>
-                            <a href="#">Настройки</a>
-                        </li>
-                        <li>
-                            <a href="#">Выход</a>
-                        </li>
-                    </ul>
-                </div>
+            </div>
+            <div class="account__pop-up">
+                <ul class="account__pop-up-list">
+                    <li>
+                        <a href="#">Мои задания</a>
+                    </li>
+                    <li>
+                        <a href="#">Настройки</a>
+                    </li>
+                    <li>
+                        <a href="#">Выход</a>
+                    </li>
+                </ul>
+            </div>
         </div>
         <?php endif; ?>
     </header>
@@ -163,16 +164,16 @@ AppAsset::register($this);
             <div class="page-footer__links">
                 <ul class="links__list">
                     <li class="links__item">
-                        <a href="/tasks">Задания</a>
+                        <a href="<?= Url::to(['tasks/index']) ?>">Задания</a>
                     </li>
                     <li class="links__item">
                         <a href="">Мой профиль</a>
                     </li>
                     <li class="links__item">
-                        <a href="/users">Исполнители</a>
+                        <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
                     </li>
                     <li class="links__item">
-                        <a href="/registration">Регистрация</a>
+                        <a href="<?= Url::to(['registration/index']) ?>">Регистрация</a>
                     </li>
                     <li class="links__item">
                         <a href="">Создать задание</a>
@@ -190,7 +191,7 @@ AppAsset::register($this);
                          alt="Логотип HTML Academy">
                 </a>
             </div>
-            <?php if (Yii::$app->request->resolve()[0] == 'registration'): ?>
+            <?php if (Url::to() == '/registration'): ?>
                 <div class="clipart-woman">
                     <img src="/img/clipart-woman.png" width="238" height="450">
                 </div>

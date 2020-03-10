@@ -20,12 +20,12 @@ class TasksController extends Controller
             ->orderBy(['creation_time' => SORT_DESC])
             ->where(['status' => Tasks::STATUS_NEW]);
 
-        $model = new TasksFilter();
+        $filterModel = new TasksFilter();
         if (Yii::$app->request->get()) {
-            $model->load(Yii::$app->request->get());
+            $filterModel->load(Yii::$app->request->get());
         }
 
-        $query = $model->applyFilters($query);
+        $query = $filterModel->applyFilters($query);
 
         $pagination = new Pagination([
             'defaultPageSize' => 5,
@@ -39,7 +39,7 @@ class TasksController extends Controller
 
         return $this->render('index', [
             'tasks' => $tasks,
-            'model' => $model,
+            'filterModel' => $filterModel,
             'pagination' => $pagination,
 
         ]);
@@ -50,7 +50,7 @@ class TasksController extends Controller
         $task = Tasks::findOne($id);
 
         if (!$task) {
-            throw new HttpException(404 ,'Task not found');
+            throw new HttpException(404, 'Task not found');
         }
 
         return $this->render('view', [

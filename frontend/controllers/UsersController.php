@@ -23,17 +23,17 @@ class UsersController extends Controller
             ->joinWith('userCategories')
             ->where(['is not', 'categories.id', null]);
 
-        $model = new UsersFilter();
+        $filterModel = new UsersFilter();
         if (Yii::$app->request->get()) {
-            $model->load(Yii::$app->request->get());
+            $filterModel->load(Yii::$app->request->get());
         }
 
-        if ($search = $model->search) {
+        if ($search = $filterModel->search) {
             $query->andWhere(['like', 'users.name', $search]);
-            $model = new UsersFilter();
-            $model->search = $search;
+            $filterModel = new UsersFilter();
+            $filterModel->search = $search;
         } else {
-            $query = $model->applyFilters($query);
+            $query = $filterModel->applyFilters($query);
         }
 
         $pagination = new Pagination([
@@ -48,7 +48,7 @@ class UsersController extends Controller
 
         return $this->render('index', [
             'users' => $users,
-            'model' => $model,
+            'filterModel' => $filterModel,
             'pagination' => $pagination
         ]);
     }
@@ -60,9 +60,9 @@ class UsersController extends Controller
             ->joinWith('userCategories')
             ->where(['is not', 'categories.id', null]);
 
-        $model = new UsersFilter();
+        $filterModel = new UsersFilter();
         if (Yii::$app->request->get()) {
-            $model->load(Yii::$app->request->get());
+            $filterModel->load(Yii::$app->request->get());
         }
 
         if ($sort) {
@@ -82,7 +82,7 @@ class UsersController extends Controller
 
         return $this->render('index', [
             'users' => $users,
-            'model' => $model,
+            'filterModel' => $filterModel,
             'pagination' => $pagination
         ]);
     }
@@ -91,7 +91,7 @@ class UsersController extends Controller
     {
         $user = Users::findOne($id);
         if (!$user) {
-            throw new HttpException(404 ,'User not found');
+            throw new HttpException(404, 'User not found');
         }
         return $this->render('view', [
             'user' => $user

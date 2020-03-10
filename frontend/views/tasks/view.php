@@ -65,7 +65,8 @@ use yii\helpers\Url;
                         <a href="<?= Url::to(['users/view', 'id' => $response->executor_id]) ?>">
                             <img src="<?= $response->executor->fileAvatar->link ?>" width="55" height="55"></a>
                         <div class="feedback-card__top--name">
-                            <p><a href="<?= Url::to(['users/view', 'id' => $response->executor_id]) ?>" class="link-regular">
+                            <p><a href="<?= Url::to(['users/view', 'id' => $response->executor_id]) ?>"
+                                  class="link-regular">
                                     <?= $response->executor->name ?></a></p>
                             <?php foreach (range(1, 5) as $value): ?>
                                 <span <?= $value <= $response->executor->userData->rating ? '' : 'class="star-disabled"' ?>></span>
@@ -103,7 +104,8 @@ use yii\helpers\Url;
                 <span><?= WordHelper::getStringTasks(count($task->customer->tasksCustomer)) ?></span>
                 <span class="last-"><?= WordHelper::getStringTimeAgo($task->customer->creation_time) ?> на сайте</span>
             </p>
-            <a href="<?= Url::to(['users/view', 'id' => $task->customer->id]) ?>" class="link-regular">Смотреть профиль</a>
+            <a href="<?= Url::to(['users/view', 'id' => $task->customer->id]) ?>" class="link-regular">Смотреть
+                профиль</a>
         </div>
     </div>
     <div class="connect-desk__chat">

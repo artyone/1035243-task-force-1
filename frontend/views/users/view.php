@@ -67,8 +67,9 @@ use yii\helpers\Url;
                         <a href="#"><img src="<?= $feedback->task->customer->fileAvatar->link ?>" width="55"
                                          height="54"></a>
                         <div class="feedback-card__reviews-content">
-                            <p class="link-name link"><a href="<?= Url::to(['users/view', 'id' => $feedback->task->customer->id]) ?>"
-                                                         class="link-regular">
+                            <p class="link-name link">
+                                <a href="<?= Url::to(['users/view', 'id' => $feedback->task->customer->id]) ?>"
+                                   class="link-regular">
                                     <?= $feedback->task->customer->name ?></a></p>
                             <p class="review-text">
                                 <?= $feedback->description ?>

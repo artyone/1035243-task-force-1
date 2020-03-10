@@ -14,7 +14,8 @@ use yii\helpers\Url;
         <?php foreach ($tasks as $task): ?>
             <div class="new-task__card">
                 <div class="new-task__title">
-                    <a href="<?= Url::to(['tasks/view', 'id' => $task->id]) ?>" class="link-regular"><h2><?= $task->name ?></h2></a>
+                    <a href="<?= Url::to(['tasks/view', 'id' => $task->id]) ?>" class="link-regular">
+                        <h2><?= $task->name ?></h2></a>
                     <a class="new-task__type link-regular" href="#"><p><?= $task->category->name ?></p></a>
                 </div>
                 <div class="new-task__icon new-task__icon--<?= $task->category->icon ?>"></div>
@@ -46,25 +47,19 @@ use yii\helpers\Url;
 </section>
 <section class="search-task">
     <div class="search-task__wrapper">
-        <?php
-
-        $form = ActiveForm::begin([
+        <?php $form = ActiveForm::begin([
             'id' => 'filter-form',
             'options' => ['class' => 'search-task__form'],
             'action' => ['/tasks'],
             'method' => 'get'
-        ]);
-
-        ?>
+        ]) ?>
         <fieldset class="search-task__categories">
             <legend>Категории</legend>
 
-            <?php
-
-            echo $form->field($model, 'categories', ['options' => ['class' => '']])
+            <?= $form->field($filterModel, 'categories', ['options' => ['class' => '']])
                 ->checkboxList(Categories::find()->select(['name', 'id'])->indexBy('id')->column(), [
-                    'item' => function ($index, $label, $name, $checked, $value) use ($model) {
-                        if (!empty($model['categories']) && in_array($value, $model['categories'])) {
+                    'item' => function ($index, $label, $name, $checked, $value) use ($filterModel) {
+                        if (!empty($filterModel['categories']) && in_array($value, $filterModel['categories'])) {
                             $checked = 'checked';
                         }
                         return '<input class="visually-hidden checkbox__input" id="categories_' . $value . '"
@@ -72,32 +67,24 @@ use yii\helpers\Url;
                                         <label for="categories_' . $value . '">' . $label . '</label>';
                     },
                     'unselect' => null
-                ])->label(false);
+                ])->label(false) ?>
 
-            ?>
         </fieldset>
-
         <fieldset class="search-task__categories">
             <legend>Дополнительно</legend>
-            <?php
-
-            echo $form->field($model, 'noResponse', [
+            <?= $form->field($filterModel, 'noResponse', [
                 'template' => '{input}{label}',
                 'options' => ['class' => ''],
             ])
-                ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false);
-
-            echo $form->field($model, 'remoteWork', [
+                ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false)
+            ?>
+            <?= $form->field($filterModel, 'remoteWork', [
                 'template' => '{input}{label}',
                 'options' => ['class' => '']
             ])
-                ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false);
-
-            ?>
+                ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false) ?>
         </fieldset>
-        <?php
-
-        echo $form->field($model, 'period', [
+        <?= $form->field($filterModel, 'period', [
             'template' => '{label}{input}',
             'options' => ['class' => ''],
             'labelOptions' => ['class' => 'search-task__name']
@@ -111,9 +98,8 @@ use yii\helpers\Url;
                 'class' => 'multiple-select input',
                 'style' => 'width: 100%',
                 'prompt' => 'Выберите период'
-            ]);
-
-        echo $form->field($model, 'search', [
+            ]) ?>
+        <?= $form->field($filterModel, 'search', [
             'template' => '{label}{input}',
             'options' => ['class' => ''],
             'labelOptions' => ['class' => 'search-task__name']
@@ -121,10 +107,9 @@ use yii\helpers\Url;
             ->input('search', [
                 'class' => 'input-middle input',
                 'style' => 'width: 100%'
-            ]);
+            ]) ?>
 
-        echo Html::submitButton('Искать', ['class' => 'button']);
-        ActiveForm::end()
-        ?>
+        <?= Html::submitButton('Искать', ['class' => 'button']); ?>
+        <?php ActiveForm::end() ?>
     </div>
 </section>
