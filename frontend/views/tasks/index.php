@@ -56,10 +56,10 @@ use yii\helpers\Url;
         <fieldset class="search-task__categories">
             <legend>Категории</legend>
 
-            <?= $form->field($filterModel, 'categories', ['options' => ['class' => '']])
+            <?= $form->field($formModel, 'categories', ['options' => ['class' => '']])
                 ->checkboxList(Categories::find()->select(['name', 'id'])->indexBy('id')->column(), [
-                    'item' => function ($index, $label, $name, $checked, $value) use ($filterModel) {
-                        if (!empty($filterModel['categories']) && in_array($value, $filterModel['categories'])) {
+                    'item' => function ($index, $label, $name, $checked, $value) use ($formModel) {
+                        if (!empty($formModel['categories']) && in_array($value, $formModel['categories'])) {
                             $checked = 'checked';
                         }
                         return '<input class="visually-hidden checkbox__input" id="categories_' . $value . '"
@@ -72,19 +72,19 @@ use yii\helpers\Url;
         </fieldset>
         <fieldset class="search-task__categories">
             <legend>Дополнительно</legend>
-            <?= $form->field($filterModel, 'noResponse', [
+            <?= $form->field($formModel, 'noResponse', [
                 'template' => '{input}{label}',
                 'options' => ['class' => ''],
             ])
                 ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false)
             ?>
-            <?= $form->field($filterModel, 'remoteWork', [
+            <?= $form->field($formModel, 'remoteWork', [
                 'template' => '{input}{label}',
                 'options' => ['class' => '']
             ])
                 ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false) ?>
         </fieldset>
-        <?= $form->field($filterModel, 'period', [
+        <?= $form->field($formModel, 'period', [
             'template' => '{label}{input}',
             'options' => ['class' => ''],
             'labelOptions' => ['class' => 'search-task__name']
@@ -99,7 +99,7 @@ use yii\helpers\Url;
                 'style' => 'width: 100%',
                 'prompt' => 'Выберите период'
             ]) ?>
-        <?= $form->field($filterModel, 'search', [
+        <?= $form->field($formModel, 'search', [
             'template' => '{label}{input}',
             'options' => ['class' => ''],
             'labelOptions' => ['class' => 'search-task__name']

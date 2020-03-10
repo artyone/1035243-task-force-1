@@ -23,17 +23,17 @@ class UsersController extends Controller
             ->joinWith('userCategories')
             ->where(['is not', 'categories.id', null]);
 
-        $filterModel = new UsersFilter();
+        $formModel = new UsersFilter();
         if (Yii::$app->request->get()) {
-            $filterModel->load(Yii::$app->request->get());
+            $formModel->load(Yii::$app->request->get());
         }
 
-        if ($search = $filterModel->search) {
+        if ($search = $formModel->search) {
             $query->andWhere(['like', 'users.name', $search]);
-            $filterModel = new UsersFilter();
-            $filterModel->search = $search;
+            $formModel = new UsersFilter();
+            $formModel->search = $search;
         } else {
-            $query = $filterModel->applyFilters($query);
+            $query = $formModel->applyFilters($query);
         }
 
         $pagination = new Pagination([
@@ -48,7 +48,7 @@ class UsersController extends Controller
 
         return $this->render('index', [
             'users' => $users,
-            'filterModel' => $filterModel,
+            'formModel' => $formModel,
             'pagination' => $pagination
         ]);
     }

@@ -13,13 +13,13 @@ use yii\helpers\Url;
     <div class="user__search-link">
         <p>Сортировать по:</p>
         <ul class="user__search-list">
-            <li class="user__search-item <?= $filterModel->sort == 'rating' ? 'user__search-item--current' : '' ?>">
+            <li class="user__search-item <?= $formModel->sort == 'rating' ? 'user__search-item--current' : '' ?>">
                 <a href="<?= Url::to(['users/sort', 'sort' => 'rating']) ?>" class="link-regular">Рейтингу</a>
             </li>
-            <li class="user__search-item <?= $filterModel->sort == 'tasks_count' ? 'user__search-item--current' : '' ?>">
+            <li class="user__search-item <?= $formModel->sort == 'tasks_count' ? 'user__search-item--current' : '' ?>">
                 <a href="<?= Url::to(['users/sort', 'sort' => 'tasks_count']) ?>" class="link-regular">Числу заказов</a>
             </li>
-            <li class="user__search-item <?= $filterModel->sort == 'popularity' ? 'user__search-item--current' : '' ?>">
+            <li class="user__search-item <?= $formModel->sort == 'popularity' ? 'user__search-item--current' : '' ?>">
                 <a href="<?= Url::to(['users/sort', 'sort' => 'popularity']) ?>" class="link-regular">Популярности</a>
             </li>
         </ul>
@@ -29,8 +29,8 @@ use yii\helpers\Url;
             <div class="content-view__feedback-card user__search-wrapper">
                 <div class="feedback-card__top">
                     <div class="user__search-icon">
-                        <a href="<?= Url::to(['users/view', 'id' => $user->id]) ?>"><img
-                                    src="<?= $user->fileAvatar->link ?>" width="65" height="65"></a>
+                        <a href="<?= Url::to(['users/view', 'id' => $user->id]) ?>">
+                            <img src="<?= $user->fileAvatar->link ?>" width="65" height="65"></a>
                         <span><?= WordHelper::getStringTasks($user->userData->tasks_count) ?></span>
                         <span><?= WordHelper::getStringFeedbacks(count($user->tasksFeedbackExecutor)) ?></span>
                     </div>
@@ -82,10 +82,10 @@ use yii\helpers\Url;
         <fieldset class="search-task__categories">
             <legend>Категории</legend>
 
-            <?= $form->field($filterModel, 'categories', ['options' => ['class' => '']])
+            <?= $form->field($formModel, 'categories', ['options' => ['class' => '']])
                 ->checkboxList(Categories::find()->select(['name'])->indexBy('id')->column(), [
-                    'item' => function ($index, $label, $name, $checked, $value) use ($filterModel) {
-                        if (!empty($filterModel['categories']) && in_array($value, $filterModel['categories'])) {
+                    'item' => function ($index, $label, $name, $checked, $value) use ($formModel) {
+                        if (!empty($formModel['categories']) && in_array($value, $formModel['categories'])) {
                             $checked = 'checked';
                         }
                         return '<input class="visually-hidden checkbox__input" id="id_' . $value . '"
@@ -97,29 +97,29 @@ use yii\helpers\Url;
         </fieldset>
         <fieldset class="search-task__categories">
             <legend>Дополнительно</legend>
-            <?= $form->field($filterModel, 'free', [
+            <?= $form->field($formModel, 'free', [
                 'template' => '{input}{label}',
                 'options' => ['class' => ''],
             ])
                 ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false) ?>
-            <?= $form->field($filterModel, 'online', [
+            <?= $form->field($formModel, 'online', [
                 'template' => '{input}{label}',
                 'options' => ['class' => '']
             ])
                 ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false) ?>
 
-            <?= $form->field($filterModel, 'hasFeedback', [
+            <?= $form->field($formModel, 'hasFeedback', [
                 'template' => '{input}{label}',
                 'options' => ['class' => '']
             ])
                 ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false) ?>
-            <?= $form->field($filterModel, 'inFavorites', [
+            <?= $form->field($formModel, 'inFavorites', [
                 'template' => '{input}{label}',
                 'options' => ['class' => '']
             ])
                 ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false) ?>
         </fieldset>
-        <?= $form->field($filterModel, 'search', [
+        <?= $form->field($formModel, 'search', [
             'template' => '{label}{input}',
             'options' => ['class' => ''],
             'labelOptions' => ['class' => 'search-task__name']

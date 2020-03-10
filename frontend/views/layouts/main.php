@@ -28,7 +28,7 @@ MainAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 <div class="table-layout">
-    <?php if (!in_array(Url::to(), ['/registration', '/landing'])): ?>
+    <?php if (!in_array(Yii::$app->controller->id, ['registration', 'landing'])): ?>
     <header class="page-header">
         <div class="main-container page-header__container">
             <div class="page-header__logo">
@@ -189,7 +189,7 @@ MainAsset::register($this);
                          alt="Логотип HTML Academy">
                 </a>
             </div>
-            <?php if (Url::to() == '/registration'): ?>
+            <?php if (Yii::$app->controller->id == 'registration'): ?>
                 <div class="clipart-woman">
                     <img src="/img/clipart-woman.png" width="238" height="450">
                 </div>

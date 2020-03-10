@@ -43,7 +43,7 @@ class TasksFilter extends Model
         return '';
     }
 
-    public function getPeriodTime($period)
+    private function getPeriodTime($period)
     {
         $date = new \DateTime();
         $date->sub(\DateInterval::createFromDateString($this->availablePeriod[$period]));

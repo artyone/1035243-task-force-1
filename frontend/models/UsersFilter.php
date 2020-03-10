@@ -41,7 +41,7 @@ class UsersFilter extends Model
         return '';
     }
 
-    public function getOnlineTime()
+    private function getOnlineTime()
     {
         $date = new \DateTime();
         $date->sub(\DateInterval::createFromDateString('30 minutes'));
