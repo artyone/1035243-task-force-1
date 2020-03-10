@@ -42,6 +42,7 @@ class RegistrationForm extends Model
 
             ['city', 'exist', 'targetClass' => '\frontend\models\Cities', 'targetAttribute' => 'id','message' => 'Выбран неверный город'],
 
+            ['password', 'string', 'max' => 32],
             ['password', 'string', 'min' => 8],
         ];
     }

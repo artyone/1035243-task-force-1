@@ -51,7 +51,7 @@ class Users extends \yii\db\ActiveRecord
             [['creation_time'], 'safe'],
             [['avatar'], 'integer'],
             [['email'], 'string', 'max' => 254],
-            [['password_hash'], 'string', 'max' => 32],
+            [['password_hash'], 'string', 'max' => 64],
             [['name'], 'string', 'max' => 500],
             [['email'], 'unique'],
             [
@@ -262,13 +262,10 @@ class Users extends \yii\db\ActiveRecord
     public function getCompletedTasksExecutor()
     {
         return $this->getTasksExecutor()->where(['status' => Tasks::STATUS_DONE])->all();
-
     }
 
     public function setPassword($password)
     {
-        $this->password_hash = $password;
-        //TODO разобраться с генерацией хэша
-        //Yii::$app->security->generatePasswordHash($password);
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
 }
