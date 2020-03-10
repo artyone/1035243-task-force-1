@@ -60,9 +60,9 @@ class UsersController extends Controller
             ->joinWith('userCategories')
             ->where(['is not', 'categories.id', null]);
 
-        $filterModel = new UsersFilter();
+        $fomrModel = new UsersFilter();
         if (Yii::$app->request->get()) {
-            $filterModel->load(Yii::$app->request->get());
+            $fomrModel->load(Yii::$app->request->get());
         }
 
         if ($sort) {
@@ -82,7 +82,7 @@ class UsersController extends Controller
 
         return $this->render('index', [
             'users' => $users,
-            'filterModel' => $filterModel,
+            'formModel' => $fomrModel,
             'pagination' => $pagination
         ]);
     }
