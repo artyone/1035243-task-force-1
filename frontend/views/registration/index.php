@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use frontend\helpers\WordHelper;
 use yii\widgets\ActiveForm;
 use frontend\models\Cities;
 
@@ -15,7 +14,8 @@ use frontend\models\Cities;
             'id' => 'form-signup',
             'options' => ['class' => 'registration__user-form form-create'],
             'action' => ['/registration'],
-            'method' => 'post'
+            'method' => 'post',
+            'enableAjaxValidation' => true
         ]) ?>
 
         <?= $form->field($userRegisterForm, 'email', [
