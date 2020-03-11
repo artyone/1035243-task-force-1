@@ -28,12 +28,16 @@ use yii\widgets\LinkPager;
             <div class="content-view__feedback-card user__search-wrapper">
                 <div class="feedback-card__top">
                     <div class="user__search-icon">
-                        <a href="/user/view/<?= $user->id ?>"><img src="<?= $user->fileAvatar->link ?>" width="65" height="65"></a>
+                        <a href="/user/view/<?= $user->id ?>">
+                            <img src="<?= $user->fileAvatar ? $user->fileAvatar->link : '/img/user-photo.png' ?>"
+                                 width="65" height="65">
+                        </a>
                         <span><?= WordHelper::getStringTasks($user->userData->tasks_count) ?></span>
                         <span><?= WordHelper::getStringFeedbacks(count($user->tasksFeedbackExecutor)) ?></span>
                     </div>
                     <div class="feedback-card__top--name user__search-card">
-                        <p class="link-name"><a href="/user/view/<?= $user->id ?>" class="link-regular"><?= $user->name ?></a></p>
+                        <p class="link-name"><a href="/user/view/<?= $user->id ?>"
+                                                class="link-regular"><?= $user->name ?></a></p>
                         <?php foreach (range(1, 5) as $value): ?>
                             <span <?= $value <= $user->userData->rating ? '' : 'class="star-disabled"' ?>></span>
                         <?php endforeach; ?>

@@ -6,7 +6,8 @@ use frontend\helpers\WordHelper;
 <section class="content-view">
     <div class="user__card-wrapper">
         <div class="user__card">
-            <img src="<?= $user->fileAvatar->link ?>" width="120" height="120" alt="Аватар пользователя">
+            <img src="<?= $user->fileAvatar ? $user->fileAvatar->link : '/img/user-photo.png' ?>" width="120"
+                 height="120" alt="Аватар пользователя">
             <div class="content-view__headline">
                 <h1><?= $user->name ?></h1>
                 <p><?= $user->userData->city->name ?>
@@ -63,8 +64,10 @@ use frontend\helpers\WordHelper;
                            class="link-regular"><?= $feedback->task->name ?></a>
                     </p>
                     <div class="card__review">
-                        <a href="#"><img src="<?= $feedback->task->customer->fileAvatar->link ?>" width="55"
-                                         height="54"></a>
+                        <a href="#">
+                            <img src="<?= $feedback->task->customer->fileAvatar ? $feedback->task->customer->fileAvatar->link : '' ?>"
+                                 width="55" height="54">
+                        </a>
                         <div class="feedback-card__reviews-content">
                             <p class="link-name link"><a href="/user/view/<?= $feedback->task->customer->id ?>"
                                                          class="link-regular">
