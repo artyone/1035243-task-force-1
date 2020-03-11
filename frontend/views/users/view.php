@@ -66,8 +66,8 @@ use yii\helpers\Url;
                     </p>
                     <div class="card__review">
                         <a href="#">
-                            <img src="<?= $feedback->task->customer->fileAvatar ? $feedback->task->customer->fileAvatar->link : '' ?>"
-                                 width="55" height="54">
+                            <img src="<?= $feedback->task->customer->fileAvatar ? $feedback->task->customer->fileAvatar->link : '/img/user-photo.png' ?>"
+                                 alt="Аватар заказчика" width="55" height="54">
                         </a>
                         <div class="feedback-card__reviews-content">
                             <p class="link-name link">

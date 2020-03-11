@@ -63,7 +63,8 @@ use yii\helpers\Url;
                 <div class="content-view__feedback-card">
                     <div class="feedback-card__top">
                         <a href="<?= Url::to(['users/view', 'id' => $response->executor_id]) ?>">
-                            <img src="<?= $response->executor->fileAvatar->link ?>" width="55" height="55"></a>
+                            <img src="<?= $response->executor->fileAvatar ? $response->executor->fileAvatar->link : '/img/user-photo.png' ?>"
+                                 width="55" height="55" alt="Аватар исполнителя"></a>
                         <div class="feedback-card__top--name">
                             <p><a href="<?= Url::to(['users/view', 'id' => $response->executor_id]) ?>"
                                   class="link-regular">
@@ -95,7 +96,8 @@ use yii\helpers\Url;
         <div class="profile-mini__wrapper">
             <h3>Заказчик</h3>
             <div class="profile-mini__top">
-                <img src="<?= $task->customer->fileAvatar->link ?>" width="62" height="62" alt="Аватар заказчика">
+                <img src="<?= $task->customer->fileAvatar ? $task->customer->fileAvatar->link : '/img/user-photo.png' ?>"
+                     width="62" height="62" alt="Аватар заказчика">
                 <div class="profile-mini__name five-stars__rate">
                     <p><?= $task->customer->name ?></p>
                 </div>
