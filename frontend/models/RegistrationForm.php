@@ -2,20 +2,20 @@
 
 namespace frontend\models;
 
-use frontend\models\Users;
 use yii\base\Model;
-use frontend\models\UsersData;
-use yii;
 
-
+/**
+ * Registration form
+ */
 class RegistrationForm extends Model
 {
-
+    /**
+     * {@inheritdoc}
+     */
     public $email;
     public $name;
     public $city;
     public $password;
-
     public function attributeLabels()
     {
         return [
@@ -26,6 +26,9 @@ class RegistrationForm extends Model
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rules()
     {
         return [

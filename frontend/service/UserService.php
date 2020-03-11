@@ -3,17 +3,25 @@
 
 namespace frontend\service;
 
+use frontend\models\RegistrationForm;
 use frontend\models\Users;
 use frontend\models\UsersData;
 use yii\base\Model;
 use yii;
 
+/**
+ * User service
+ */
 class UserService extends Model
 {
-
-    public function registration($model)
+    /**
+     * Регистрация
+     * @param RegistrationForm $model модель формы регистрации
+     * @return bool true - регистрация прошла успешно, false - регистрация не удалась
+     * @throws yii\db\Exception
+     */
+    public function registration(RegistrationForm $model): bool
     {
-
         $transaction = Yii::$app->db->beginTransaction();
 
         $user = new Users();

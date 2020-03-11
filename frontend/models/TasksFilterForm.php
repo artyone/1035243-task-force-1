@@ -4,15 +4,19 @@ namespace frontend\models;
 
 use yii\base\Model;
 
-class TasksFilter extends Model
+/**
+ * Tasks filter form
+ */
+class TasksFilterForm extends Model
 {
-
+    /**
+     * {@inheritdoc}
+     */
     public $categories;
     public $noResponse;
     public $remoteWork;
     public $period;
     public $search;
-
     private $availablePeriod = [
         1 => '1 day',
         2 => '1 week',
@@ -20,6 +24,9 @@ class TasksFilter extends Model
         4 => '100 years'
     ];
 
+    /**
+     * {@inheritdoc}
+     */
     public function attributeLabels()
     {
         return [
@@ -31,6 +38,9 @@ class TasksFilter extends Model
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rules()
     {
         return [
@@ -38,11 +48,19 @@ class TasksFilter extends Model
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function formName()
     {
         return '';
     }
 
+    /**
+     * Вычисление даты для отбора заданий
+     *
+     * @return string текущая дата минус заданный на форме период
+     */
     private function getPeriodTime($period)
     {
         $date = new \DateTime();
@@ -51,6 +69,13 @@ class TasksFilter extends Model
         return $result;
     }
 
+    /**
+     * Применение дополнительных фильтров к запросу
+     *
+     * @param ???
+     * @return ???
+     */
+    //Прошу подсказать какой тут тип данных
     public function applyFilters($query)
     {
         if ($this->categories) {

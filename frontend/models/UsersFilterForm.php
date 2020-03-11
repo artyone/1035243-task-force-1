@@ -4,10 +4,17 @@
 namespace frontend\models;
 
 use yii\base\Model;
+use yii\db\ActiveRecord;
+use yii\db\Query;
 
-class UsersFilter extends Model
+/**
+ * Users filter form
+ */
+class UsersFilterForm extends Model
 {
-
+    /**
+     * {@inheritdoc}
+     */
     public $categories;
     public $free;
     public $online;
@@ -16,6 +23,9 @@ class UsersFilter extends Model
     public $search;
     public $sort;
 
+    /**
+     * {@inheritdoc}
+     */
     public function attributeLabels()
     {
         return [
@@ -29,6 +39,9 @@ class UsersFilter extends Model
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rules()
     {
         return [
@@ -36,12 +49,20 @@ class UsersFilter extends Model
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function formName()
     {
         return '';
     }
 
-    private function getOnlineTime()
+    /**
+     * Вычисление крайней даты для нахождения статуса "онлайн" у пользователей
+     *
+     * @return string текущая дата минус 30 минут
+     */
+    private function getOnlineTime(): string
     {
         $date = new \DateTime();
         $date->sub(\DateInterval::createFromDateString('30 minutes'));
@@ -49,6 +70,13 @@ class UsersFilter extends Model
         return $result;
     }
 
+    /**
+     * Применение дополнительных фильтров к запросу
+     *
+     * @param ???
+     * @return ???
+     */
+    //Прошу подсказать какой тут тип данных
     public function applyFilters($query)
     {
 

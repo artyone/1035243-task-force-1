@@ -14,12 +14,12 @@ use frontend\models\Cities;
             'id' => 'form-signup',
             'options' => ['class' => 'registration__user-form form-create'],
             'action' => ['/registration'],
-            'method' => 'post',
-            'enableAjaxValidation' => true
+            'method' => 'post'
         ]) ?>
 
         <?= $form->field($userRegisterForm, 'email', [
-            'options' => ['class' => 'form']
+            'options' => ['class' => 'form'],
+            'enableAjaxValidation' => true
         ])
             ->textinput([
                 'class' => 'input textarea',
@@ -40,7 +40,8 @@ use frontend\models\Cities;
 
 
         <?= $form->field($userRegisterForm, 'city', [
-            'options' => ['class' => '']
+            'options' => ['class' => ''],
+            'enableAjaxValidation' => true
         ])
             ->dropDownList(
                 Cities::find()->select(['name', 'id'])->indexBy('id')->column(), [

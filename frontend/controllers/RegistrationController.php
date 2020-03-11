@@ -11,13 +11,19 @@ use yii\widgets\ActiveForm;
 use yii\web\Response;
 
 
-
+/**
+ * Registration controller
+ */
 class RegistrationController extends Controller
 {
 
+    /**
+     * Регистрация пользователя.
+     *
+     * @return mixed
+     */
     public function actionIndex()
     {
-
         $userRegisterForm = new RegistrationForm();
         if (Yii::$app->request->getIsPost()) {
             $userRegisterForm->load(Yii::$app->request->post());

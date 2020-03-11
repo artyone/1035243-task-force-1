@@ -8,29 +8,35 @@ use frontend\models\Tasks;
 use yii\data\Pagination;
 use yii\db\Query;
 use yii\web\Controller;
-use frontend\models\UsersFilter;
+use frontend\models\UsersFilterForm;
 use yii;
 use yii\web\HttpException;
 
-
+/**
+ * Users controller
+ */
 class UsersController extends Controller
 {
+    /**
+     * Отображение общего списка исполнителей с учетом фильтров, если они заданы.
+     *
+     * @return mixed
+     */
     public function actionIndex()
     {
-
         $query = Users::find()
             ->orderBy(['creation_time' => SORT_DESC])
             ->joinWith('userCategories')
             ->where(['is not', 'categories.id', null]);
 
-        $usersFilterForm = new UsersFilter();
+        $usersFilterForm = new UsersFilterForm();
         if (Yii::$app->request->get()) {
             $usersFilterForm->load(Yii::$app->request->get());
         }
 
         if ($search = $usersFilterForm->search) {
             $query->andWhere(['like', 'users.name', $search]);
-            $usersFilterForm = new UsersFilter();
+            $usersFilterForm = new UsersFilterForm();
             $usersFilterForm->search = $search;
         } else {
             $query = $usersFilterForm->applyFilters($query);
@@ -53,6 +59,11 @@ class UsersController extends Controller
         ]);
     }
 
+    /**
+     * Отображение общего списка исполнителей с учетом сортировки.
+     *
+     * @return mixed
+     */
     public function actionSort()
     {
         $query = Users::find()
@@ -60,7 +71,7 @@ class UsersController extends Controller
             ->joinWith('userCategories')
             ->where(['is not', 'categories.id', null]);
 
-        $usersFilterForm = new UsersFilter();
+        $usersFilterForm = new UsersFilterForm();
         if (Yii::$app->request->get()) {
             $usersFilterForm->load(Yii::$app->request->get());
         }
@@ -84,6 +95,11 @@ class UsersController extends Controller
         ]);
     }
 
+    /**
+     * Отображение одного исполнителя.
+     *
+     * @return mixed
+     */
     public function actionView($id)
     {
         $user = Users::findOne($id);

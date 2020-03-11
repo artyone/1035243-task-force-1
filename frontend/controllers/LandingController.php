@@ -7,8 +7,16 @@ namespace frontend\controllers;
 use yii\web\Controller;
 use frontend\models\Tasks;
 
+/**
+ * Landing controller
+ */
 class LandingController extends Controller
 {
+    /**
+     * Отображение лэндинга сайта
+     *
+     * @return mixed
+     */
     public function actionIndex()
     {
         $query = Tasks::find()
