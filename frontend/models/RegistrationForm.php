@@ -47,32 +47,4 @@ class RegistrationForm extends Model
         ];
     }
 
-    public function registration()
-    {
-        if (!$this->validate()) {
-            return null;
-        }
-
-        $transaction = Yii::$app->db->beginTransaction();
-
-        $user = new Users();
-        $user->name = $this->name;
-        $user->email = $this->email;
-        $user->setPassword($this->password);
-        if (!$user->save()) {
-            $transaction->rollBack();
-            return false;
-        }
-        $userData = new UsersData();
-        $userData->user_id = $user->id;
-        $userData->city_id = $this->city;
-        if (!$userData->save()) {
-            $transaction->rollBack();
-            return false;
-        }
-        $transaction->commit();
-        return true;
-
-    }
-
 }

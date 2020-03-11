@@ -23,17 +23,17 @@ class UsersController extends Controller
             ->joinWith('userCategories')
             ->where(['is not', 'categories.id', null]);
 
-        $formModel = new UsersFilter();
+        $usersFilterForm = new UsersFilter();
         if (Yii::$app->request->get()) {
-            $formModel->load(Yii::$app->request->get());
+            $usersFilterForm->load(Yii::$app->request->get());
         }
 
-        if ($search = $formModel->search) {
+        if ($search = $usersFilterForm->search) {
             $query->andWhere(['like', 'users.name', $search]);
-            $formModel = new UsersFilter();
-            $formModel->search = $search;
+            $usersFilterForm = new UsersFilter();
+            $usersFilterForm->search = $search;
         } else {
-            $query = $formModel->applyFilters($query);
+            $query = $usersFilterForm->applyFilters($query);
         }
 
         $pagination = new Pagination([
@@ -48,7 +48,7 @@ class UsersController extends Controller
 
         return $this->render('index', [
             'users' => $users,
-            'formModel' => $formModel,
+            'usersFilterForm' => $usersFilterForm,
             'pagination' => $pagination
         ]);
     }
@@ -60,12 +60,12 @@ class UsersController extends Controller
             ->joinWith('userCategories')
             ->where(['is not', 'categories.id', null]);
 
-        $formModel = new UsersFilter();
+        $usersFilterForm = new UsersFilter();
         if (Yii::$app->request->get()) {
-            $formModel->load(Yii::$app->request->get());
+            $usersFilterForm->load(Yii::$app->request->get());
         }
 
-        $query = $formModel->applyFilters($query);
+        $query = $usersFilterForm->applyFilters($query);
 
         $pagination = new Pagination([
             'defaultPageSize' => 5,
@@ -79,7 +79,7 @@ class UsersController extends Controller
 
         return $this->render('index', [
             'users' => $users,
-            'formModel' => $formModel,
+            'usersFilterForm' => $usersFilterForm,
             'pagination' => $pagination
         ]);
     }

@@ -20,12 +20,12 @@ class TasksController extends Controller
             ->orderBy(['creation_time' => SORT_DESC])
             ->where(['status' => Tasks::STATUS_NEW]);
 
-        $formModel = new TasksFilter();
+        $tasksFilterForm = new TasksFilter();
         if (Yii::$app->request->get()) {
-            $formModel->load(Yii::$app->request->get());
+            $tasksFilterForm->load(Yii::$app->request->get());
         }
 
-        $query = $formModel->applyFilters($query);
+        $query = $tasksFilterForm->applyFilters($query);
 
         $pagination = new Pagination([
             'defaultPageSize' => 5,
@@ -39,7 +39,7 @@ class TasksController extends Controller
 
         return $this->render('index', [
             'tasks' => $tasks,
-            'formModel' => $formModel,
+            'tasksFilterForm' => $tasksFilterForm,
             'pagination' => $pagination,
 
         ]);

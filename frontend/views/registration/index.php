@@ -18,7 +18,7 @@ use frontend\models\Cities;
             'method' => 'post'
         ]) ?>
 
-        <?= $form->field($model, 'email', [
+        <?= $form->field($userRegisterForm, 'email', [
             'options' => ['class' => 'form']
         ])
             ->textinput([
@@ -28,7 +28,7 @@ use frontend\models\Cities;
             ])
             ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
 
-        <?= $form->field($model, 'name', [
+        <?= $form->field($userRegisterForm, 'name', [
             'options' => ['class' => '']
         ])
             ->textinput([
@@ -39,7 +39,7 @@ use frontend\models\Cities;
             ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
 
 
-        <?= $form->field($model, 'city', [
+        <?= $form->field($userRegisterForm, 'city', [
             'options' => ['class' => '']
         ])
             ->dropDownList(
@@ -51,7 +51,7 @@ use frontend\models\Cities;
             ])
             ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
 
-        <?= $form->field($model, 'password', [
+        <?= $form->field($userRegisterForm, 'password', [
             'options' => ['class' => '']
         ])
             ->passwordInput([

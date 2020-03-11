@@ -3,6 +3,7 @@
 
 namespace frontend\controllers;
 
+use frontend\service\UserService;
 use yii\web\Controller;
 use frontend\models\RegistrationForm;
 use yii;
@@ -15,14 +16,16 @@ class RegistrationController extends Controller
     public function actionIndex()
     {
 
-        $model = new RegistrationForm();
-
-        if ($model->load(Yii::$app->request->post()) && $model->registration()) {
-            return $this->goHome();
+        $userRegisterForm = new RegistrationForm();
+        if ($userRegisterForm->load(Yii::$app->request->post()) && $userRegisterForm->validate()) {
+            $service = new UserService();
+            if($service->registration($userRegisterForm)) {
+                return $this->goHome();
+            }
         }
 
         return $this->render('index', [
-            'model' => $model
+            'userRegisterForm' => $userRegisterForm
         ]);
     }
 

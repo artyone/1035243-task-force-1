@@ -58,6 +58,7 @@ class UsersFilter extends Model
         if ($this->free) {
             $query->joinWith('tasksExecutor');
             $query->andWhere(['or', ['tasks.id' => null], ['tasks.status' => Tasks::STATUS_DONE]]);
+            $query->groupBy('users.id');
         }
         if ($this->online) {
             $query->joinWith('userData');
@@ -65,7 +66,8 @@ class UsersFilter extends Model
         }
         if ($this->hasFeedback) {
             $query->joinWith('tasksFeedbackExecutor');
-            $query->andWhere(['is not', 'tasks_feedback.task_id', null]);
+            $query->andWhere(['is not', 'tasks_feedback.executor_id', null]);
+            $query->groupBy('users.id');
         }
         if ($this->inFavorites) {
             //@todo разработать по созданию аккаунта

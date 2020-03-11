@@ -48,7 +48,7 @@ use yii\helpers\Url;
 <section class="search-task">
     <div class="search-task__wrapper">
         <?php $form = ActiveForm::begin([
-            'id' => 'filter-form',
+            'id' => 'tasks-filter-form',
             'options' => ['class' => 'search-task__form'],
             'action' => ['/tasks'],
             'method' => 'get'
@@ -56,10 +56,10 @@ use yii\helpers\Url;
         <fieldset class="search-task__categories">
             <legend>Категории</legend>
 
-            <?= $form->field($formModel, 'categories', ['options' => ['class' => '']])
+            <?= $form->field($tasksFilterForm, 'categories', ['options' => ['class' => '']])
                 ->checkboxList(Categories::find()->select(['name', 'id'])->indexBy('id')->column(), [
-                    'item' => function ($index, $label, $name, $checked, $value) use ($formModel) {
-                        if (!empty($formModel['categories']) && in_array($value, $formModel['categories'])) {
+                    'item' => function ($index, $label, $name, $checked, $value) use ($tasksFilterForm) {
+                        if (!empty($tasksFilterForm['categories']) && in_array($value, $tasksFilterForm['categories'])) {
                             $checked = 'checked';
                         }
                         return '<input class="visually-hidden checkbox__input" id="categories_' . $value . '"
@@ -72,19 +72,19 @@ use yii\helpers\Url;
         </fieldset>
         <fieldset class="search-task__categories">
             <legend>Дополнительно</legend>
-            <?= $form->field($formModel, 'noResponse', [
+            <?= $form->field($tasksFilterForm, 'noResponse', [
                 'template' => '{input}{label}',
                 'options' => ['class' => ''],
             ])
                 ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false)
             ?>
-            <?= $form->field($formModel, 'remoteWork', [
+            <?= $form->field($tasksFilterForm, 'remoteWork', [
                 'template' => '{input}{label}',
                 'options' => ['class' => '']
             ])
                 ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false) ?>
         </fieldset>
-        <?= $form->field($formModel, 'period', [
+        <?= $form->field($tasksFilterForm, 'period', [
             'template' => '{label}{input}',
             'options' => ['class' => ''],
             'labelOptions' => ['class' => 'search-task__name']
@@ -99,7 +99,7 @@ use yii\helpers\Url;
                 'style' => 'width: 100%',
                 'prompt' => 'Выберите период'
             ]) ?>
-        <?= $form->field($formModel, 'search', [
+        <?= $form->field($tasksFilterForm, 'search', [
             'template' => '{label}{input}',
             'options' => ['class' => ''],
             'labelOptions' => ['class' => 'search-task__name']
