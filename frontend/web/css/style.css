@@ -641,6 +641,12 @@ footer {
   .input-danger + input + span {
     color: #FF116E; }
 
+.has-error .control-label,
+.has-error .help-block {
+  color: #FF116E; }
+  .has-error .input {
+    border-color: #FF116E; }
+
 .input-middle {
   padding-top: 14px;
   padding-bottom: 14px;
@@ -755,13 +761,14 @@ footer {
   border-radius: 4px;
   text-decoration: none;
   text-transform: uppercase;
-  cursor: pointer; }
+  cursor: pointer;}
 
 .button:hover {
-  background-color: #598bff; }
+  background-color: #598bff;
+  text-decoration: none;}
 
 .button:active {
-  background-color: #274bdb; }
+  background-color: #274bdb;}
 
 .button__big-color {
   -ms-flex-item-align: start;
@@ -1332,6 +1339,7 @@ footer {
   margin-right: 100px; }
 
 .form-create label {
+  display:inline-block;
   margin-top: 29px;
   margin-bottom: 12px;
   text-transform: uppercase; }
@@ -1340,7 +1348,9 @@ footer {
   font-family: "Roboto", sans-serif;
   font-weight: 300;
   font-size: 12px;
-  color: #8a8a8d; }
+  color: #8a8a8d;
+  margin-bottom: 12px;
+  display:inline-block;}
 
 .create__file {
   display: -webkit-box;

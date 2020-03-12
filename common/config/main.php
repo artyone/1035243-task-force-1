@@ -2,8 +2,9 @@
 return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
+    'language' => 'ru-RU',
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
         'urlManager' => [
@@ -14,6 +15,8 @@ return [
                 '//' => '/',
                 'tasks' => 'tasks/index',
                 'users' => 'users/index',
+                'registration' => 'registration/index',
+                'landing' => 'landing/index',
                 'task/view/<id:\d+>' => 'tasks/view',
                 'user/view/<id:\d+>' => 'users/view',
                 'users/sort/<sort:\w+>' => 'users/sort'

@@ -1,16 +1,9 @@
 <?php
 
-/* @var $this \yii\web\View */
-
-/* @var $content string */
-
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use frontend\assets\MainAsset;
-use common\widgets\Alert;
+use frontend\helpers\WordHelper;
+use yii\helpers\Url;
 
 MainAsset::register($this);
 ?>
@@ -25,16 +18,14 @@ MainAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body>
+<body class="landing">
 <?php $this->beginBody() ?>
 <div class="table-layout">
-    <?php if (!in_array(Yii::$app->controller->id, ['registration', 'landing'])): ?>
-    <header class="page-header">
-        <div class="main-container page-header__container">
-            <div class="page-header__logo">
-                <a href="/">
-                    <svg class="page-header__logo-image" id="Layer_2" xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 1634 646.35">
+    <header class=" page-header--index">
+        <div class="main-container page-header__container page-header__container--index">
+            <div class="page-header__logo--index">
+                <a>
+                    <svg class="logo-image--index" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1634 646.35">
                         <title>taskforce_logo2-01</title>
                         <g>
                             <g>
@@ -72,86 +63,142 @@ MainAsset::register($this);
                         </g>
                     </svg>
                 </a>
+                <p>Работа там, где ты!</p>
             </div>
-            <div class="header__nav">
-                <ul class="header-nav__list site-list">
-                    <li class="site-list__item">
-                        <a href="<?= Url::to(['tasks/index']) ?>">Задания</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="#">Создать задание</a>
-                    </li>
-                    <li class="site-list__item">
-                        <a href="#">Мой профиль</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="header__town">
-                <select class="multiple-select input town-select" size="1" name="town[]">
-                    <option value="Moscow">Москва</option>
-                    <option selected value="SPB">Санкт-Петербург</option>
-                    <option value="Krasnodar">Краснодар</option>
-                    <option value="Irkutsk">Иркутск</option>
-                    <option value="Vladivostok">Владивосток</option>
-                </select>
-            </div>
-            <div class="header__lightbulb"></div>
-            <div class="lightbulb__pop-up">
-                <h3>Новые события</h3>
-                <p class="lightbulb__new-task lightbulb__new-task--message">
-                    Новое сообщение в чате
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--executor">
-                    Выбран исполнитель для
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-                <p class="lightbulb__new-task lightbulb__new-task--close">
-                    Завершено задание
-                    <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                </p>
-            </div>
-            <div class="header__account">
-                <a class="header__account-photo">
-                    <img src="/img/user-photo.png"
-                         width="43" height="44"
-                         alt="Аватар пользователя">
+            <div class="header__account--index">
+                <a href="<?= Url::to(['login/index']) ?>" class="header__account-enter open-modal"
+                   data-for="enter-form">
+                    <span>Вход</span></a>
+                или
+                <a href="<?= Url::to(['registration/index']) ?>" class="header__account-registration">
+                    Регистрация
                 </a>
-                <span class="header__account-name">
-                 Василий
-             </span>
-            </div>
-            <div class="account__pop-up">
-                <ul class="account__pop-up-list">
-                    <li>
-                        <a href="#">Мои задания</a>
-                    </li>
-                    <li>
-                        <a href="#">Настройки</a>
-                    </li>
-                    <li>
-                        <a href="#">Выход</a>
-                    </li>
-                </ul>
             </div>
         </div>
-        <?php endif; ?>
     </header>
-    <main class="page-main">
-        <div class="main-container page-container">
+    <main>
+        <div class="landing-container">
+            <div class="landing-top">
+                <h1>Работа для всех.<br>
+                    Найди исполнителя на любую задачу.</h1>
+                <p>Сломался кран на кухне? Надо отправить документы? Нет времени самому гулять с собакой?
+                    У нас вы быстро найдёте исполнителя для любой жизненной ситуации?<br>
+                    Быстро, безопасно и с гарантией. Просто, как раз, два, три. </p>
+                <a class="button" href="<?= Url::to(['registration/index']) ?>">Создать аккаунт</a>
+            </div>
+            <div class="landing-center">
+                <div class="landing-instruction">
+                    <div class="landing-instruction-step">
+                        <div class="instruction-circle circle-request"></div>
+                        <div class="instruction-description">
+                            <h3>Публикация заявки</h3>
+                            <p>Создайте новую заявку.</p>
+                            <p>Опишите в ней все детали
+                                и стоимость работы.</p>
+                        </div>
+                    </div>
+                    <div class="landing-instruction-step">
+                        <div class="instruction-circle  circle-choice"></div>
+                        <div class="instruction-description">
+                            <h3>Выбор исполнителя</h3>
+                            <p>Получайте отклики от мастеров.</p>
+                            <p>Выберите подходящего<br>
+                                вам исполнителя.</p>
+                        </div>
+                    </div>
+                    <div class="landing-instruction-step">
+                        <div class="instruction-circle  circle-discussion"></div>
+                        <div class="instruction-description">
+                            <h3>Обсуждение деталей</h3>
+                            <p>Обсудите все детали работы<br>
+                                в нашем внутреннем чате.</p>
+                        </div>
+                    </div>
+                    <div class="landing-instruction-step">
+                        <div class="instruction-circle circle-payment"></div>
+                        <div class="instruction-description">
+                            <h3>Оплата&nbsp;работы</h3>
+                            <p>По завершении работы оплатите
+                                услугу и закройте задание</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="landing-notice">
+                    <div class="landing-notice-card card-executor">
+                        <h3>Исполнителям</h3>
+                        <ul class="notice-card-list">
+                            <li>
+                                Большой выбор заданий
+                            </li>
+                            <li>
+                                Работайте где удобно
+                            </li>
+                            <li>
+                                Свободный график
+                            </li>
+                            <li>
+                                Удалённая работа
+                            </li>
+                            <li>
+                                Гарантия оплаты
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="landing-notice-card card-customer">
+                        <h3>Заказчикам</h3>
+                        <ul class="notice-card-list">
+                            <li>
+                                Исполнители на любую задачу
+                            </li>
+                            <li>
+                                Достоверные отзывы
+                            </li>
+                            <li>
+                                Оплата по факту работы
+                            </li>
+                            <li>
+                                Экономия времени и денег
+                            </li>
+                            <li>
+                                Выгодные цены
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="landing-bottom">
+                <div class="landing-bottom-container">
+                    <h2>Последние задания на сайте</h2>
+                    <?php foreach ($tasks as $task): ?>
+                        <div class="landing-task">
+                            <div class="landing-task-top task-<?= $task->category->icon ?>"></div>
+                            <div class="landing-task-description">
+                                <h3><a href="<?= Url::to(['tasks/view', 'id' => $task->id]) ?>"
+                                       class="link-regular"><?= $task->name ?></a></h3>
+                                <p><?= substr($task->description, 0, 73) . '...' ?></p>
+                            </div>
+                            <div class="landing-task-info">
+                                <div class="task-info-left">
+                                    <p><a href="" class="link-regular"><?= $task->category->name ?></a></p>
+                                    <p><?= WordHelper::getStringTimeAgo($task->creation_time) . ' назад' ?></p>
+                                </div>
+                                <span><?= $task->price ?><b>₽</b></span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
 
-            <?= $content ?>
-
+                </div>
+                <div class="landing-bottom-container">
+                    <a class="button red-button" href="<?= Url::to(['tasks/index']) ?>">смотреть все задания</a>
+                </div>
+            </div>
         </div>
     </main>
     <footer class="page-footer">
         <div class="main-container page-footer__container">
             <div class="page-footer__info">
                 <p class="page-footer__info-copyright">
-                    © 2020, ООО «ТаскФорс»
+                    © 2019, ООО «ТаскФорс»
                     Все права защищены
                 </p>
                 <p class="page-footer__info-use">
@@ -182,29 +229,31 @@ MainAsset::register($this);
                 </ul>
             </div>
             <div class="page-footer__copyright">
-                <a>
+                <a href="https://htmlacademy.ru">
                     <img class="copyright-logo"
                          src="/img/academy-logo.png"
                          width="185" height="63"
                          alt="Логотип HTML Academy">
                 </a>
             </div>
-            <?php if (Yii::$app->controller->id == 'registration'): ?>
-                <div class="clipart-woman">
-                    <img src="/img/clipart-woman.png" width="238" height="450">
-                </div>
-                <div class="clipart-message">
-                    <div class="clipart-message-text">
-                        <h2>Знаете ли вы, что?</h2>
-                        <p>После регистрации вам будет доступно более
-                            двух тысяч заданий из двадцати разных категорий.</p>
-                        <p>В среднем, наши исполнители зарабатывают
-                            от 500 рублей в час.</p>
-                    </div>
-                </div>
-            <?php endif; ?>
         </div>
     </footer>
+    <section class="modal enter-form form-modal" id="enter-form">
+        <h2>Вход на сайт</h2>
+        <form action="#" method="post">
+            <p>
+                <label class="form-modal-description" for="enter-email">Email</label>
+                <input class="enter-form-email input input-middle" type="email" name="enter-email" id="enter-email">
+            </p>
+            <p>
+                <label class="form-modal-description" for="enter-password">Пароль</label>
+                <input class="enter-form-email input input-middle" type="password" name="enter-email"
+                       id="enter-password">
+            </p>
+            <button class="button" type="submit">Войти</button>
+        </form>
+        <button class="form-modal-close" type="button">Закрыть</button>
+    </section>
 </div>
 <?php $this->endBody() ?>
 </body>

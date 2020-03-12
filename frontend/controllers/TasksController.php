@@ -6,45 +6,32 @@ namespace frontend\controllers;
 use frontend\models\Tasks;
 use yii\web\Controller;
 use yii\data\Pagination;
-use frontend\models\TasksFilter;
+use frontend\models\TasksFilterForm;
 use yii;
 use yii\web\HttpException;
 
-
+/**
+ * Tasks controller
+ */
 class TasksController extends Controller
 {
-
+    /**
+     * Отображение общего списка заданий с учетом фильтров, если они заданы.
+     *
+     * @return mixed
+     */
     public function actionIndex()
     {
         $query = Tasks::find()
-            ->orderBy('creation_time')
+            ->orderBy(['creation_time' => SORT_DESC])
             ->where(['status' => Tasks::STATUS_NEW]);
 
-        $model = new TasksFilter();
-        $model->load(Yii::$app->request->get());
-
-        foreach ($model as $key => $data) {
-            if ($data) {
-                switch ($key) {
-                    case 'categories':
-                        $query->andWhere(['tasks.category_id' => $data]);
-                        break;
-                    case 'noResponse':
-                        $query->joinWith('tasksResponse');
-                        $query->andWhere(['tasks_response.executor_id' => NULL]);
-                        break;
-                    case 'remoteWork':
-                        $query->andWhere(['tasks.city_id' => NULL]);
-                        break;
-                    case 'period':
-                        $query->andWhere(['>', 'tasks.creation_time', $model->getPeriodTime($data)]);
-                        break;
-                    case 'search':
-                        $query->andWhere(['like','tasks.name',$data]);
-                        break;
-                }
-            }
+        $tasksFilterForm = new TasksFilterForm();
+        if (Yii::$app->request->isGet) {
+            $tasksFilterForm->load(Yii::$app->request->get());
         }
+
+        $query = $tasksFilterForm->applyFilters($query);
 
         $pagination = new Pagination([
             'defaultPageSize' => 5,
@@ -58,18 +45,24 @@ class TasksController extends Controller
 
         return $this->render('index', [
             'tasks' => $tasks,
-            'model' => $model,
+            'tasksFilterForm' => $tasksFilterForm,
             'pagination' => $pagination,
 
         ]);
     }
 
+    /**
+     * Отображение одного задания.
+     *
+     * @return mixed
+     * @throws HttpException
+     */
     public function actionView($id)
     {
         $task = Tasks::findOne($id);
 
         if (!$task) {
-            throw new HttpException(404 ,'Task not found');
+            throw new HttpException(404, 'Task not found');
         }
 
         return $this->render('view', [

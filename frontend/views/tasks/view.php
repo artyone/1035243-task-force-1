@@ -1,6 +1,11 @@
 <?php
 
 use frontend\helpers\WordHelper;
+use yii\helpers\Url;
+
+/**
+ * @var $task
+ */
 
 ?>
 <section class="content-view">
@@ -61,9 +66,13 @@ use frontend\helpers\WordHelper;
             <?php foreach ($task->tasksResponse as $response): ?>
                 <div class="content-view__feedback-card">
                     <div class="feedback-card__top">
-                        <a href="#"><img src="<?= $response->executor->fileAvatar->link ?>" width="55" height="55"></a>
+                        <a href="<?= Url::to(['users/view', 'id' => $response->executor_id]) ?>">
+                            <img src="<?= $response->executor->fileAvatar ? $response->executor->fileAvatar->link : '/img/user-photo.png' ?>"
+                                 width="55" height="55" alt="Аватар исполнителя"></a>
                         <div class="feedback-card__top--name">
-                            <p><a href="#" class="link-regular"><?= $response->executor->name ?></a></p>
+                            <p><a href="<?= Url::to(['users/view', 'id' => $response->executor_id]) ?>"
+                                  class="link-regular">
+                                    <?= $response->executor->name ?></a></p>
                             <?php foreach (range(1, 5) as $value): ?>
                                 <span <?= $value <= $response->executor->userData->rating ? '' : 'class="star-disabled"' ?>></span>
                             <?php endforeach; ?>
@@ -91,7 +100,8 @@ use frontend\helpers\WordHelper;
         <div class="profile-mini__wrapper">
             <h3>Заказчик</h3>
             <div class="profile-mini__top">
-                <img src="<?= $task->customer->fileAvatar->link ?>" width="62" height="62" alt="Аватар заказчика">
+                <img src="<?= $task->customer->fileAvatar ? $task->customer->fileAvatar->link : '/img/user-photo.png' ?>"
+                     width="62" height="62" alt="Аватар заказчика">
                 <div class="profile-mini__name five-stars__rate">
                     <p><?= $task->customer->name ?></p>
                 </div>
@@ -100,7 +110,8 @@ use frontend\helpers\WordHelper;
                 <span><?= WordHelper::getStringTasks(count($task->customer->tasksCustomer)) ?></span>
                 <span class="last-"><?= WordHelper::getStringTimeAgo($task->customer->creation_time) ?> на сайте</span>
             </p>
-            <a href="/user/view/<?= $task->customer->id ?>" class="link-regular">Смотреть профиль</a>
+            <a href="<?= Url::to(['users/view', 'id' => $task->customer->id]) ?>" class="link-regular">Смотреть
+                профиль</a>
         </div>
     </div>
     <div class="connect-desk__chat">

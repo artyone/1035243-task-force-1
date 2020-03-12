@@ -5,6 +5,13 @@ use frontend\helpers\WordHelper;
 use yii\widgets\ActiveForm;
 use frontend\models\Categories;
 use yii\widgets\LinkPager;
+use yii\helpers\Url;
+
+/**
+ * @var $tasks
+ * @var $pagination
+ * @var $tasksFilterForm
+ */
 
 ?>
 <section class="new-task">
@@ -13,7 +20,8 @@ use yii\widgets\LinkPager;
         <?php foreach ($tasks as $task): ?>
             <div class="new-task__card">
                 <div class="new-task__title">
-                    <a href="/task/view/<?= $task->id ?>" class="link-regular"><h2><?= $task->name ?></h2></a>
+                    <a href="<?= Url::to(['tasks/view', 'id' => $task->id]) ?>" class="link-regular">
+                        <h2><?= $task->name ?></h2></a>
                     <a class="new-task__type link-regular" href="#"><p><?= $task->category->name ?></p></a>
                 </div>
                 <div class="new-task__icon new-task__icon--<?= $task->category->icon ?>"></div>
@@ -45,25 +53,20 @@ use yii\widgets\LinkPager;
 </section>
 <section class="search-task">
     <div class="search-task__wrapper">
-        <?php
-
-        $form = ActiveForm::begin([
-            'id' => 'filter-form',
+        <?php $form = ActiveForm::begin([
+            'id' => 'tasks-filter-form',
             'options' => ['class' => 'search-task__form'],
             'action' => ['/tasks'],
             'method' => 'get'
-        ]);
-
-        ?>
+        ]) ?>
         <fieldset class="search-task__categories">
             <legend>Категории</legend>
 
-            <?php
-
-            echo $form->field($model, 'categories', ['options' => ['class' => '']])
+            <?= $form->field($tasksFilterForm, 'categories', ['options' => ['class' => '']])
                 ->checkboxList(Categories::find()->select(['name', 'id'])->indexBy('id')->column(), [
-                    'item' => function ($index, $label, $name, $checked, $value) use ($model) {
-                        if (!empty($model['categories']) && in_array($value, $model['categories'])) {
+                    'item' => function ($index, $label, $name, $checked, $value) use ($tasksFilterForm) {
+                        if (!empty($tasksFilterForm['categories']) && in_array($value,
+                                $tasksFilterForm['categories'])) {
                             $checked = 'checked';
                         }
                         return '<input class="visually-hidden checkbox__input" id="categories_' . $value . '"
@@ -71,32 +74,24 @@ use yii\widgets\LinkPager;
                                         <label for="categories_' . $value . '">' . $label . '</label>';
                     },
                     'unselect' => null
-                ])->label(false);
+                ])->label(false) ?>
 
-            ?>
         </fieldset>
-
         <fieldset class="search-task__categories">
             <legend>Дополнительно</legend>
-            <?php
-
-            echo $form->field($model, 'noResponse', [
+            <?= $form->field($tasksFilterForm, 'noResponse', [
                 'template' => '{input}{label}',
                 'options' => ['class' => ''],
             ])
-                ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false);
-
-            echo $form->field($model, 'remoteWork', [
+                ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false)
+            ?>
+            <?= $form->field($tasksFilterForm, 'remoteWork', [
                 'template' => '{input}{label}',
                 'options' => ['class' => '']
             ])
-                ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false);
-
-            ?>
+                ->checkbox(['class' => 'visually-hidden checkbox__input', 'uncheck' => false], false) ?>
         </fieldset>
-        <?php
-
-        echo $form->field($model, 'period', [
+        <?= $form->field($tasksFilterForm, 'period', [
             'template' => '{label}{input}',
             'options' => ['class' => ''],
             'labelOptions' => ['class' => 'search-task__name']
@@ -110,9 +105,8 @@ use yii\widgets\LinkPager;
                 'class' => 'multiple-select input',
                 'style' => 'width: 100%',
                 'prompt' => 'Выберите период'
-            ]);
-
-        echo $form->field($model, 'search', [
+            ]) ?>
+        <?= $form->field($tasksFilterForm, 'search', [
             'template' => '{label}{input}',
             'options' => ['class' => ''],
             'labelOptions' => ['class' => 'search-task__name']
@@ -120,10 +114,9 @@ use yii\widgets\LinkPager;
             ->input('search', [
                 'class' => 'input-middle input',
                 'style' => 'width: 100%'
-            ]);
+            ]) ?>
 
-        echo Html::submitButton('Искать', ['class' => 'button']);
-        ActiveForm::end()
-        ?>
+        <?= Html::submitButton('Искать', ['class' => 'button']); ?>
+        <?php ActiveForm::end() ?>
     </div>
 </section>

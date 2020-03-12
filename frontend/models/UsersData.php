@@ -40,7 +40,7 @@ class UsersData extends \yii\db\ActiveRecord
     {
         return [
             [['user_id'], 'required'],
-            [['user_id', 'location_id','rating','popularity','tasks_count'], 'integer'],
+            [['user_id', 'city_id','rating','popularity','tasks_count'], 'integer'],
             [['birthday', 'last_online_time'], 'safe'],
             [['address', 'about'], 'string', 'max' => 500],
             [['phone'], 'string', 'max' => 20],
@@ -82,7 +82,7 @@ class UsersData extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Location]].
+     * Gets query for [[City]].
      *
      * @return \yii\db\ActiveQuery
      */

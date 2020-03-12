@@ -4,57 +4,40 @@
 namespace frontend\controllers;
 
 use frontend\models\Users;
-use frontend\models\Tasks;
 use yii\data\Pagination;
-use yii\db\Query;
 use yii\web\Controller;
-use frontend\models\UsersFilter;
+use frontend\models\UsersFilterForm;
 use yii;
 use yii\web\HttpException;
 
-
+/**
+ * Users controller
+ */
 class UsersController extends Controller
 {
+    /**
+     * Отображение общего списка исполнителей с учетом фильтров, если они заданы.
+     *
+     * @return mixed
+     */
     public function actionIndex()
     {
-
         $query = Users::find()
             ->orderBy(['creation_time' => SORT_DESC])
             ->joinWith('userCategories')
             ->where(['is not', 'categories.id', null]);
 
-        $model = new UsersFilter();
-        $model->load(Yii::$app->request->get());
+        $usersFilterForm = new UsersFilterForm();
+        if (Yii::$app->request->isGet) {
+            $usersFilterForm->load(Yii::$app->request->get());
+        }
 
-        if ($search = $model->search) {
+        if ($search = $usersFilterForm->search) {
             $query->andWhere(['like', 'users.name', $search]);
-            $model = new UsersFilter();
-            $model->search = $search;
+            $usersFilterForm = new UsersFilterForm();
+            $usersFilterForm->search = $search;
         } else {
-            foreach ($model as $key => $data) {
-                if ($data) {
-                    switch ($key) {
-                        case 'categories':
-                            $query->andWhere(['categories.id' => $data]);
-                            break;
-                        case 'free':
-                            $query->joinWith('tasksExecutor');
-                            $query->andWhere(['or', ['tasks.id' => null], ['tasks.status' => Tasks::STATUS_DONE]]);
-                            break;
-                        case 'online':
-                            $query->joinWith('userData');
-                            $query->andWhere(['>', 'users_data.last_online_time', $model->getOnlineTime()]);
-                            break;
-                        case 'hasFeedback':
-                            $query->joinWith('tasksFeedbackExecutor');
-                            $query->andWhere(['is not', 'tasks_feedback.task_id', null]);
-                            break;
-                        case 'inFavorites':
-                            //@todo разработать по созданию аккаунта
-                            break;
-                    }
-                }
-            }
+            $query = $usersFilterForm->applyFilters($query);
         }
 
         $pagination = new Pagination([
@@ -69,25 +52,29 @@ class UsersController extends Controller
 
         return $this->render('index', [
             'users' => $users,
-            'model' => $model,
+            'usersFilterForm' => $usersFilterForm,
             'pagination' => $pagination
         ]);
     }
 
-    public function actionSort($sort)
+    /**
+     * Отображение общего списка исполнителей с учетом сортировки.
+     *
+     * @return mixed
+     */
+    public function actionSort()
     {
         $query = Users::find()
             ->orderBy(['creation_time' => SORT_DESC])
             ->joinWith('userCategories')
             ->where(['is not', 'categories.id', null]);
 
-        $model = new UsersFilter();
-        $model->load(Yii::$app->request->get());
-
-        if ($sort) {
-            $query->joinWith('userData');
-            $query->orderBy(["users_data.$sort" => SORT_DESC]);
+        $usersFilterForm = new UsersFilterForm();
+        if (Yii::$app->request->get()) {
+            $usersFilterForm->load(Yii::$app->request->get());
         }
+
+        $query = $usersFilterForm->applyFilters($query);
 
         $pagination = new Pagination([
             'defaultPageSize' => 5,
@@ -101,16 +88,21 @@ class UsersController extends Controller
 
         return $this->render('index', [
             'users' => $users,
-            'model' => $model,
+            'usersFilterForm' => $usersFilterForm,
             'pagination' => $pagination
         ]);
     }
 
+    /**
+     * Отображение одного исполнителя.
+     *
+     * @return mixed
+     */
     public function actionView($id)
     {
         $user = Users::findOne($id);
         if (!$user) {
-            throw new HttpException(404 ,'User not found');
+            throw new HttpException(404, 'User not found');
         }
         return $this->render('view', [
             'user' => $user
