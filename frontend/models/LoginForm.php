@@ -21,7 +21,7 @@ class LoginForm extends Model
     {
         return [
             'email' => 'Электронная почта',
-            'password' => 'Пароль'
+            'password' => 'Пароль',
         ];
     }
 
@@ -38,16 +38,6 @@ class LoginForm extends Model
             ['email', 'trim'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-/*            [
-                'email',
-                'exist',
-                'targetClass' => '\frontend\models\users\Users',
-                'targetAttribute' => 'email',
-                'message' => 'Введенный адрес не зарегистрирован'
-            ],*/
-
-            ['password', 'string', 'max' => 32],
-            ['password', 'string', 'min' => 8],
             ['password', 'validatePassword']
         ];
     }
@@ -63,6 +53,7 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
+                //Подсвечивается только поле пароля. Прошу подсказать, если есть какие-то варианты и возможности сделать иначе
                 $this->addError($attribute, 'Неправильный email или пароль');
             }
         }

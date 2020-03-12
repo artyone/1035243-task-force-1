@@ -74,7 +74,7 @@ class UsersFilterForm extends Model
      * @param ???
      * @return ???
      */
-    //Прошу подсказать какой тут тип данных
+    // Прошу подсказать какой тут тип данных
     public function applyFilters($query)
     {
 

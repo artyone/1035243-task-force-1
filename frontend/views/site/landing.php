@@ -66,11 +66,11 @@ MainAsset::register($this);
                 <p>Работа там, где ты!</p>
             </div>
             <div class="header__account--index">
-                <a href="<?= Url::to(['login/index']) ?>" class="header__account-enter open-modal"
+                <a href="<?= Url::to(['site/login']) ?>" class="header__account-enter open-modal"
                    data-for="enter-form">
                     <span>Вход</span></a>
                 или
-                <a href="<?= Url::to(['registration/index']) ?>" class="header__account-registration">
+                <a href="<?= Url::to(['site/registration']) ?>" class="header__account-registration">
                     Регистрация
                 </a>
             </div>
@@ -218,7 +218,7 @@ MainAsset::register($this);
                         <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['registration/index']) ?>">Регистрация</a>
+                        <a href="<?= Url::to(['site/registration']) ?>">Регистрация</a>
                     </li>
                     <li class="links__item">
                         <a href="">Создать задание</a>
@@ -238,7 +238,7 @@ MainAsset::register($this);
             </div>
         </div>
     </footer>
-    <section class="modal enter-form form-modal" id="enter-form">
+<!--    <section class="modal enter-form form-modal" id="enter-form">
         <h2>Вход на сайт</h2>
         <form action="#" method="post">
             <p>
@@ -253,7 +253,7 @@ MainAsset::register($this);
             <button class="button" type="submit">Войти</button>
         </form>
         <button class="form-modal-close" type="button">Закрыть</button>
-    </section>
+    </section>-->
 </div>
 <?php $this->endBody() ?>
 </body>

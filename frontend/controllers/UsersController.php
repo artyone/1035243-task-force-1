@@ -5,7 +5,6 @@ namespace frontend\controllers;
 
 use frontend\models\users\Users;
 use yii\data\Pagination;
-use yii\web\Controller;
 use frontend\models\users\UsersFilterForm;
 use yii;
 use yii\web\HttpException;
@@ -13,7 +12,7 @@ use yii\web\HttpException;
 /**
  * Users controller
  */
-class UsersController extends Controller
+class UsersController extends SecuredController
 {
     /**
      * Отображение общего списка исполнителей с учетом фильтров, если они заданы.
@@ -108,6 +107,8 @@ class UsersController extends Controller
             'user' => $user
         ]);
     }
+
+
 
 
 }

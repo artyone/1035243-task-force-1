@@ -28,7 +28,7 @@ MainAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 <div class="table-layout">
-    <?php if (!in_array(Yii::$app->controller->id, ['registration', 'landing', 'login'])): ?>
+    <?php if (!in_array(Yii::$app->controller->action->id, ['registration', 'landing', 'login'])): ?>
     <header class="page-header">
         <div class="main-container page-header__container">
             <div class="page-header__logo">
@@ -121,7 +121,7 @@ MainAsset::register($this);
                          alt="Аватар пользователя">
                 </a>
                 <span class="header__account-name">
-                 Василий
+                 <?= Yii::$app->user->getIdentity()->name ?>
              </span>
             </div>
             <div class="account__pop-up">
@@ -133,7 +133,7 @@ MainAsset::register($this);
                         <a href="#">Настройки</a>
                     </li>
                     <li>
-                        <a href="#">Выход</a>
+                        <a href="<?= Url::to(['site/logout']) ?>">Выход</a>
                     </li>
                 </ul>
             </div>
@@ -171,7 +171,7 @@ MainAsset::register($this);
                         <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['registration/index']) ?>">Регистрация</a>
+                        <a href="<?= Url::to(['site/registration']) ?>">Регистрация</a>
                     </li>
                     <li class="links__item">
                         <a href="">Создать задание</a>
@@ -189,7 +189,7 @@ MainAsset::register($this);
                          alt="Логотип HTML Academy">
                 </a>
             </div>
-            <?php if (Yii::$app->controller->id == 'registration'): ?>
+            <?php if (Yii::$app->controller->action->id == 'registration'): ?>
                 <div class="clipart-woman">
                     <img src="/img/clipart-woman.png" width="238" height="450">
                 </div>
