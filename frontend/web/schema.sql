@@ -15,9 +15,9 @@ CREATE TABLE categories /*Таблица категорий*/
 
 CREATE TABLE cities /*Таблица городов*/
 (
-    id   INT(11)     NOT NULL AUTO_INCREMENT, /*сквозной айди*/
-    name VARCHAR(50) NOT NULL, /*имя города*/
-    latitude VARCHAR(50),
+    id        INT(11)     NOT NULL AUTO_INCREMENT, /*сквозной айди*/
+    name      VARCHAR(50) NOT NULL, /*имя города*/
+    latitude  VARCHAR(50),
     longitude VARCHAR(50),
     PRIMARY KEY (id)
 );
@@ -47,6 +47,9 @@ CREATE TABLE users_data /*Таблица данных пользователей
     id               INT(11) NOT NULL AUTO_INCREMENT, /*сквозной айди*/
     user_id          INT(11) NOT NULL, /*айди пользователя*/
     city_id          INT(11), /*локация пользователя*/
+    rating           TINYINT,
+    popularity       INT(11),
+    tasks_count      INT(11),
     address          VARCHAR(500),
     birthday         DATETIME, /*дата рождения*/
     phone            VARCHAR(20), /*мобильный телефон*/

@@ -9,7 +9,10 @@ use Yii;
  *
  * @property int $id
  * @property int $user_id
- * @property int|null $location_id
+ * @property int|null $city_id
+ * @property int $rating
+ * @property int $popularity
+ * @property int $tasks_count
  * @property string|null $address
  * @property string|null $birthday
  * @property string|null $phone
@@ -37,7 +40,7 @@ class UsersData extends \yii\db\ActiveRecord
     {
         return [
             [['user_id'], 'required'],
-            [['user_id', 'location_id'], 'integer'],
+            [['user_id', 'location_id','rating','popularity','tasks_count'], 'integer'],
             [['birthday', 'last_online_time'], 'safe'],
             [['address', 'about'], 'string', 'max' => 500],
             [['phone'], 'string', 'max' => 20],
@@ -56,6 +59,9 @@ class UsersData extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => 'User ID',
             'city_id' => 'City ID',
+            'rating' => 'Rating',
+            'popularity' => 'Popularity',
+            'tasks_count' => 'Tasks count',
             'address' => 'Address',
             'birthday' => 'Birthday',
             'phone' => 'Phone',
