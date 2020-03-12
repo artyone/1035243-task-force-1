@@ -7,8 +7,9 @@ use frontend\formatter\MinutesFormatter;
 use frontend\formatter\HoursFormatter;
 use frontend\formatter\DaysFormatter;
 use frontend\formatter\FeedbacksFormatter;
+use frontend\formatter\MonthFormatter;
 use frontend\formatter\TasksFormatter;
-use frontend\formatter\TimeFormatter;
+use frontend\formatter\YearFormatter;
 
 
 class WordHelper
@@ -21,21 +22,29 @@ class WordHelper
      */
     static function getStringTimeAgo(?string $time): string
     {
-        $timeFormatter = new TimeFormatter($time);
-        if ($num = $timeFormatter->getMinutes()) {
-            $word = new MinutesFormatter($num);
-            $result = $word->getWordForm();
-            return $result;
+
+        $interval = date_create('now')->diff(date_create($time));
+        if ($interval->y >= 1) {
+            $word = new YearFormatter($interval->y);
+            return $word->getWordForm();
         }
-        if ($num = $timeFormatter->getHours()) {
-            $word = new HoursFormatter($num);
-            $result = $word->getWordForm();
-            return $result;
+        if ($interval->m >= 1) {
+            $word = new MonthFormatter($interval->m);
+            return $word->getWordForm();
         }
-        $num = $timeFormatter->getDays();
-        $word = new DaysFormatter($num);
-        $result = $word->getWordForm();
-        return $result;
+        if ($interval->d >= 1) {
+            $word = new DaysFormatter($interval->d);
+            return $word->getWordForm();
+        }
+        if ($interval->h >= 1) {
+            $word = new HoursFormatter($interval->h);
+            return $word->getWordForm();
+        }
+        if ($interval->i >= 1) {
+            $word = new MinutesFormatter($interval->i);
+            return $word->getWordForm();
+        }
+        return '';
     }
 
     /**

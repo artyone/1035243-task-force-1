@@ -10,6 +10,7 @@ use yii\db\Query;
 use yii\web\Controller;
 use frontend\models\UsersFilter;
 use yii;
+use yii\web\HttpException;
 
 
 class UsersController extends Controller
@@ -104,4 +105,17 @@ class UsersController extends Controller
             'pagination' => $pagination
         ]);
     }
+
+    public function actionView($id)
+    {
+        $user = Users::findOne($id);
+        if (!$user) {
+            throw new HttpException(404 ,'User not found');
+        }
+        return $this->render('view', [
+            'user' => $user
+        ]);
+    }
+
+
 }

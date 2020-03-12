@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\data\Pagination;
 use frontend\models\TasksFilter;
 use yii;
+use yii\web\HttpException;
 
 
 class TasksController extends Controller
@@ -62,5 +63,20 @@ class TasksController extends Controller
 
         ]);
     }
+
+    public function actionView($id)
+    {
+        $task = Tasks::findOne($id);
+
+        if (!$task) {
+            throw new HttpException(404 ,'Task not found');
+        }
+
+        return $this->render('view', [
+            'task' => $task
+
+        ]);
+    }
+
 
 }
