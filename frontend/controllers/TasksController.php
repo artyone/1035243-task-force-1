@@ -3,10 +3,10 @@
 
 namespace frontend\controllers;
 
-use frontend\models\Tasks;
+use frontend\models\tasks\Tasks;
 use yii\web\Controller;
 use yii\data\Pagination;
-use frontend\models\TasksFilterForm;
+use frontend\models\tasks\TasksFilterForm;
 use yii;
 use yii\web\HttpException;
 

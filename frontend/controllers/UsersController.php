@@ -3,10 +3,10 @@
 
 namespace frontend\controllers;
 
-use frontend\models\Users;
+use frontend\models\users\Users;
 use yii\data\Pagination;
 use yii\web\Controller;
-use frontend\models\UsersFilterForm;
+use frontend\models\users\UsersFilterForm;
 use yii;
 use yii\web\HttpException;
 

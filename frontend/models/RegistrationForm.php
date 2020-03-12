@@ -39,7 +39,7 @@ class RegistrationForm extends Model
             ['email', 'trim'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\frontend\models\Users', 'message' => 'Введенный адрес занят'],
+            ['email', 'unique', 'targetClass' => '\frontend\models\users\Users', 'message' => 'Введенный адрес занят'],
 
             ['name', 'string', 'max' => 255],
 

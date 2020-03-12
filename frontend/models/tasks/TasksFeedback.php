@@ -1,8 +1,9 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\tasks;
 
 use Yii;
+use frontend\models\users\Users;
 
 /**
  * This is the model class for table "tasks_feedback".

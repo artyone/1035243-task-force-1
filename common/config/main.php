@@ -16,6 +16,7 @@ return [
                 'tasks' => 'tasks/index',
                 'users' => 'users/index',
                 'registration' => 'registration/index',
+                'login' => 'login/index',
                 'landing' => 'landing/index',
                 'task/view/<id:\d+>' => 'tasks/view',
                 'user/view/<id:\d+>' => 'users/view',
@@ -25,5 +26,8 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'user' => [
+            'identityClass' => 'frontend\models\users\User'
+        ]
     ],
 ];

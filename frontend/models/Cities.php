@@ -3,6 +3,8 @@
 namespace frontend\models;
 
 use Yii;
+use frontend\models\tasks\Tasks;
+use frontend\models\users\UsersData;
 
 /**
  * This is the model class for table "cities".

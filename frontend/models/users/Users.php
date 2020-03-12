@@ -1,9 +1,15 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\users;
 
 use Yii;
-use frontend\models\Tasks;
+use frontend\models\tasks\Tasks;
+use frontend\models\tasks\TasksChat;
+use frontend\models\tasks\TasksFeedback;
+use frontend\models\tasks\TasksResponse;
+use frontend\models\Files;
+use frontend\models\Categories;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "users".
@@ -31,14 +37,14 @@ use frontend\models\Tasks;
  * @property UsersVisible[] $usersVisible
  * @property UsersPhoto[] $usersPhoto
  */
-class Users extends \yii\db\ActiveRecord
+class Users extends \yii\db\ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'users';
+        return 'user';
     }
 
     /**
@@ -267,5 +273,52 @@ class Users extends \yii\db\ActiveRecord
     public function setPassword($password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
+
+    /**
+     * Finds user by email
+     *
+     * @param string $email
+     * @return static|null
+     */
+    public static function findByEmail($email)
+    {
+        return static::findOne(['email' => $email]);
+    }
+
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return bool if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
+    }
+
+    public static function findIdentity($id)
+    {
+        return self::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
+    }
+
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    public function getAuthKey()
+    {
+        // TODO: Implement getAuthKey() method.
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        // TODO: Implement validateAuthKey() method.
     }
 }

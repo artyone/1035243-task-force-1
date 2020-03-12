@@ -5,7 +5,7 @@ namespace frontend\controllers;
 
 
 use yii\web\Controller;
-use frontend\models\Tasks;
+use frontend\models\tasks\Tasks;
 
 /**
  * Landing controller

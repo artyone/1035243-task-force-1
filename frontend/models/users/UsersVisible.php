@@ -1,27 +1,27 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\users;
 
 use Yii;
 
 /**
- * This is the model class for table "users_category".
+ * This is the model class for table "users_visible".
  *
  * @property int $id
  * @property int $user_id
- * @property int $category_id
+ * @property int $only_customer
+ * @property int $not_visible
  *
  * @property Users $user
- * @property Categories $category
  */
-class UsersCategory extends \yii\db\ActiveRecord
+class UsersVisible extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'users_category';
+        return 'users_visible';
     }
 
     /**
@@ -30,10 +30,9 @@ class UsersCategory extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'category_id'], 'required'],
-            [['user_id', 'category_id'], 'integer'],
+            [['user_id'], 'required'],
+            [['user_id', 'only_customer', 'not_visible'], 'integer'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'id']],
-            [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categories::className(), 'targetAttribute' => ['category_id' => 'id']],
         ];
     }
 
@@ -45,7 +44,8 @@ class UsersCategory extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'category_id' => 'Category ID',
+            'only_customer' => 'Only Customer',
+            'not_visible' => 'Not Visible',
         ];
     }
 
@@ -57,15 +57,5 @@ class UsersCategory extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(Users::className(), ['id' => 'user_id']);
-    }
-
-    /**
-     * Gets query for [[Category]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getCategory()
-    {
-        return $this->hasOne(Categories::className(), ['id' => 'category_id']);
     }
 }

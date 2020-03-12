@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\tasks;
 
 use yii\base\Model;
 

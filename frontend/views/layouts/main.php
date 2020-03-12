@@ -28,7 +28,7 @@ MainAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 <div class="table-layout">
-    <?php if (!in_array(Yii::$app->controller->id, ['registration', 'landing'])): ?>
+    <?php if (!in_array(Yii::$app->controller->id, ['registration', 'landing', 'login'])): ?>
     <header class="page-header">
         <div class="main-container page-header__container">
             <div class="page-header__logo">

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace frontend\models;
+namespace frontend\models\users;
 
 use yii\base\Model;
 

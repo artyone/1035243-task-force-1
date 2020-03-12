@@ -32,8 +32,7 @@ class RegistrationController extends Controller
                 return ActiveForm::validate($userRegisterForm);
             }
             if ($userRegisterForm->validate()) {
-                $service = new UserService();
-                if($service->registration($userRegisterForm)) {
+                if(UserService::registration($userRegisterForm)) {
                     return $this->goHome();
                 }
             }
