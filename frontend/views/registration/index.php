@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use frontend\models\Cities;
 
+/** @var $userRegisterForm */
+
 ?>
 
 <section class="registration__user">
@@ -11,7 +13,7 @@ use frontend\models\Cities;
     <div class="registration-wrapper">
 
         <?php $form = ActiveForm::begin([
-            'id' => 'form-signup',
+            'id' => 'user-register-form',
             'options' => ['class' => 'registration__user-form form-create'],
             'action' => ['/registration'],
             'method' => 'post'
@@ -48,7 +50,7 @@ use frontend\models\Cities;
                 'class' => 'multiple-select input town-select registration-town',
                 'style' => 'width: 100%',
                 'prompt' => ['text' => 'Выберите город', 'options' => ['class' => '']],
-                'options' => [$model['city'] => ['selected' => true]]
+                'options' => [$userRegisterForm['city'] => ['selected' => true]]
             ])
             ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
 
@@ -65,7 +67,7 @@ use frontend\models\Cities;
 
         <div class="form-group">
             <?= Html::submitButton('Создать аккаунт',
-                ['class' => 'button button__registration', 'name' => 'signup-button']) ?>
+                ['class' => 'button button__registration', 'name' => 'register-button']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>

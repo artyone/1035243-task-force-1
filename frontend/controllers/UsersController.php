@@ -4,9 +4,7 @@
 namespace frontend\controllers;
 
 use frontend\models\Users;
-use frontend\models\Tasks;
 use yii\data\Pagination;
-use yii\db\Query;
 use yii\web\Controller;
 use frontend\models\UsersFilterForm;
 use yii;
@@ -30,7 +28,7 @@ class UsersController extends Controller
             ->where(['is not', 'categories.id', null]);
 
         $usersFilterForm = new UsersFilterForm();
-        if (Yii::$app->request->get()) {
+        if (Yii::$app->request->isGet) {
             $usersFilterForm->load(Yii::$app->request->get());
         }
 

@@ -7,6 +7,12 @@ use frontend\models\Categories;
 use yii\widgets\LinkPager;
 use yii\helpers\Url;
 
+/**
+ * @var $usersFilterForm
+ * @var $users
+ * @var $pagination
+ */
+
 ?>
 
 <section class="user__search">
@@ -31,7 +37,7 @@ use yii\helpers\Url;
                     <div class="user__search-icon">
                         <a href="<?= Url::to(['users/view', 'id' => $user->id]) ?>">
                             <img src="<?= $user->fileAvatar ? $user->fileAvatar->link : '/img/user-photo.png' ?>"
-                                 width="65" height="65">
+                                 width="65" height="65" alt="Аватар пользователя">
                         </a>
                         <span><?= WordHelper::getStringTasks($user->userData->tasks_count) ?></span>
                         <span><?= WordHelper::getStringFeedbacks(count($user->tasksFeedbackExecutor)) ?></span>
@@ -87,7 +93,8 @@ use yii\helpers\Url;
             <?= $form->field($usersFilterForm, 'categories', ['options' => ['class' => '']])
                 ->checkboxList(Categories::find()->select(['name'])->indexBy('id')->column(), [
                     'item' => function ($index, $label, $name, $checked, $value) use ($usersFilterForm) {
-                        if (!empty($usersFilterForm['categories']) && in_array($value, $usersFilterForm['categories'])) {
+                        if (!empty($usersFilterForm['categories']) && in_array($value,
+                                $usersFilterForm['categories'])) {
                             $checked = 'checked';
                         }
                         return '<input class="visually-hidden checkbox__input" id="id_' . $value . '"

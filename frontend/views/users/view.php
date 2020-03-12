@@ -3,6 +3,10 @@
 use frontend\helpers\WordHelper;
 use yii\helpers\Url;
 
+/**
+ * @var $user
+ */
+
 ?>
 <section class="content-view">
     <div class="user__card-wrapper">

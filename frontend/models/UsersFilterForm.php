@@ -4,8 +4,6 @@
 namespace frontend\models;
 
 use yii\base\Model;
-use yii\db\ActiveRecord;
-use yii\db\Query;
 
 /**
  * Users filter form
@@ -45,7 +43,7 @@ class UsersFilterForm extends Model
     public function rules()
     {
         return [
-            [['categories', 'free','online', 'hasFeedback', 'inFavorites', 'search', 'sort'], 'safe'],
+            [['categories', 'free', 'online', 'hasFeedback', 'inFavorites', 'search', 'sort'], 'safe'],
         ];
     }
 

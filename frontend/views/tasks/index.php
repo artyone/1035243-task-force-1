@@ -7,6 +7,12 @@ use frontend\models\Categories;
 use yii\widgets\LinkPager;
 use yii\helpers\Url;
 
+/**
+ * @var $tasks
+ * @var $pagination
+ * @var $tasksFilterForm
+ */
+
 ?>
 <section class="new-task">
     <div class="new-task__wrapper">
@@ -59,7 +65,8 @@ use yii\helpers\Url;
             <?= $form->field($tasksFilterForm, 'categories', ['options' => ['class' => '']])
                 ->checkboxList(Categories::find()->select(['name', 'id'])->indexBy('id')->column(), [
                     'item' => function ($index, $label, $name, $checked, $value) use ($tasksFilterForm) {
-                        if (!empty($tasksFilterForm['categories']) && in_array($value, $tasksFilterForm['categories'])) {
+                        if (!empty($tasksFilterForm['categories']) && in_array($value,
+                                $tasksFilterForm['categories'])) {
                             $checked = 'checked';
                         }
                         return '<input class="visually-hidden checkbox__input" id="categories_' . $value . '"

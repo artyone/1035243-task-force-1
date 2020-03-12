@@ -3,6 +3,10 @@
 use frontend\helpers\WordHelper;
 use yii\helpers\Url;
 
+/**
+ * @var $task
+ */
+
 ?>
 <section class="content-view">
     <div class="content-view__card">

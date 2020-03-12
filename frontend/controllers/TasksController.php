@@ -27,7 +27,7 @@ class TasksController extends Controller
             ->where(['status' => Tasks::STATUS_NEW]);
 
         $tasksFilterForm = new TasksFilterForm();
-        if (Yii::$app->request->get()) {
+        if (Yii::$app->request->isGet) {
             $tasksFilterForm->load(Yii::$app->request->get());
         }
 
@@ -55,6 +55,7 @@ class TasksController extends Controller
      * Отображение одного задания.
      *
      * @return mixed
+     * @throws HttpException
      */
     public function actionView($id)
     {
