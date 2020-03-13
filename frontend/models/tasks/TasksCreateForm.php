@@ -53,6 +53,7 @@ class TasksCreateForm extends Model
             ['categoryId', 'exist', 'targetClass' => '\frontend\models\Categories', 'targetAttribute' => 'id','message' => 'Выбрана неверная категория'],
             ['files', 'file', 'maxFiles' => 4],
             ['price', 'integer', 'min' => '1'],
+            ['price', 'default', 'value' => null],
             ['deadlineTime', 'date', 'min' => time()],
             ['deadlineTime', 'default', 'value' => null]
         ];
