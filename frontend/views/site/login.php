@@ -2,14 +2,13 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use frontend\models\Cities;
 
 /** @var $userLoginForm */
 
 ?>
 
 <section class="registration__user">
-    <h1 align="center">Вход на сайт</h1>
+    <h1 style="text-align: center">Вход на сайт</h1>
     <div class="registration-wrapper">
 
         <?php $form = ActiveForm::begin([
@@ -26,20 +25,20 @@ use frontend\models\Cities;
             ->textinput([
                 'class' => 'input textarea',
                 'style' => 'width: 100%',
-                'placeholder' => 'ivanov@mail.ru'
             ])
-            ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
+            ->error(['tag' => 'span']) ?>
 
         <?= $form->field($userLoginForm, 'password', [
             'options' => ['class' => ''],
+            'labelOptions' => ['style' => 'color: #333438']
 
         ])
             ->passwordInput([
                 'class' => 'input textarea',
-                'style' => 'width: 100%',
-                'type' => 'password'
+                'style' => 'width: 100%; border-color: #e4e9f2',
+                'type' => 'password',
             ])
-            ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
+            ->error(['tag' => 'span']) ?>
 
 
 

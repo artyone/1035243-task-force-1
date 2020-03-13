@@ -41,8 +41,8 @@ return [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
-                '/' => 'tasks/index',
                 '//' => '/',
+                'tasks' => 'tasks/index',
                 'users' => 'users/index',
                 'registration' => 'site/registration',
                 'login' => 'site/login',

@@ -6,11 +6,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use frontend\assets\MainAsset;
-use common\widgets\Alert;
 
 MainAsset::register($this);
 ?>
@@ -116,7 +112,7 @@ MainAsset::register($this);
             </div>
             <div class="header__account">
                 <a class="header__account-photo">
-                    <img src="/img/user-photo.png"
+                    <img src="<?= Yii::$app->user->getIdentity()->fileAvatar ? Yii::$app->user->getIdentity()->fileAvatar->link : '/img/user-photo.png' ?>"
                          width="43" height="44"
                          alt="Аватар пользователя">
                 </a>
@@ -127,10 +123,10 @@ MainAsset::register($this);
             <div class="account__pop-up">
                 <ul class="account__pop-up-list">
                     <li>
-                        <a href="#">Мои задания</a>
+                        <a href="<?= Url::to(['tasks/my']) ?>">Мои задания</a>
                     </li>
                     <li>
-                        <a href="#">Настройки</a>
+                        <a href="<?= Url::to(['site/settings']) ?>">Настройки</a>
                     </li>
                     <li>
                         <a href="<?= Url::to(['site/logout']) ?>">Выход</a>
@@ -191,7 +187,7 @@ MainAsset::register($this);
             </div>
             <?php if (Yii::$app->controller->action->id == 'registration'): ?>
                 <div class="clipart-woman">
-                    <img src="/img/clipart-woman.png" width="238" height="450">
+                    <img src="/img/clipart-woman.png" width="238" height="450" alt="Промо фото">
                 </div>
                 <div class="clipart-message">
                     <div class="clipart-message-text">

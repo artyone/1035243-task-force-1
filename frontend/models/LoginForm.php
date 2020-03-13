@@ -53,7 +53,6 @@ class LoginForm extends Model
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
-                //Подсвечивается только поле пароля. Прошу подсказать, если есть какие-то варианты и возможности сделать иначе
                 $this->addError($attribute, 'Неправильный email или пароль');
             }
         }

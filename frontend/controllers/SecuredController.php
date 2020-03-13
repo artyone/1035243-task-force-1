@@ -13,10 +13,35 @@ abstract class SecuredController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
+
                 'rules' => [
                     [
+                        'actions' => ['index', 'view', 'logout'],
                         'allow' => true,
-                        'roles' => ['@']
+                        'roles' => ['@'],
+
+                    ],
+                    [
+                        'actions' => ['login', 'registration', 'landing'],
+                        'allow' => true,
+                        'roles' => ['?'],
+
+                    ],
+                    [
+                        'actions' => ['index', 'view', 'logout'],
+                        'allow' => false,
+                        'roles' => ['?'],
+                        'denyCallback' => function ($rule, $action) {
+                            return $action->controller->redirect('/landing');
+                        }
+                    ],
+                    [
+                        'actions' => ['login', 'registration', 'landing'],
+                        'allow' => false,
+                        'roles' => ['@'],
+                        'denyCallback' => function ($rule, $action) {
+                            return $action->controller->redirect('/');
+                        }
                     ]
                 ]
             ]

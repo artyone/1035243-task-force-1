@@ -25,20 +25,20 @@ use frontend\models\Cities;
         ])
             ->textinput([
                 'class' => 'input textarea',
-                'style' => 'width: 100%',
+                'style' => 'width: 91%',
                 'placeholder' => 'ivanov@mail.ru'
             ])
-            ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
+            ->error(['tag' => 'span']) ?>
 
         <?= $form->field($userRegisterForm, 'name', [
             'options' => ['class' => '']
         ])
             ->textinput([
                 'class' => 'input textarea',
-                'style' => 'width: 100%',
+                'style' => 'width: 91%',
                 'placeholder' => 'Иван Иванов'
             ])
-            ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
+            ->error(['tag' => 'span']) ?>
 
 
         <?= $form->field($userRegisterForm, 'city', [
@@ -52,17 +52,17 @@ use frontend\models\Cities;
                 'prompt' => ['text' => 'Выберите город', 'options' => ['class' => '']],
                 'options' => [$userRegisterForm['city'] => ['selected' => true]]
             ])
-            ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
+            ->error(['tag' => 'span']) ?>
 
         <?= $form->field($userRegisterForm, 'password', [
             'options' => ['class' => '']
         ])
             ->passwordInput([
                 'class' => 'input textarea',
-                'style' => 'width: 100%',
+                'style' => 'width: 91%',
                 'type' => 'password'
             ])
-            ->error(['tag' => 'span', 'style' => 'display:inline-block, margin-bottom:12px']) ?>
+            ->error(['tag' => 'span']) ?>
 
 
         <div class="form-group">
