@@ -16,7 +16,7 @@ abstract class SecuredController extends Controller
 
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'logout'],
+                        'actions' => ['index', 'view', 'logout', 'sort'],
                         'allow' => true,
                         'roles' => ['@'],
 
@@ -28,7 +28,7 @@ abstract class SecuredController extends Controller
 
                     ],
                     [
-                        'actions' => ['index', 'view', 'logout'],
+                        'actions' => ['index', 'view', 'logout', 'sort'],
                         'allow' => false,
                         'roles' => ['?'],
                         'denyCallback' => function ($rule, $action) {
