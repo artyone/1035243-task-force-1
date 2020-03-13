@@ -20,7 +20,7 @@ use frontend\models\Cities;
         ]) ?>
 
         <?= $form->field($userRegisterForm, 'email', [
-            'options' => ['class' => 'form'],
+            'options' => ['class' => ''],
             'enableAjaxValidation' => true
         ])
             ->textinput([

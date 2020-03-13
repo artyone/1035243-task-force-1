@@ -8,7 +8,10 @@ use yii\data\Pagination;
 use frontend\models\tasks\TasksFilterForm;
 use yii;
 use yii\web\HttpException;
-use frontend\models\users\Users;
+use frontend\models\tasks\TasksCreateForm;
+use yii\web\UploadedFile;
+
+
 /**
  * Tasks controller
  */
@@ -74,15 +77,21 @@ class TasksController extends SecuredController
     public function actionCreate()
     {
 
-/*        if (!Users::findOne(Yii::$app->user->getIdentity()->id)->isExecutor()) {
-            return $this->goBack();
-        }*/
-
-        $task = Tasks::findOne(1);
-
+        $taskCreateForm = new TasksCreateForm();
+        if (Yii::$app->request->getIsPost()) {
+            $taskCreateForm->load(Yii::$app->request->post());
+            $taskCreateForm->files = UploadedFile::getInstances($taskCreateForm, 'files');
+            if ($taskCreateForm->upload()) {
+                // file is uploaded successfully
+                return $this->goHome();
+            }
+/*            if ($taskCreateForm->validate()) {
+                return $this->goHome();
+            }*/
+        }
         return $this->render('create', [
-            'task' => $task
-
+            'taskCreateForm' => $taskCreateForm
         ]);
+
     }
 }
