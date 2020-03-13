@@ -39,6 +39,7 @@ use yii\web\IdentityInterface;
  */
 class Users extends \yii\db\ActiveRecord implements IdentityInterface
 {
+
     /**
      * {@inheritdoc}
      */
@@ -321,4 +322,21 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
     {
         // TODO: Implement validateAuthKey() method.
     }
+
+    public function isCustomer()
+    {
+        if ($this->userCategories) {
+            return false;
+        }
+        return true;
+    }
+
+    public function isExecutor()
+    {
+        if ($this->userCategories) {
+            return true;
+        }
+        return false;
+    }
+
 }

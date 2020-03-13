@@ -646,6 +646,8 @@ footer {
   color: #FF116E; }
   .has-error .input {
     border-color: #FF116E; }
+  .has-error .hint-block {
+    display: none }
 
 .input-middle {
   padding-top: 14px;

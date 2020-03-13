@@ -7,6 +7,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use frontend\assets\MainAsset;
+use frontend\models\users\Users;
 
 MainAsset::register($this);
 ?>
@@ -71,17 +72,17 @@ MainAsset::register($this);
             </div>
             <div class="header__nav">
                 <ul class="header-nav__list site-list">
-                    <li class="site-list__item">
+                    <li class="site-list__item <?= Url::to() == '/tasks' ? 'site-list__item--active' : '' ?>">
                         <a href="<?= Url::to(['tasks/index']) ?>">Задания</a>
                     </li>
-                    <li class="site-list__item">
+                    <li class="site-list__item <?= Url::to() == '/users' ? 'site-list__item--active' : '' ?>">
                         <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
                     </li>
-                    <li class="site-list__item">
-                        <a href="#">Создать задание</a>
+                    <li class="site-list__item <?= Url::to() == '/task/create' ? 'site-list__item--active' : '' ?>">
+                        <a href="<?= Url::to(['tasks/create']) ?>">Создать задание</a>
                     </li>
-                    <li class="site-list__item">
-                        <a href="#">Мой профиль</a>
+                    <li class="site-list__item <?= Url::to() == '/profile' ? 'site-list__item--active' : '' ?>">
+                        <a href="<?= Url::to(['users/profile']) ?>">Мой профиль</a>
                     </li>
                 </ul>
             </div>

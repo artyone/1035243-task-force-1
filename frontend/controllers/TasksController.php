@@ -8,7 +8,7 @@ use yii\data\Pagination;
 use frontend\models\tasks\TasksFilterForm;
 use yii;
 use yii\web\HttpException;
-
+use frontend\models\users\Users;
 /**
  * Tasks controller
  */
@@ -71,5 +71,18 @@ class TasksController extends SecuredController
         ]);
     }
 
+    public function actionCreate()
+    {
 
+/*        if (!Users::findOne(Yii::$app->user->getIdentity()->id)->isExecutor()) {
+            return $this->goBack();
+        }*/
+
+        $task = Tasks::findOne(1);
+
+        return $this->render('create', [
+            'task' => $task
+
+        ]);
+    }
 }

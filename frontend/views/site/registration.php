@@ -28,6 +28,7 @@ use frontend\models\Cities;
                 'style' => 'width: 91%',
                 'placeholder' => 'ivanov@mail.ru'
             ])
+            ->hint('Введите ваш адрес электронной почты', ['tag' => 'span'])
             ->error(['tag' => 'span']) ?>
 
         <?= $form->field($userRegisterForm, 'name', [
@@ -38,6 +39,7 @@ use frontend\models\Cities;
                 'style' => 'width: 91%',
                 'placeholder' => 'Иван Иванов'
             ])
+            ->hint('Введите ваше имя и фамилию', ['tag' => 'span'])
             ->error(['tag' => 'span']) ?>
 
 
@@ -52,6 +54,7 @@ use frontend\models\Cities;
                 'prompt' => ['text' => 'Выберите город', 'options' => ['class' => '']],
                 'options' => [$userRegisterForm['city'] => ['selected' => true]]
             ])
+            ->hint('Укажите город, чтобы находить подходящие задачи', ['tag' => 'span'])
             ->error(['tag' => 'span']) ?>
 
         <?= $form->field($userRegisterForm, 'password', [
@@ -62,6 +65,7 @@ use frontend\models\Cities;
                 'style' => 'width: 91%',
                 'type' => 'password'
             ])
+            ->hint('Введите пароль. Минимально 8 знаков.', ['tag' => 'span'])
             ->error(['tag' => 'span']) ?>
 
 
