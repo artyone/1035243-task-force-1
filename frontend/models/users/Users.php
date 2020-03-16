@@ -339,4 +339,12 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
         return false;
     }
 
+    public function canResponse($task)
+    {
+        if ($this->isExecutor() && !TasksResponse::userPostedResponse($task->id, $this->id) && $this->id != $task->customer->id) {
+            return true;
+        }
+        return false;
+    }
+
 }

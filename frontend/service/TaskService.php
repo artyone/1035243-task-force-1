@@ -7,6 +7,7 @@ use frontend\models\Files;
 use frontend\models\tasks\TasksCreateForm;
 use frontend\models\tasks\Tasks;
 use frontend\models\tasks\TasksFile;
+use frontend\models\tasks\TasksResponse;
 use yii\base\Model;
 use yii;
 
@@ -16,7 +17,7 @@ use yii;
 class TaskService extends Model
 {
 
-    public function create(TasksCreateForm $model): ?string
+    public function createTask(TasksCreateForm $model): ?string
     {
         $transaction = Yii::$app->db->beginTransaction();
 
@@ -40,7 +41,7 @@ class TaskService extends Model
         }
 
         $transaction->commit();
-        return $task->getTaskLink();
+        return $task->getLink();
     }
 
     private function uploadFiles(TasksCreateForm $model, int $taskId): bool
@@ -65,4 +66,20 @@ class TaskService extends Model
         return true;
     }
 
+    public function addResponse($task, $model)
+    {
+        $user = Yii::$app->user->identity;
+        if (!$user->canResponse($task->id)) {
+            return false;
+        }
+        $taskResponse = new TasksResponse();
+        $taskResponse->task_id = $task->id;
+        $taskResponse->executor_id = $user->id;
+        $taskResponse->price = $model->price;
+        $taskResponse->description = $model->description;
+        if (!$taskResponse->save()) {
+            return false;
+        }
+        return true;
+    }
 }

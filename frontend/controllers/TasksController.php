@@ -4,6 +4,7 @@
 namespace frontend\controllers;
 
 use frontend\models\tasks\Tasks;
+use frontend\models\tasks\TasksResponseForm;
 use yii\data\Pagination;
 use frontend\models\tasks\TasksFilterForm;
 use yii;
@@ -70,8 +71,18 @@ class TasksController extends SecuredController
             throw new HttpException(404, 'Task not found');
         }
 
+        $taskResponseForm = new TasksResponseForm();
+        if ($taskResponseForm->load(Yii::$app->request->post()) && $taskResponseForm->validate()) {
+            $newResponse = new TaskService();
+            if ($newResponse->addResponse($task, $taskResponseForm)) {
+                return $this->goHome();
+                //return $this->redirect(URL::to($task->getLink()));
+            }
+        }
+
         return $this->render('view', [
-            'task' => $task
+            'task' => $task,
+            'taskResponseForm' => $taskResponseForm
 
         ]);
     }
@@ -85,7 +96,7 @@ class TasksController extends SecuredController
             $taskCreateForm->files = UploadedFile::getInstances($taskCreateForm, 'files');
             if ($taskCreateForm->validate()) {
                 $newTask = new TaskService();
-                if($link = $newTask->create($taskCreateForm)) {
+                if ($link = $newTask->createTask($taskCreateForm)) {
                     return $this->redirect(URL::to($link));
                 }
             } else {
@@ -94,7 +105,7 @@ class TasksController extends SecuredController
         }
         return $this->render('create', [
             'taskCreateForm' => $taskCreateForm,
-            'errors' => $errors?? []
+            'errors' => $errors ?? []
         ]);
 
     }

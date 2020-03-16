@@ -271,9 +271,7 @@ MainAsset::register($this);
             'labelOptions' => [
                 'class' => 'form-modal-description form-control',
                 'style' => 'display:inline-block'
-            ]
-
-        ])
+            ]])
             ->passwordInput([
                 'class' => 'enter-form-email input input-middle',
                 'style' => 'width: 90%; margin-bottom:10px; border-color: #e4e9f2',
@@ -291,6 +289,7 @@ MainAsset::register($this);
 
         <button class="form-modal-close" type="button">Закрыть</button>
     </section>
+    <div class="overlay"></div>
 </div>
 <?php $this->endBody() ?>
 </body>

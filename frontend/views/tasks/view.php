@@ -2,9 +2,12 @@
 
 use frontend\helpers\WordHelper;
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
 /**
  * @var $task
+ * @var $taskResponseForm
  */
 
 ?>
@@ -49,9 +52,13 @@ use yii\helpers\Url;
             </div>
         </div>
         <div class="content-view__action-buttons">
-            <button class=" button button__big-color response-button open-modal"
-                    type="button" data-for="response-form">Откликнуться
-            </button>
+            <?php if (Yii::$app->user->identity->canResponse($task)): ?>
+                <button class=" button button__big-color response-button open-modal"
+                        type="button" data-for="response-form">Откликнуться
+                </button>
+            <?php endif; ?>
+
+
             <button class="button button__big-color refusal-button open-modal"
                     type="button" data-for="refuse-form">Отказаться
             </button>
@@ -140,3 +147,82 @@ use yii\helpers\Url;
         </form>
     </div>
 </section>
+<section class="modal response-form form-modal" id="response-form">
+    <h2>Отклик на задание</h2>
+
+    <?php $form = ActiveForm::begin([
+        'id' => 'add-response-form',
+        'options' => ['class' => ''],
+        'action' => [$task->getLink()],
+        'method' => 'post'
+    ]) ?>
+
+    <?= $form->field($taskResponseForm, 'price', [
+        'options' => ['class' => ''],
+        'labelOptions' => ['class' => 'form-modal-description', 'style' => ['display' => 'inline-block']],
+        'template' => '{label}<br>{input}<br>{error}'
+    ])
+        ->textinput([
+            'class' => 'response-form-payment input input-middle input-money',
+        ])
+        ->error(['tag' => 'span']) ?>
+
+    <?= $form->field($taskResponseForm, 'description', [
+        'options' => ['class' => ''],
+        'labelOptions' => ['class' => 'form-modal-description', 'style' => ['display' => 'inline-block']],
+        'template' => '{label}<br>{input}<br>{error}'
+    ])
+        ->textarea([
+            'class' => 'input textarea',
+            'style' => 'width: 90%',
+            'rows' => '4'
+        ])
+        ->error(['tag' => 'span']) ?>
+
+
+        <?= Html::submitButton('Отправить',
+            ['class' => 'button modal-button', 'name' => 'send-button']) ?>
+
+
+    <?php ActiveForm::end(); ?>
+
+</section>
+<section class="modal completion-form form-modal" id="complete-form">
+    <h2>Завершение задания</h2>
+    <p class="form-modal-description">Задание выполнено?</p>
+    <form action="#" method="post">
+        <input class="visually-hidden completion-input completion-input--yes" type="radio" id="completion-radio--yes" name="completion" value="yes">
+        <label class="completion-label completion-label--yes" for="completion-radio--yes">Да</label>
+        <input class="visually-hidden completion-input completion-input--difficult" type="radio" id="completion-radio--yet" name="completion" value="difficulties">
+        <label class="completion-label completion-label--difficult" for="completion-radio--yet">Возникли проблемы</label>
+        <p>
+            <label class="form-modal-description" for="completion-comment">Комментарий</label>
+            <textarea class="input textarea" rows="4" id="completion-comment" name="completion-comment" placeholder="Place your text"></textarea>
+        </p>
+        <p class="form-modal-description">
+            Оценка
+        </p><div class="feedback-card__top--name completion-form-star">
+            <span class="star-disabled"></span>
+            <span class="star-disabled"></span>
+            <span class="star-disabled"></span>
+            <span class="star-disabled"></span>
+            <span class="star-disabled"></span>
+        </div>
+        <p></p>
+        <input type="hidden" name="rating" id="rating" value="0">
+        <button class="button modal-button" type="submit">Отправить</button>
+    </form>
+    <button class="form-modal-close" type="button">Закрыть</button>
+</section>
+<section class="modal form-modal refusal-form" id="refuse-form">
+    <h2>Отказ от задания</h2>
+    <p>
+        Вы собираетесь отказаться от выполнения задания.
+        Это действие приведёт к снижению вашего рейтинга.
+        Вы уверены?
+    </p>
+    <button class="button__form-modal button" id="close-modal" type="button">Отмена</button>
+    <button class="button__form-modal refusal-button button" type="button">Отказаться</button>
+    <button class="form-modal-close" type="button">Закрыть</button>
+</section>
+<div class="overlay"></div>

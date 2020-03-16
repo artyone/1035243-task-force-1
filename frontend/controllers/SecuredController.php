@@ -27,7 +27,7 @@ abstract class SecuredController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
-                            return Users::findOne(Yii::$app->user->getIdentity()->id)->isCustomer();
+                            return Yii::$app->user->identity->isCustomer();
                         }
 
                     ],

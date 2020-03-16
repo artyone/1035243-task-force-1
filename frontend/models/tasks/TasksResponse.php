@@ -77,4 +77,12 @@ class TasksResponse extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::className(), ['id' => 'executor_id']);
     }
+
+    public static function userPostedResponse($taskId, $userId)
+    {
+        if (TasksResponse::find()->where(['task_id' => $taskId])->andWhere(['executor_id' => $userId])->all()) {
+            return true;
+        }
+        return false;
+    }
 }
