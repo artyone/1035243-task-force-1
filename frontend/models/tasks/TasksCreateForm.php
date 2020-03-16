@@ -4,6 +4,8 @@ namespace frontend\models\tasks;
 
 use yii\base\Model;
 use yii\web\UploadedFile;
+use frontend\models\Files;
+use frontend\models\tasks\TasksFile;
 
 /**
  * Task creation form
@@ -46,15 +48,20 @@ class TasksCreateForm extends Model
         return [
             [['name', 'description', 'categoryId', 'files', 'location', 'price', 'deadlineTime'], 'safe'],
             [['name', 'description', 'categoryId'], 'required'],
-            ['name', 'string', 'min' => 10],
-            ['name', 'string', 'max' => 50],
-            ['description', 'string', 'min' => 30],
-            ['description', 'string', 'min' => 50],
-            ['categoryId', 'exist', 'targetClass' => '\frontend\models\Categories', 'targetAttribute' => 'id','message' => 'Выбрана неверная категория'],
+            ['name', 'string', 'length' => [10, 30]],
+            ['description', 'string', 'length' => [30, 200]],
+            [
+                'categoryId',
+                'exist',
+                'targetClass' => '\frontend\models\Categories',
+                'targetAttribute' => 'id',
+                'message' => 'Выбрана неверная категория'
+            ],
+            //@TODO доработь location после реализации локаций
             ['files', 'file', 'maxFiles' => 4],
             ['price', 'integer', 'min' => '1'],
             ['price', 'default', 'value' => null],
-            ['deadlineTime', 'date', 'min' => time()],
+            ['deadlineTime', 'date', 'format' => 'php:Y-m-d', 'min' => date('Y-m-d')],
             ['deadlineTime', 'default', 'value' => null]
         ];
     }
@@ -65,18 +72,6 @@ class TasksCreateForm extends Model
     public function formName()
     {
         return '';
-    }
-
-    public function upload()
-    {
-        if ($this->validate()) {
-            foreach ($this->files as $file) {
-                $file->saveAs('taskfiles/' . $file->baseName . time() . '.' . $file->extension);
-            }
-            return true;
-        } else {
-            return false;
-        }
     }
 
 

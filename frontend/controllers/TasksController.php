@@ -11,6 +11,7 @@ use yii\web\HttpException;
 use frontend\models\tasks\TasksCreateForm;
 use yii\web\UploadedFile;
 use frontend\service\TaskService;
+use yii\helpers\Url;
 
 
 /**
@@ -82,20 +83,18 @@ class TasksController extends SecuredController
         if (Yii::$app->request->getIsPost()) {
             $taskCreateForm->load(Yii::$app->request->post());
             $taskCreateForm->files = UploadedFile::getInstances($taskCreateForm, 'files');
-/*            if ($taskCreateForm->upload()) {
-                // file is uploaded successfully
-                return $this->goHome();
-            }*/
-
-
             if ($taskCreateForm->validate()) {
-                if(TaskService::create($taskCreateForm)) {
-                    return $this->goHome();
+                $newTask = new TaskService();
+                if($link = $newTask->create($taskCreateForm)) {
+                    return $this->redirect(URL::to($link));
                 }
+            } else {
+                $errors = $taskCreateForm->getErrors();
             }
         }
         return $this->render('create', [
-            'taskCreateForm' => $taskCreateForm
+            'taskCreateForm' => $taskCreateForm,
+            'errors' => $errors?? []
         ]);
 
     }

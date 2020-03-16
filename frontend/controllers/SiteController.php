@@ -63,7 +63,8 @@ class SiteController extends SecuredController
                 return ActiveForm::validate($userRegisterForm);
             }
             if ($userRegisterForm->validate()) {
-                if(UserService::registration($userRegisterForm)) {
+                $newUser = new UserService();
+                if($newUser->registration($userRegisterForm)) {
                     return $this->goHome();
                 }
             }
