@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\tasks;
 
 use yii\base\Model;
 
@@ -75,7 +75,7 @@ class TasksFilterForm extends Model
      * @param ???
      * @return ???
      */
-    //Прошу подсказать какой тут тип данных
+    // Прошу подсказать какой тут тип данных
     public function applyFilters($query)
     {
         if ($this->categories) {

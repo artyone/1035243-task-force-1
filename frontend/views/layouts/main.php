@@ -6,11 +6,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use frontend\assets\MainAsset;
-use common\widgets\Alert;
 
 MainAsset::register($this);
 ?>
@@ -28,7 +24,7 @@ MainAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 <div class="table-layout">
-    <?php if (!in_array(Yii::$app->controller->id, ['registration', 'landing'])): ?>
+    <?php if (!in_array(Yii::$app->controller->action->id, ['registration', 'landing', 'login'])): ?>
     <header class="page-header">
         <div class="main-container page-header__container">
             <div class="page-header__logo">
@@ -116,24 +112,24 @@ MainAsset::register($this);
             </div>
             <div class="header__account">
                 <a class="header__account-photo">
-                    <img src="/img/user-photo.png"
+                    <img src="<?= Yii::$app->user->getIdentity()->fileAvatar ? Yii::$app->user->getIdentity()->fileAvatar->link : '/img/user-photo.png' ?>"
                          width="43" height="44"
                          alt="Аватар пользователя">
                 </a>
                 <span class="header__account-name">
-                 Василий
+                 <?= Yii::$app->user->getIdentity()->name ?>
              </span>
             </div>
             <div class="account__pop-up">
                 <ul class="account__pop-up-list">
                     <li>
-                        <a href="#">Мои задания</a>
+                        <a href="<?= Url::to(['tasks/my']) ?>">Мои задания</a>
                     </li>
                     <li>
-                        <a href="#">Настройки</a>
+                        <a href="<?= Url::to(['site/settings']) ?>">Настройки</a>
                     </li>
                     <li>
-                        <a href="#">Выход</a>
+                        <a href="<?= Url::to(['site/logout']) ?>">Выход</a>
                     </li>
                 </ul>
             </div>
@@ -171,7 +167,7 @@ MainAsset::register($this);
                         <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['registration/index']) ?>">Регистрация</a>
+                        <a href="<?= Url::to(['site/registration']) ?>">Регистрация</a>
                     </li>
                     <li class="links__item">
                         <a href="">Создать задание</a>
@@ -189,9 +185,9 @@ MainAsset::register($this);
                          alt="Логотип HTML Academy">
                 </a>
             </div>
-            <?php if (Yii::$app->controller->id == 'registration'): ?>
+            <?php if (Yii::$app->controller->action->id == 'registration'): ?>
                 <div class="clipart-woman">
-                    <img src="/img/clipart-woman.png" width="238" height="450">
+                    <img src="/img/clipart-woman.png" width="238" height="450" alt="Промо фото">
                 </div>
                 <div class="clipart-message">
                     <div class="clipart-message-text">

@@ -4,6 +4,12 @@ use yii\helpers\Html;
 use frontend\assets\MainAsset;
 use frontend\helpers\WordHelper;
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
+
+/**
+ * @var $userLoginForm
+ * @var $tasks
+ */
 
 MainAsset::register($this);
 ?>
@@ -66,11 +72,11 @@ MainAsset::register($this);
                 <p>Работа там, где ты!</p>
             </div>
             <div class="header__account--index">
-                <a href="<?= Url::to(['login/index']) ?>" class="header__account-enter open-modal"
+                <a href="#" class="header__account-enter open-modal"
                    data-for="enter-form">
                     <span>Вход</span></a>
                 или
-                <a href="<?= Url::to(['registration/index']) ?>" class="header__account-registration">
+                <a href="<?= Url::to(['site/registration']) ?>" class="header__account-registration">
                     Регистрация
                 </a>
             </div>
@@ -84,7 +90,7 @@ MainAsset::register($this);
                 <p>Сломался кран на кухне? Надо отправить документы? Нет времени самому гулять с собакой?
                     У нас вы быстро найдёте исполнителя для любой жизненной ситуации?<br>
                     Быстро, безопасно и с гарантией. Просто, как раз, два, три. </p>
-                <a class="button" href="<?= Url::to(['registration/index']) ?>">Создать аккаунт</a>
+                <a class="button" href="<?= Url::to(['site/registration']) ?>">Создать аккаунт</a>
             </div>
             <div class="landing-center">
                 <div class="landing-instruction">
@@ -218,7 +224,7 @@ MainAsset::register($this);
                         <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['registration/index']) ?>">Регистрация</a>
+                        <a href="<?= Url::to(['site/registration']) ?>">Регистрация</a>
                     </li>
                     <li class="links__item">
                         <a href="">Создать задание</a>
@@ -240,18 +246,49 @@ MainAsset::register($this);
     </footer>
     <section class="modal enter-form form-modal" id="enter-form">
         <h2>Вход на сайт</h2>
-        <form action="#" method="post">
-            <p>
-                <label class="form-modal-description" for="enter-email">Email</label>
-                <input class="enter-form-email input input-middle" type="email" name="enter-email" id="enter-email">
-            </p>
-            <p>
-                <label class="form-modal-description" for="enter-password">Пароль</label>
-                <input class="enter-form-email input input-middle" type="password" name="enter-email"
-                       id="enter-password">
-            </p>
-            <button class="button" type="submit">Войти</button>
-        </form>
+        <?php $form = ActiveForm::begin([
+            'id' => 'user-login-form',
+            'action' => ['/landing'],
+            'method' => 'post',
+            'enableAjaxValidation' => true
+        ]) ?>
+
+        <?= $form->field($userLoginForm, 'email', [
+            'options' => ['class' => ''],
+            'labelOptions' => [
+                    'class' => 'form-modal-description form-control',
+                    'style' => 'display:inline-block'
+            ]
+        ])
+            ->textinput([
+                'class' => 'enter-form-email input input-middle',
+                'style' => 'width: 90%; margin-bottom:5px',
+            ])
+            ->error(['tag' => 'span', 'style' => 'display:inline-block; margin-bottom:12px']) ?>
+
+        <?= $form->field($userLoginForm, 'password', [
+            'options' => ['class' => ''],
+            'labelOptions' => [
+                'class' => 'form-modal-description form-control',
+                'style' => 'display:inline-block'
+            ]
+
+        ])
+            ->passwordInput([
+                'class' => 'enter-form-email input input-middle',
+                'style' => 'width: 90%; margin-bottom:10px; border-color: #e4e9f2',
+                'type' => 'password'
+            ])
+            ->error(['tag' => 'span', 'style' => 'display:inline-block; margin-bottom:12px']) ?>
+
+
+        <div class="form-group">
+            <?= Html::submitButton('Войти',
+                ['class' => 'button', 'name' => 'login-button']) ?>
+        </div>
+
+        <?php ActiveForm::end(); ?>
+
         <button class="form-modal-close" type="button">Закрыть</button>
     </section>
 </div>

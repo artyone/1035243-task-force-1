@@ -1,8 +1,9 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\users;
 
 use Yii;
+use frontend\models\Cities;
 
 /**
  * This is the model class for table "users_data".

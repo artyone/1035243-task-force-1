@@ -1,41 +1,52 @@
 <?php
 
-/* @var $this yii\web\View */
-/* @var $form yii\bootstrap\ActiveForm */
-/* @var $model \common\models\LoginForm */
-
 use yii\helpers\Html;
-use yii\bootstrap\ActiveForm;
+use yii\widgets\ActiveForm;
 
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
+/** @var $userLoginForm */
+
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+<section class="registration__user">
+    <h1 style="text-align: center">Вход на сайт</h1>
+    <div class="registration-wrapper">
 
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+        <?php $form = ActiveForm::begin([
+            'id' => 'user-login-form',
+            'options' => ['class' => 'registration__user-form form-create'],
+            'action' => ['/login'],
+            'method' => 'post',
+            'enableAjaxValidation' => true
+        ]) ?>
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+        <?= $form->field($userLoginForm, 'email', [
+            'options' => ['class' => '']
+        ])
+            ->textinput([
+                'class' => 'input textarea',
+                'style' => 'width: 100%',
+            ])
+            ->error(['tag' => 'span']) ?>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+        <?= $form->field($userLoginForm, 'password', [
+            'options' => ['class' => ''],
+            'labelOptions' => ['style' => 'color: #333438']
 
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+        ])
+            ->passwordInput([
+                'class' => 'input textarea',
+                'style' => 'width: 100%; border-color: #e4e9f2',
+                'type' => 'password',
+            ])
+            ->error(['tag' => 'span']) ?>
 
-                <div style="color:#999;margin:1em 0">
-                    If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                    <br>
-                    Need new verification email? <?= Html::a('Resend', ['site/resend-verification-email']) ?>
-                </div>
 
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
 
-            <?php ActiveForm::end(); ?>
+        <div class="form-group">
+            <?= Html::submitButton('Войти',
+                ['class' => 'button button__login', 'name' => 'login-button']) ?>
         </div>
+
+        <?php ActiveForm::end(); ?>
     </div>
-</div>
+</section>

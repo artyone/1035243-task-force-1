@@ -3,6 +3,9 @@
 namespace frontend\models;
 
 use Yii;
+use frontend\models\tasks\TasksFile;
+use frontend\models\users\Users;
+use frontend\models\users\UsersPhoto;
 
 /**
  * This is the model class for table "files".

@@ -1,8 +1,9 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\models\users;
 
 use Yii;
+use frontend\models\Files;
 
 /**
  * This is the model class for table "users_work_photos".
