@@ -25,6 +25,7 @@ abstract class SecuredController extends Controller
                     [
                         'actions' => ['create'],
                         'allow' => true,
+                        'roles' => ['@'],
                         'matchCallback' => function ($rule, $action) {
                             return Users::findOne(Yii::$app->user->getIdentity()->id)->isCustomer();
                         }
@@ -37,7 +38,7 @@ abstract class SecuredController extends Controller
 
                     ],
                     [
-                        'actions' => ['index', 'view', 'logout', 'sort'],
+                        'actions' => ['index', 'view', 'logout', 'sort', 'create'],
                         'allow' => false,
                         'roles' => ['?'],
                         'denyCallback' => function ($rule, $action) {
@@ -45,7 +46,7 @@ abstract class SecuredController extends Controller
                         }
                     ],
                     [
-                        'actions' => ['login', 'registration', 'landing', 'create'],
+                        'actions' => ['login', 'registration', 'landing'],
                         'allow' => false,
                         'roles' => ['@'],
                         'denyCallback' => function ($rule, $action) {
