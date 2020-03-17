@@ -17,7 +17,7 @@ abstract class SecuredController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'logout', 'sort', 'response'],
+                        'actions' => ['index', 'view', 'logout', 'sort', 'error', 'response'],
                         'allow' => true,
                         'roles' => ['@'],
 
