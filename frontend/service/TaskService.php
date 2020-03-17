@@ -8,8 +8,10 @@ use frontend\models\tasks\TasksCreateForm;
 use frontend\models\tasks\Tasks;
 use frontend\models\tasks\TasksFile;
 use frontend\models\tasks\TasksResponse;
+use frontend\models\tasks\TasksResponseForm;
 use yii\base\Model;
 use yii;
+use yii\web\IdentityInterface;
 
 /**
  * Task service
@@ -66,10 +68,10 @@ class TaskService extends Model
         return true;
     }
 
-    public function addResponse($task, $model)
+    public function createResponse(Tasks $task, TasksResponseForm $model, IdentityInterface $user)
     {
-        $user = Yii::$app->user->identity;
-        if (!$user->canResponse($task->id)) {
+
+        if (!$user->canResponse($task)) {
             return false;
         }
         $taskResponse = new TasksResponse();
@@ -78,6 +80,34 @@ class TaskService extends Model
         $taskResponse->price = $model->price;
         $taskResponse->description = $model->description;
         if (!$taskResponse->save()) {
+            return false;
+        }
+        return true;
+    }
+
+    public function declineResponse(TasksResponse $response,IdentityInterface $user): bool
+    {
+        if (!$user->isAuthor($response->task)) {
+            return false;
+        }
+
+        $response->status = TasksResponse::STATUS_DECLINE;
+        if (!$response->save()) {
+            return false;
+        }
+        return true;
+    }
+
+    public function taskStart($response, $user)
+    {
+        $task = $response->task;
+        if(!$task->start($user->id)) {
+            return false;
+        }
+
+        $task->executor_id = $response->executor_id;
+        $task->price = $response->price;
+        if (!$task->save()) {
             return false;
         }
         return true;

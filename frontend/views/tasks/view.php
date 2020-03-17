@@ -4,10 +4,15 @@ use frontend\helpers\WordHelper;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+use frontend\models\tasks\Tasks;
+use frontend\models\tasks\TasksResponse;
 
 /**
- * @var $task
- * @var $taskResponseForm
+ * @var Tasks $task
+ * @array TasksResponse $responses
+ * @var $availableActions
+ * @var \frontend\models\users\Users $user
+ * @var \frontend\models\tasks\TasksResponseForm $taskResponseForm
  */
 
 ?>
@@ -19,7 +24,7 @@ use yii\helpers\Html;
                     <h1><?= $task->name ?></h1>
                     <span>
                         Размещено в категории
-                        <a href="#" class="link-regular"><?= $task->category->name ?></a>
+                        <?= Html::a($task->category->name, ['#'], ['class' => 'link-regular']) ?>
                         <?= WordHelper::getStringTimeAgo($task->creation_time) ?> назад
                     </span>
                 </div>
@@ -33,7 +38,7 @@ use yii\helpers\Html;
             <div class="content-view__attach">
                 <h3 class="content-view__h3">Вложения</h3>
                 <?php foreach ($task->tasksFile as $file): ?>
-                    <a href="<?= $file->link ?>" download><?= pathinfo($file->link, PATHINFO_FILENAME) ?></a>
+                    <?= Html::a(pathinfo($file->link, PATHINFO_FILENAME), [$file->link], ['download' => '']) ?>
                 <?php endforeach; ?>
             </div>
             <div class="content-view__location">
@@ -52,55 +57,76 @@ use yii\helpers\Html;
             </div>
         </div>
         <div class="content-view__action-buttons">
-            <?php if (Yii::$app->user->identity->canResponse($task)): ?>
-                <button class=" button button__big-color response-button open-modal"
-                        type="button" data-for="response-form">Откликнуться
-                </button>
+            <?php if ($user->canResponse($task)): ?>
+                <?= Html::button('Откликнуться', [
+                    'class' => 'button button__big-color response-button open-modal',
+                    'type' => 'button',
+                    'data-for' => 'response-form'
+                ]) ?>
             <?php endif; ?>
-
-
-            <button class="button button__big-color refusal-button open-modal"
-                    type="button" data-for="refuse-form">Отказаться
-            </button>
-            <button class="button button__big-color request-button open-modal"
-                    type="button" data-for="complete-form">Завершить
-            </button>
+            <?php if (in_array('cancel', $availableActions)): ?>
+                <?= Html::button('Отменить', [
+                    'class' => 'button button__big-color cancel-button open-modal',
+                    'type' => 'button',
+                    'data-for' => 'cancel-form'
+                ]) ?>
+            <?php endif; ?>
+            <?php if (in_array('refuse', $availableActions)): ?>
+                <?= Html::button('Отказаться', [
+                    'class' => 'button button__big-color refuse-button open-modal',
+                    'type' => 'button',
+                    'data-for' => 'refuse-form'
+                ]) ?>
+            <?php endif; ?>
+            <?php if (in_array('complete', $availableActions)): ?>
+                <?= Html::button('Завершить', [
+                    'class' => 'button button__big-color complete-button open-modal',
+                    'type' => 'button',
+                    'data-for' => 'complete-form'
+                ]) ?>
+            <?php endif; ?>
         </div>
     </div>
-    <div class="content-view__feedback">
-        <h2>Отклики <span>(<?= count($task->tasksResponse) ?>)</span></h2>
-        <div class="content-view__feedback-wrapper">
-            <?php foreach ($task->tasksResponse as $response): ?>
-                <div class="content-view__feedback-card">
-                    <div class="feedback-card__top">
-                        <a href="<?= Url::to(['users/view', 'id' => $response->executor_id]) ?>">
-                            <img src="<?= $response->executor->fileAvatar ? $response->executor->fileAvatar->link : '/img/user-photo.png' ?>"
-                                 width="55" height="55" alt="Аватар исполнителя"></a>
-                        <div class="feedback-card__top--name">
-                            <p><a href="<?= Url::to(['users/view', 'id' => $response->executor_id]) ?>"
-                                  class="link-regular">
-                                    <?= $response->executor->name ?></a></p>
-                            <?php foreach (range(1, 5) as $value): ?>
-                                <span <?= $value <= $response->executor->userData->rating ? '' : 'class="star-disabled"' ?>></span>
-                            <?php endforeach; ?>
-                            <b><?= $response->executor->userData->rating ?></b>
+    <?php if (!empty($responses)): ?>
+        <div class="content-view__feedback">
+            <h2>Отклики <span>(<?= count($responses) ?>)</span></h2>
+            <div class="content-view__feedback-wrapper">
+                <?php foreach ($responses as $response): ?>
+                    <div class="content-view__feedback-card">
+                        <div class="feedback-card__top">
+                            <a href="<?= Url::to(['users/view', 'id' => $response->executor_id]) ?>">
+                                <img src="<?= $response->executor->fileAvatar ? $response->executor->fileAvatar->link : '/img/user-photo.png' ?>"
+                                     width="55" height="55" alt="Аватар исполнителя"></a>
+                            <div class="feedback-card__top--name">
+                                <p>
+                                    <?= Html::a($response->executor->name,
+                                        ['users/view', 'id' => $response->executor_id], ['class' => 'link-regular']) ?>
+                                </p>
+                                <?php foreach (range(1, 5) as $value): ?>
+                                    <span <?= $value <= $response->executor->userData->rating ? '' : 'class="star-disabled"' ?>></span>
+                                <?php endforeach; ?>
+                                <b><?= $response->executor->userData->rating ?></b>
+                            </div>
+                            <span class="new-task__time"><?= WordHelper::getStringTimeAgo($response->creation_time) ?> назад</span>
                         </div>
-                        <span class="new-task__time"><?= WordHelper::getStringTimeAgo($response->creation_time) ?> назад</span>
+                        <div class="feedback-card__content">
+                            <p><?= $response->description ?></p>
+                            <span><?= $response->price ?> ₽</span>
+                        </div>
+                        <?php if (in_array('start',
+                                $availableActions) && $response->status == TasksResponse::STATUS_NEW): ?>
+                            <div class="feedback-card__actions">
+                                <?= Html::a('Подтвердить', ['tasks/response', 'id' => $response->id, 'status' => 'accept'],
+                                    ['class' => 'button__small-color request-button button', 'type' => 'button']) ?>
+                                <?= Html::a('Отказать', ['tasks/response', 'id' => $response->id, 'status' => 'decline'],
+                                    ['class' => 'button__small-color refusal-button button', 'type' => 'button']) ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
-                    <div class="feedback-card__content">
-                        <p><?= $response->description ?></p>
-                        <span>1500 ₽</span>
-                    </div>
-                    <div class="feedback-card__actions">
-                        <a class="button__small-color request-button button"
-                           type="button">Подтвердить</a>
-                        <a class="button__small-color refusal-button button"
-                           type="button">Отказать</a>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
         </div>
-    </div>
+    <?php endif; ?>
 </section>
 <section class="connect-desk">
     <div class="connect-desk__profile-mini">
@@ -180,28 +206,34 @@ use yii\helpers\Html;
         ->error(['tag' => 'span']) ?>
 
 
-        <?= Html::submitButton('Отправить',
-            ['class' => 'button modal-button', 'name' => 'send-button']) ?>
-
+    <?= Html::submitButton('Отправить',
+        ['class' => 'button modal-button', 'name' => 'send-button']) ?>
 
     <?php ActiveForm::end(); ?>
+
+    <?= Html::button('', ['class' => 'form-modal-close', 'type' => 'button']) ?>
 
 </section>
 <section class="modal completion-form form-modal" id="complete-form">
     <h2>Завершение задания</h2>
     <p class="form-modal-description">Задание выполнено?</p>
     <form action="#" method="post">
-        <input class="visually-hidden completion-input completion-input--yes" type="radio" id="completion-radio--yes" name="completion" value="yes">
+        <input class="visually-hidden completion-input completion-input--yes" type="radio" id="completion-radio--yes"
+               name="completion" value="yes">
         <label class="completion-label completion-label--yes" for="completion-radio--yes">Да</label>
-        <input class="visually-hidden completion-input completion-input--difficult" type="radio" id="completion-radio--yet" name="completion" value="difficulties">
-        <label class="completion-label completion-label--difficult" for="completion-radio--yet">Возникли проблемы</label>
+        <input class="visually-hidden completion-input completion-input--difficult" type="radio"
+               id="completion-radio--yet" name="completion" value="difficulties">
+        <label class="completion-label completion-label--difficult" for="completion-radio--yet">Возникли
+            проблемы</label>
         <p>
             <label class="form-modal-description" for="completion-comment">Комментарий</label>
-            <textarea class="input textarea" rows="4" id="completion-comment" name="completion-comment" placeholder="Place your text"></textarea>
+            <textarea class="input textarea" rows="4" id="completion-comment" name="completion-comment"
+                      placeholder="Place your text"></textarea>
         </p>
         <p class="form-modal-description">
             Оценка
-        </p><div class="feedback-card__top--name completion-form-star">
+        </p>
+        <div class="feedback-card__top--name completion-form-star">
             <span class="star-disabled"></span>
             <span class="star-disabled"></span>
             <span class="star-disabled"></span>

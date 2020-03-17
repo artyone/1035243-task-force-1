@@ -331,7 +331,7 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
         return true;
     }
 
-    public function isExecutor()
+    public function isExecutor(): bool
     {
         if ($this->userCategories) {
             return true;
@@ -339,9 +339,17 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
         return false;
     }
 
-    public function canResponse($task)
+    public function isAuthor(Tasks $task): bool
     {
-        if ($this->isExecutor() && !TasksResponse::userPostedResponse($task->id, $this->id) && $this->id != $task->customer->id) {
+        if ($this->id == $task->customer->id) {
+            return true;
+        }
+        return false;
+    }
+
+    public function canResponse(Tasks $task): bool
+    {
+        if ($this->isExecutor() && !$task->getTasksResponseByUser($this->id) && !$this->isAuthor($task)) {
             return true;
         }
         return false;

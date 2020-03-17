@@ -4,6 +4,7 @@
 namespace frontend\controllers;
 
 use frontend\models\tasks\Tasks;
+use frontend\models\tasks\TasksResponse;
 use frontend\models\tasks\TasksResponseForm;
 use yii\data\Pagination;
 use frontend\models\tasks\TasksFilterForm;
@@ -71,25 +72,31 @@ class TasksController extends SecuredController
             throw new HttpException(404, 'Task not found');
         }
 
+        $user = Yii::$app->user->identity;
+
+        $responses = $user->isAuthor($task) ? $task->tasksResponse : $task->getTasksResponseByUser($user->id);
+
+        $availableActions = $task->getAvailableActions($user->id);
+
         $taskResponseForm = new TasksResponseForm();
         if ($taskResponseForm->load(Yii::$app->request->post()) && $taskResponseForm->validate()) {
             $newResponse = new TaskService();
-            if ($newResponse->addResponse($task, $taskResponseForm)) {
-                return $this->goHome();
-                //return $this->redirect(URL::to($task->getLink()));
+            if ($newResponse->createResponse($task, $taskResponseForm, $user)) {
+                return $this->redirect(URL::to($task->getLink()));
             }
         }
 
         return $this->render('view', [
             'task' => $task,
+            'responses' => $responses,
+            'user' => $user,
+            'availableActions' => $availableActions,
             'taskResponseForm' => $taskResponseForm
-
         ]);
     }
 
     public function actionCreate()
     {
-
         $taskCreateForm = new TasksCreateForm();
         if (Yii::$app->request->getIsPost()) {
             $taskCreateForm->load(Yii::$app->request->post());
@@ -107,6 +114,30 @@ class TasksController extends SecuredController
             'taskCreateForm' => $taskCreateForm,
             'errors' => $errors ?? []
         ]);
+    }
 
+    public function actionResponse($status, $id)
+    {
+        $response = TasksResponse::findOne($id);
+        $user = Yii::$app->user->identity;
+
+        if (!$response) {
+            throw new HttpException(404, 'Отклик не найден');
+        }
+
+        if ($status == 'decline') {
+            $responseDecline = new TaskService();
+            if ($responseDecline->declineResponse($response, $user)) {
+                return $this->redirect($response->task->link);
+            }
+        }
+
+        if ($status == 'accept') {
+            $taskStart = new TaskService();
+            if ($taskStart->taskStart($response, $user)) {
+                return $this->redirect($response->task->link);
+            }
+        }
+        return $this->redirect($response->task->link);
     }
 }

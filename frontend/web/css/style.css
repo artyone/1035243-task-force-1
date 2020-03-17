@@ -815,6 +815,15 @@ footer {
   background-color: #ff4757;
   padding: 20px; }
 
+.cancel-button {
+  background-color: #ff4757; }
+
+.complete-button {
+  background-color: #3366ff; }
+
+.refuse-button {
+  background-color: #ff3d71; }
+
 .response-button {
   background-color: #ffaa00; }
 
@@ -825,8 +834,7 @@ footer {
   background-color: #00e096; }
 
 .request-button {
-  background-color: #3366ff;
-}
+  background-color: #3366ff; }
 
 
 .button__chat {

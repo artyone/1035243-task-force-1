@@ -152,6 +152,7 @@ CREATE TABLE tasks_response /*Таблица откликов на задани�
     executor_id   INT(11) NOT NULL, /*айди исполнителя*/
     description   VARCHAR(500), /*комментарий к отклику*/
     price         INT, /*цена, целое не отрицательное*/
+    status        TINYINT      NOT NULL DEFAULT 0, /*статус*/
     FOREIGN KEY (task_id) REFERENCES tasks (id),
     FOREIGN KEY (executor_id) REFERENCES users (id),
     PRIMARY KEY (id)
