@@ -2,7 +2,7 @@
 
 namespace frontend\models\tasks;
 
-use Yii;
+use yii\db\ActiveRecord;
 use frontend\models\Categories;
 use frontend\models\Cities;
 use frontend\models\users\Users;
@@ -11,7 +11,6 @@ use frontend\models\tasks\actions\CancelAction;
 use frontend\models\tasks\actions\StartAction;
 use frontend\models\tasks\actions\RefuseAction;
 use frontend\models\tasks\actions\CompleteAction;
-use frontend\models\tasks\actions\NewAction;
 
 /**
  * This is the model class for table "tasks".
@@ -40,7 +39,7 @@ use frontend\models\tasks\actions\NewAction;
  * @property TasksFile[] $tasksFile
  * @property TasksResponse[] $tasksResponse
  */
-class Tasks extends \yii\db\ActiveRecord
+class Tasks extends ActiveRecord
 {
     const STATUS_NEW = 1;
     const STATUS_EXECUTION = 2;
@@ -241,39 +240,23 @@ class Tasks extends \yii\db\ActiveRecord
         return $result;
     }
 
-    public function start($initiatorId): ?string
+    public function start(): int
     {
-        if (!StartAction::verifyAction($this, $initiatorId)) {
-            return null;
-            //throw new StatusException('Ошибка при установке статуса '. self::STATUS_EXECUTION);
-        }
         return $this->status = self::STATUS_EXECUTION;
     }
 
-    public function cancel($initiatorId): ?string
+    public function cancel(): int
     {
-        if (!CancelAction::verifyAction($this, $initiatorId)) {
-            return null;
-            //throw new StatusException('Ошибка при установке статуса ' . self::STATUS_CANCELED);
-        }
         return $this->status = self::STATUS_CANCELED;
     }
 
-    public function refuse($initiatorId): ?string
+    public function refuse(): int
     {
-        if (!RefuseAction::verifyAction($this, $initiatorId)) {
-            return null;
-            //throw new StatusException('Ошибка при установке статуса ' . self::STATUS_FAILED);
-        }
         return $this->status = self::STATUS_FAILED;
     }
 
-    public function complete($initiatorId): ?string
+    public function complete(): int
     {
-        if (!CompleteAction::verifyAction($this, $initiatorId)) {
-            return null;
-            //throw new StatusException('Ошибка при установке статуса ' . self::STATUS_DONE);
-        }
         return $this->status = self::STATUS_DONE;
     }
 }

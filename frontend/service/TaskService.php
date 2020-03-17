@@ -84,11 +84,8 @@ class TaskService extends Model
         return true;
     }
 
-    public function declineResponse(TasksResponse $response, IdentityInterface $user): bool
+    public function declineResponse(TasksResponse $response): bool
     {
-        if (!$user->isAuthor($response->task)) {
-            return false;
-        }
 
         $response->status = TasksResponse::STATUS_DECLINE;
         if (!$response->save()) {
@@ -97,13 +94,17 @@ class TaskService extends Model
         return true;
     }
 
-    public function taskStart(TasksResponse $response, IdentityInterface $user): bool
+    public function taskStart(TasksResponse $response): bool
     {
+
         $task = $response->task;
-        if(!$task->start($user->id)) {
+
+        if ($task->status !== Tasks::STATUS_NEW) {
             return false;
         }
 
+        $task = $response->task;
+        $task->start();
         $task->executor_id = $response->executor_id;
         $task->price = $response->price;
         if (!$task->save()) {

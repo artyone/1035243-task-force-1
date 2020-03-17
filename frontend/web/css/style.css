@@ -887,6 +887,12 @@ footer {
   background-color: #f8f8f8;
   border-top: 1px solid #c8c5c5; }
 
+.new-user__pagination {
+  padding-left: 20px;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  background-color: #ffffff; }
+
 .new-task__pagination-list {
   list-style: none;
   padding: 0;

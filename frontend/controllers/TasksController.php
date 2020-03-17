@@ -96,12 +96,18 @@ class TasksController extends SecuredController
 
     public function actionCreate()
     {
+        $user = Yii::$app->user->identity;
+
+        if (!$user->isCustomer()) {
+            throw new HttpException(403, 'Данная операция вам запрещена');
+        }
+
         $taskCreateForm = new TasksCreateForm();
         if ($taskCreateForm->load(Yii::$app->request->post()) && $taskCreateForm->validate()) {
             $taskCreateForm->files = UploadedFile::getInstances($taskCreateForm, 'files');
             $newTask = new TaskService();
             if ($task = $newTask->createTask($taskCreateForm)) {
-                return $this->redirect($task->taskLink);
+                return $this->redirect($task->link);
             }
         } else {
             $errors = $taskCreateForm->getErrors();
@@ -121,16 +127,20 @@ class TasksController extends SecuredController
             throw new HttpException(404, 'Отклик не найден');
         }
 
+        if (!$user->isAuthor($response->task)) {
+            throw new HttpException(403, 'Данная операция вам запрещена');
+        }
+
         if ($status == 'decline') {
             $responseDecline = new TaskService();
-            if ($responseDecline->declineResponse($response, $user)) {
+            if ($responseDecline->declineResponse($response)) {
                 return $this->redirect($response->task->link);
             }
         }
 
         if ($status == 'accept') {
             $taskStart = new TaskService();
-            if ($taskStart->taskStart($response, $user)) {
+            if ($taskStart->taskStart($response)) {
                 return $this->redirect($response->task->link);
             }
         }

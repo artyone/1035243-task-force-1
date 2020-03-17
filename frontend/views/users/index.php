@@ -61,7 +61,7 @@ use yii\helpers\Url;
             </div>
         <?php endif; ?>
     <?php endforeach; ?>
-    <div class="pagination">
+    <div class="new-user__pagination">
         <?= LinkPager::widget([
             'pagination' => $pagination,
             'options' => [
