@@ -100,11 +100,11 @@ class TasksController extends SecuredController
         if ($taskCreateForm->load(Yii::$app->request->post()) && $taskCreateForm->validate()) {
             $taskCreateForm->files = UploadedFile::getInstances($taskCreateForm, 'files');
             $newTask = new TaskService();
-            if ($task = $newTask->create($taskCreateForm)) {
+            if ($task = $newTask->createTask($taskCreateForm)) {
                 return $this->redirect($task->taskLink);
-            } else {
-                $errors = $taskCreateForm->getErrors();
             }
+        } else {
+            $errors = $taskCreateForm->getErrors();
         }
         return $this->render('create', [
             'taskCreateForm' => $taskCreateForm,

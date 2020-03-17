@@ -19,7 +19,7 @@ use yii\web\IdentityInterface;
 class TaskService extends Model
 {
 
-    public function createTask(TasksCreateForm $model): ?string
+    public function createTask(TasksCreateForm $model): ?Tasks
     {
         $transaction = Yii::$app->db->beginTransaction();
 
@@ -67,7 +67,7 @@ class TaskService extends Model
         return true;
     }
 
-    public function createResponse(Tasks $task, TasksResponseForm $model, IdentityInterface $user)
+    public function createResponse(Tasks $task, TasksResponseForm $model, IdentityInterface $user): bool
     {
 
         if (!$user->canResponse($task)) {
@@ -84,7 +84,7 @@ class TaskService extends Model
         return true;
     }
 
-    public function declineResponse(TasksResponse $response,IdentityInterface $user): bool
+    public function declineResponse(TasksResponse $response, IdentityInterface $user): bool
     {
         if (!$user->isAuthor($response->task)) {
             return false;
@@ -97,7 +97,7 @@ class TaskService extends Model
         return true;
     }
 
-    public function taskStart($response, $user)
+    public function taskStart(TasksResponse $response, IdentityInterface $user): bool
     {
         $task = $response->task;
         if(!$task->start($user->id)) {
