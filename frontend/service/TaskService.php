@@ -9,6 +9,7 @@ use frontend\models\tasks\Tasks;
 use frontend\models\tasks\TasksFile;
 use yii\base\Model;
 use yii;
+use yii\web\UploadedFile;
 
 /**
  * Task service
@@ -16,7 +17,7 @@ use yii;
 class TaskService extends Model
 {
 
-    public function create(TasksCreateForm $model): ?string
+    public function create(TasksCreateForm $model): ?Tasks
     {
         $transaction = Yii::$app->db->beginTransaction();
 
@@ -26,32 +27,31 @@ class TaskService extends Model
         $task->category_id = $model->categoryId;
         $task->price = $model->price;
         $task->deadline_time = $model->deadlineTime;
-        $task->customer_id = Yii::$app->user->getIdentity()->id;
+        $task->customer_id = Yii::$app->user->identity->id;
         $task->status = Tasks::STATUS_NEW;
 
         if (!$task->save()) {
             $transaction->rollBack();
             return null;
         }
-
-        if (!$this->uploadFiles($model, $task->id)) {
+        if (!$this->uploadFiles($model->files, $task->id)) {
             $transaction->rollBack();
             return null;
         }
-
         $transaction->commit();
-        return $task->getTaskLink();
+
+        return $task;
     }
 
-    private function uploadFiles(TasksCreateForm $model, int $taskId): bool
+    private function uploadFiles(array $files, int $taskId): bool
     {
-        foreach ($model->files as $file) {
+        foreach ($files as $file) {
             $filePath = 'taskfiles/' . $taskId . '_' . $file->name;
             if (!$file->saveAs($filePath)) {
                 return false;
             }
             $fileInDb = new Files();
-            $fileInDb->link = $filePath;
+            $fileInDb->link = '/' . $filePath;
             if (!$fileInDb->save()) {
                 return false;
             }

@@ -11,7 +11,6 @@ use yii\web\HttpException;
 use frontend\models\tasks\TasksCreateForm;
 use yii\web\UploadedFile;
 use frontend\service\TaskService;
-use yii\helpers\Url;
 
 
 /**
@@ -32,9 +31,8 @@ class TasksController extends SecuredController
             ->where(['status' => Tasks::STATUS_NEW]);
 
         $tasksFilterForm = new TasksFilterForm();
-        if (Yii::$app->request->isGet) {
-            $tasksFilterForm->load(Yii::$app->request->get());
-        }
+        $tasksFilterForm->load(Yii::$app->request->get());
+
 
         $query = $tasksFilterForm->applyFilters($query);
 
@@ -67,27 +65,22 @@ class TasksController extends SecuredController
         $task = Tasks::findOne($id);
 
         if (!$task) {
-            throw new HttpException(404, 'Task not found');
+            throw new HttpException(404, 'Задание не найдено');
         }
 
         return $this->render('view', [
             'task' => $task
-
         ]);
     }
 
     public function actionCreate()
     {
-
         $taskCreateForm = new TasksCreateForm();
-        if (Yii::$app->request->getIsPost()) {
-            $taskCreateForm->load(Yii::$app->request->post());
+        if ($taskCreateForm->load(Yii::$app->request->post()) && $taskCreateForm->validate()) {
             $taskCreateForm->files = UploadedFile::getInstances($taskCreateForm, 'files');
-            if ($taskCreateForm->validate()) {
-                $newTask = new TaskService();
-                if($link = $newTask->create($taskCreateForm)) {
-                    return $this->redirect(URL::to($link));
-                }
+            $newTask = new TaskService();
+            if ($task = $newTask->create($taskCreateForm)) {
+                return $this->redirect($task->taskLink);
             } else {
                 $errors = $taskCreateForm->getErrors();
             }

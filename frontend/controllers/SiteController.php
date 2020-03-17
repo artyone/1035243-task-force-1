@@ -64,7 +64,7 @@ class SiteController extends SecuredController
             }
             if ($userRegisterForm->validate()) {
                 $newUser = new UserService();
-                if($newUser->registration($userRegisterForm)) {
+                if ($newUser->registration($userRegisterForm)) {
                     return $this->goHome();
                 }
             }
@@ -107,5 +107,14 @@ class SiteController extends SecuredController
             'tasks' => $tasks,
             'userLoginForm' => $userLoginForm
         ]);
+    }
+
+    public function actions()
+    {
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+        ];
     }
 }

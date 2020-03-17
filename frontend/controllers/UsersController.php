@@ -27,9 +27,7 @@ class UsersController extends SecuredController
             ->where(['is not', 'categories.id', null]);
 
         $usersFilterForm = new UsersFilterForm();
-        if (Yii::$app->request->isGet) {
-            $usersFilterForm->load(Yii::$app->request->get());
-        }
+        $usersFilterForm->load(Yii::$app->request->get());
 
         if ($search = $usersFilterForm->search) {
             $query->andWhere(['like', 'users.name', $search]);
@@ -69,9 +67,7 @@ class UsersController extends SecuredController
             ->where(['is not', 'categories.id', null]);
 
         $usersFilterForm = new UsersFilterForm();
-        if (Yii::$app->request->get()) {
-            $usersFilterForm->load(Yii::$app->request->get());
-        }
+        $usersFilterForm->load(Yii::$app->request->get());
 
         $query = $usersFilterForm->applyFilters($query);
 
@@ -101,7 +97,7 @@ class UsersController extends SecuredController
     {
         $user = Users::findOne($id);
         if (!$user) {
-            throw new HttpException(404, 'User not found');
+            throw new HttpException(404, 'Пользователь не найден');
         }
         return $this->render('view', [
             'user' => $user
