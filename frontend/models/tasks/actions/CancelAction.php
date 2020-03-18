@@ -3,9 +3,8 @@
 
 namespace frontend\models\tasks\actions;
 
-use app\exception\RoleException;
-use app\exception\ActionException;
 use frontend\models\tasks\Tasks;
+use yii\web\IdentityInterface;
 
 class CancelAction implements ActionInterface
 {
@@ -20,9 +19,14 @@ class CancelAction implements ActionInterface
         return 'cancel';
     }
 
-    public static function verifyAction(Tasks $task, int $userId): bool
+    public static function getActionDescription(): string
     {
-        if ($userId !== $task->customer->id) {
+        return 'Отменить';
+    }
+
+    public static function verifyAction(Tasks $task, IdentityInterface $user): bool
+    {
+        if (!$user->isAuthor($task)) {
             //throw new RoleException('Ошибка. Выбранный пользователь не иницицатор задачи');
             return false;
         }

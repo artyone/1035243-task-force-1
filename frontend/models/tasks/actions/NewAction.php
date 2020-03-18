@@ -3,10 +3,8 @@
 
 namespace frontend\models\tasks\actions;
 
-use app\exception\ActionException;
-use app\exception\RoleException;
 use frontend\models\tasks\Tasks;
-use frontend\models\users\Users;
+use yii\web\IdentityInterface;
 
 class NewAction implements ActionInterface
 {
@@ -21,15 +19,15 @@ class NewAction implements ActionInterface
         return 'new';
     }
 
-    public static function verifyAction(Tasks $task, int $userId): bool
+    public static function getActionDescription(): string
     {
-        if (!Users::findOne($userId)->isCustomer()) {
+        return 'Создать задание';
+    }
+
+    public static function verifyAction(?Tasks $task, IdentityInterface $user): bool
+    {
+        if (!$user->isCustomer()) {
             return false;
-            //throw new RoleException('Ошибка. Роль пользователя не заказчик');
-        }
-        if ($task->status !== $task::STATUS_NEW) {
-            return false;
-            //throw new ActionException('Ошибка. Статус задачи не ' . $task::STATUS_NEW);
         }
         return true;
     }

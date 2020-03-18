@@ -4,8 +4,16 @@
 namespace frontend\service;
 
 use frontend\models\Files;
+use frontend\models\tasks\actions\AddResponseAction;
+use frontend\models\tasks\actions\CancelAction;
+use frontend\models\tasks\actions\CompleteAction;
+use frontend\models\tasks\actions\NewAction;
+use frontend\models\tasks\actions\RefuseAction;
+use frontend\models\tasks\actions\StartAction;
+use frontend\models\tasks\TasksCompleteForm;
 use frontend\models\tasks\TasksCreateForm;
 use frontend\models\tasks\Tasks;
+use frontend\models\tasks\TasksFeedback;
 use frontend\models\tasks\TasksFile;
 use frontend\models\tasks\TasksResponse;
 use frontend\models\tasks\TasksResponseForm;
@@ -19,8 +27,12 @@ use yii\web\IdentityInterface;
 class TaskService extends Model
 {
 
-    public function createTask(TasksCreateForm $model): ?Tasks
+    public function createTask(TasksCreateForm $model, IdentityInterface $user): ?Tasks
     {
+        if(!NewAction::verifyAction(null, $user)) {
+            return null;
+        }
+
         $transaction = Yii::$app->db->beginTransaction();
 
         $task = new Tasks();
@@ -29,7 +41,7 @@ class TaskService extends Model
         $task->category_id = $model->categoryId;
         $task->price = $model->price;
         $task->deadline_time = $model->deadlineTime;
-        $task->customer_id = Yii::$app->user->identity->id;
+        $task->customer_id = $user->id;
         $task->status = Tasks::STATUS_NEW;
 
         if (!$task->save()) {
@@ -69,24 +81,25 @@ class TaskService extends Model
 
     public function createResponse(Tasks $task, TasksResponseForm $model, IdentityInterface $user): bool
     {
-
-        if (!$user->canResponse($task)) {
+        if (!AddResponseAction::verifyAction($task, $user)){
             return false;
         }
         $taskResponse = new TasksResponse();
         $taskResponse->task_id = $task->id;
         $taskResponse->executor_id = $user->id;
         $taskResponse->price = $model->price;
-        $taskResponse->description = $model->description;
+        $taskResponse->description = $model->descriptionResponse;
         if (!$taskResponse->save()) {
             return false;
         }
         return true;
     }
 
-    public function declineResponse(TasksResponse $response): bool
+    public function declineResponse(TasksResponse $response, IdentityInterface $user): bool
     {
-
+        if (!$user->isAuthor($response->task)) {
+            return false;
+        }
         $response->status = TasksResponse::STATUS_DECLINE;
         if (!$response->save()) {
             return false;
@@ -94,16 +107,14 @@ class TaskService extends Model
         return true;
     }
 
-    public function taskStart(TasksResponse $response): bool
+    public function taskStart(TasksResponse $response, IdentityInterface $user): bool
     {
-
         $task = $response->task;
 
-        if ($task->status !== Tasks::STATUS_NEW) {
+        if (!StartAction::verifyAction($task, $user)) {
             return false;
         }
 
-        $task = $response->task;
         $task->start();
         $task->executor_id = $response->executor_id;
         $task->price = $response->price;
@@ -111,5 +122,70 @@ class TaskService extends Model
             return false;
         }
         return true;
+    }
+
+    public function taskCancel(Tasks $task, IdentityInterface $user): bool
+    {
+        if (!CancelAction::verifyAction($task, $user)) {
+            return false;
+        }
+        $task->cancel();
+        if (!$task->save()) {
+            return false;
+        }
+        return true;
+    }
+
+    public function taskRefuse(Tasks $task, IdentityInterface $user): bool
+    {
+
+        if (!RefuseAction::verifyAction($task, $user)) {
+            return false;
+        }
+        $task->refuse();
+        if (!$task->save()) {
+            return false;
+        }
+        //@TODO Реализовать запись проваленного задания пользователю (вопрос только зачем, если это нигде не учитывается?)
+        return true;
+    }
+
+    public function taskComplete(Tasks $task, TasksCompleteForm $model, IdentityInterface $user)
+    {
+
+        if (!CompleteAction::verifyAction($task, $user)) {
+            return false;
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+
+        switch ($model->isComplete) {
+            case 'yes':
+                $task->complete();
+                break;
+            case 'difficult':
+                $task->refuse();
+                break;
+        }
+        if (!$task->save()) {
+            $transaction->rollBack();
+            return false;
+        }
+        $newFeedback = new TasksFeedback();
+        $newFeedback->customer_id = $task->customer_id;
+        $newFeedback->executor_id = $task->executor_id;
+        $newFeedback->task_id = $task->id;
+        $newFeedback->description = $model->descriptionComplete;
+        $newFeedback->rating = $model->rating;
+        if (!$newFeedback->save()) {
+            $transaction->rollBack();
+            return false;
+        }
+
+        $transaction->commit();
+
+        return true;
+
+
     }
 }

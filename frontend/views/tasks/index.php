@@ -30,7 +30,9 @@ use yii\helpers\Url;
                 </p>
                 <b class="new-task__price new-task__price--<?= $task->category->icon ?>">
                     <?= $task->price ? $task->price . ' <b> ₽</b>' : '' ?></b>
-                <p class="new-task__place"><?= Html::encode("{$task->city->name}, {$task->address_comments}, {$task->latitude}-{$task->longitude}") ?></p>
+                <p class="new-task__place">
+                    <?= $task->city ? $task->city->name : 'Удаленная работа' ?>
+                </p>
                 <span class="new-task__time"><?= WordHelper::getStringTimeAgo($task->creation_time) ?> назад</span>
             </div>
         <?php endforeach; ?>
@@ -61,7 +63,6 @@ use yii\helpers\Url;
         ]) ?>
         <fieldset class="search-task__categories">
             <legend>Категории</legend>
-
             <?= $form->field($tasksFilterForm, 'categories', ['options' => ['class' => '']])
                 ->checkboxList(Categories::find()->select(['name', 'id'])->indexBy('id')->column(), [
                     'item' => function ($index, $label, $name, $checked, $value) use ($tasksFilterForm) {
@@ -69,13 +70,12 @@ use yii\helpers\Url;
                                 $tasksFilterForm['categories'])) {
                             $checked = 'checked';
                         }
-                        return '<input class="visually-hidden checkbox__input" id="categories_' . $value . '"
-                         type="checkbox" name="' . $name . '" value="' . $value . '" ' . $checked . '>
-                                        <label for="categories_' . $value . '">' . $label . '</label>';
+                        return "<input class=\"visually-hidden checkbox__input\" id=\"categories_$value\" 
+                                type=\"checkbox\" name=\"$name\" value=\"$value\" $checked>
+                                <label for=\"categories_$value\">$label</label>";
                     },
                     'unselect' => null
                 ])->label(false) ?>
-
         </fieldset>
         <fieldset class="search-task__categories">
             <legend>Дополнительно</legend>
@@ -115,7 +115,6 @@ use yii\helpers\Url;
                 'class' => 'input-middle input',
                 'style' => 'width: 100%'
             ]) ?>
-
         <?= Html::submitButton('Искать', ['class' => 'button']); ?>
         <?php ActiveForm::end() ?>
     </div>

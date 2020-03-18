@@ -3,10 +3,8 @@
 
 namespace frontend\models\tasks\actions;
 
-use app\exception\ActionException;
-use app\exception\RoleException;
 use frontend\models\tasks\Tasks;
-use frontend\models\users\Users;
+use yii\web\IdentityInterface;
 
 class StartAction implements ActionInterface
 {
@@ -21,9 +19,14 @@ class StartAction implements ActionInterface
         return 'start';
     }
 
-    public static function verifyAction(Tasks $task, int $userId): bool
+    public static function getActionDescription(): string
     {
-        if (!Users::findOne($userId)->isAuthor($task)) {
+        return 'Подтвердить';
+    }
+
+    public static function verifyAction(Tasks $task, IdentityInterface $user): bool
+    {
+        if (!$user->isAuthor($task)) {
             return false;
             //throw new RoleException('Ошибка. Роль не соответсвует роли исполнителя');
         }

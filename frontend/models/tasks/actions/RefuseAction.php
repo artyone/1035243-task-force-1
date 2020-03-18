@@ -3,9 +3,8 @@
 
 namespace frontend\models\tasks\actions;
 
-use app\exception\ActionException;
-use app\exception\RoleException;
 use frontend\models\tasks\Tasks;
+use yii\web\IdentityInterface;
 
 class RefuseAction implements ActionInterface
 {
@@ -20,9 +19,14 @@ class RefuseAction implements ActionInterface
         return 'refuse';
     }
 
-    public static function verifyAction(Tasks $task, int $userId): bool
+    public static function getActionDescription(): string
     {
-        if ($userId !== $task->executor->id) {
+        return 'Отказаться';
+    }
+
+    public static function verifyAction(Tasks $task, IdentityInterface $user): bool
+    {
+        if (!$user->isContractor($task)) {
             return false;
             //throw new RoleException('Ошибка. Выбранный пользователь не исполнитель задачи');
         }

@@ -17,7 +17,17 @@ abstract class SecuredController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'logout', 'sort', 'error', 'response'],
+                        'actions' => [
+                            'index',
+                            'view',
+                            'logout',
+                            'sort',
+                            'error',
+                            'response',
+                            'cancel',
+                            'refuse',
+                            'complete'
+                        ],
                         'allow' => true,
                         'roles' => ['@'],
 
@@ -38,7 +48,18 @@ abstract class SecuredController extends Controller
 
                     ],
                     [
-                        'actions' => ['index', 'view', 'logout', 'sort', 'create'],
+                        'actions' => [
+                            'index',
+                            'view',
+                            'logout',
+                            'sort',
+                            'error',
+                            'response',
+                            'cancel',
+                            'refuse',
+                            'complete',
+                            'create'
+                        ],
                         'allow' => false,
                         'roles' => ['?'],
                         'denyCallback' => function ($rule, $action) {

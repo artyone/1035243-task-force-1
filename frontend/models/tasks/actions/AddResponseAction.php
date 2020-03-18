@@ -6,34 +6,34 @@ namespace frontend\models\tasks\actions;
 use frontend\models\tasks\Tasks;
 use yii\web\IdentityInterface;
 
-class CompleteAction implements ActionInterface
+class AddResponseAction implements ActionInterface
 {
 
     public static function getNameClass(): string
     {
-        return CompleteAction::class;
+        return AddResponseAction::class;
     }
 
     public static function getActionName(): string
     {
-        return 'complete';
+        return 'response';
     }
 
     public static function getActionDescription(): string
     {
-        return 'Завершить';
+        return 'Откликнуться';
     }
 
     public static function verifyAction(Tasks $task, IdentityInterface $user): bool
     {
-        if (!$user->isAuthor($task)) {
+
+        if (!$user->isExecutor() || $user->isAuthor($task)) {
             return false;
-            //throw new RoleException('Ошибка. Выбранный пользователь не инициатор задачи');
         }
-        if ($task->status !== $task::STATUS_EXECUTION) {
+        if ($task->getTasksResponseByUser($user) || $task->status !== Tasks::STATUS_NEW) {
             return false;
-            //throw new ActionException('Ошибка. Статус задачи не ' . $task::STATUS_EXECUTION);
         }
+
         return true;
     }
 }

@@ -347,9 +347,9 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
         return false;
     }
 
-    public function canResponse(Tasks $task): bool
+    public function isContractor(Tasks $task): bool
     {
-        if ($this->isExecutor() && !$task->getTasksResponseByUser($this->id) && !$this->isAuthor($task)) {
+        if ($this->id == $task->executor->id) {
             return true;
         }
         return false;

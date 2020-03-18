@@ -16,7 +16,7 @@ class TasksResponseForm extends Model
      * {@inheritdoc}
      */
 public $price;
-public $description;
+public $descriptionResponse;
 
 
     /**
@@ -26,7 +26,7 @@ public $description;
     {
         return [
             'price' => 'Ваша цена',
-            'description' => 'Комментарий'
+            'descriptionResponse' => 'Комментарий'
         ];
     }
 
@@ -36,9 +36,9 @@ public $description;
     public function rules()
     {
         return [
-            [['description', 'price'], 'safe'],
-            ['description', 'string', 'length' => [0, 200]],
-            ['price', 'integer', 'min' => '1'],
+            [['descriptionResponse', 'price'], 'safe'],
+            ['descriptionResponse', 'string', 'length' => [0, 200]],
+            ['price', 'integer', 'min' => '1', 'max' => '99999'],
             ['price', 'default', 'value' => null],
         ];
     }

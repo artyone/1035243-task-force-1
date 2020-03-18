@@ -7,7 +7,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use frontend\assets\MainAsset;
-use frontend\models\users\Users;
+use frontend\models\tasks\actions\NewAction;
 
 MainAsset::register($this);
 ?>
@@ -78,9 +78,11 @@ MainAsset::register($this);
                     <li class="site-list__item <?= Url::to() == '/users' ? 'site-list__item--active' : '' ?>">
                         <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
                     </li>
+                    <?php if (NewAction::verifyAction(null, Yii::$app->user->identity)): ?>
                     <li class="site-list__item <?= Url::to() == '/task/create' ? 'site-list__item--active' : '' ?>">
                         <a href="<?= Url::to(['tasks/create']) ?>">Создать задание</a>
                     </li>
+                    <?php endif; ?>
                     <li class="site-list__item <?= Url::to() == '/profile' ? 'site-list__item--active' : '' ?>">
                         <a href="<?= Url::to(['users/profile']) ?>">Мой профиль</a>
                     </li>

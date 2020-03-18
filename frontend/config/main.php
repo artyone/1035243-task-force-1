@@ -46,6 +46,8 @@ return [
                 'task/view/<id:\d+>' => 'tasks/view',
                 'task/create' => 'tasks/create',
                 'task/response/<status:\w+>/<id:\d+>' => 'tasks/response',
+                'task/cancel/<id:\d+>' => 'tasks/cancel',
+                'task/refuse/<id:\d+>' => 'tasks/refuse',
                 'users' => 'users/index',
                 'user/view/<id:\d+>' => 'users/view',
                 'users/sort/<sort:\w+>' => 'users/sort',

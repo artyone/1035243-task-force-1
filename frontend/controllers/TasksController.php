@@ -4,6 +4,7 @@
 namespace frontend\controllers;
 
 use frontend\models\tasks\Tasks;
+use frontend\models\tasks\TasksCompleteForm;
 use frontend\models\tasks\TasksResponse;
 use frontend\models\tasks\TasksResponseForm;
 use yii\data\Pagination;
@@ -13,7 +14,6 @@ use yii\web\HttpException;
 use frontend\models\tasks\TasksCreateForm;
 use yii\web\UploadedFile;
 use frontend\service\TaskService;
-use yii\helpers\Url;
 
 
 /**
@@ -73,15 +73,23 @@ class TasksController extends SecuredController
 
         $user = Yii::$app->user->identity;
 
-        $responses = $user->isAuthor($task) ? $task->tasksResponse : $task->getTasksResponseByUser($user->id);
+        $responses = $user->isAuthor($task) ? $task->tasksResponse : $task->getTasksResponseByUser($user);
 
-        $availableActions = $task->getAvailableActions($user->id);
+        $availableActions = $task->getAvailableActions($user);
 
         $taskResponseForm = new TasksResponseForm();
         if ($taskResponseForm->load(Yii::$app->request->post()) && $taskResponseForm->validate()) {
             $newResponse = new TaskService();
             if ($newResponse->createResponse($task, $taskResponseForm, $user)) {
-                return $this->redirect(URL::to($task->getLink()));
+                return $this->redirect($task->link);
+            }
+        }
+
+        $taskCompleteForm = new TasksCompleteForm();
+        if ($taskCompleteForm->load(Yii::$app->request->post()) && $taskCompleteForm->validate()) {
+            $taskComplete = new TaskService();
+            if ($taskComplete->taskComplete($task, $taskCompleteForm, $user)) {
+                return $this->redirect($task->link);
             }
         }
 
@@ -90,7 +98,8 @@ class TasksController extends SecuredController
             'responses' => $responses,
             'user' => $user,
             'availableActions' => $availableActions,
-            'taskResponseForm' => $taskResponseForm
+            'taskResponseForm' => $taskResponseForm,
+            'taskCompleteForm' => $taskCompleteForm
         ]);
     }
 
@@ -98,15 +107,11 @@ class TasksController extends SecuredController
     {
         $user = Yii::$app->user->identity;
 
-        if (!$user->isCustomer()) {
-            throw new HttpException(403, 'Данная операция вам запрещена');
-        }
-
         $taskCreateForm = new TasksCreateForm();
         if ($taskCreateForm->load(Yii::$app->request->post()) && $taskCreateForm->validate()) {
             $taskCreateForm->files = UploadedFile::getInstances($taskCreateForm, 'files');
             $newTask = new TaskService();
-            if ($task = $newTask->createTask($taskCreateForm)) {
+            if ($task = $newTask->createTask($taskCreateForm, $user)) {
                 return $this->redirect($task->link);
             }
         } else {
@@ -127,23 +132,54 @@ class TasksController extends SecuredController
             throw new HttpException(404, 'Отклик не найден');
         }
 
-        if (!$user->isAuthor($response->task)) {
-            throw new HttpException(403, 'Данная операция вам запрещена');
-        }
-
         if ($status == 'decline') {
             $responseDecline = new TaskService();
-            if ($responseDecline->declineResponse($response)) {
+            if ($responseDecline->declineResponse($response,$user)) {
                 return $this->redirect($response->task->link);
             }
         }
 
         if ($status == 'accept') {
             $taskStart = new TaskService();
-            if ($taskStart->taskStart($response)) {
+            if ($taskStart->taskStart($response, $user)) {
                 return $this->redirect($response->task->link);
             }
         }
         return $this->redirect($response->task->link);
     }
+
+    public function actionCancel($id)
+    {
+        $task = Tasks::findOne($id);
+        $user = Yii::$app->user->identity;
+
+        if (!$task) {
+            throw new HttpException(404, 'Задание не найдено');
+        }
+
+        $cancelTask = new TaskService();
+        if ($cancelTask->taskCancel($task, $user)) {
+            return $this->goHome();
+        }
+        return $this->redirect($task->link);
+
+    }
+
+    public function actionRefuse($id)
+    {
+        $task = Tasks::findOne($id);
+        $user = Yii::$app->user->identity;
+
+        if (!$task) {
+            throw new HttpException(404, 'Задание не найдено');
+        }
+
+        $refuseTask = new TaskService();
+        if ($refuseTask->taskRefuse($task, $user)) {
+            return $this->goHome();
+        }
+        return $this->redirect($task->link);
+
+    }
+
 }

@@ -59,7 +59,7 @@ class TasksCreateForm extends Model
             ],
             //@TODO доработь location после реализации локаций
             ['files', 'file', 'maxFiles' => 4],
-            ['price', 'integer', 'min' => '1'],
+            ['price', 'integer', 'min' => '1', 'max' => '99999'],
             ['price', 'default', 'value' => null],
             ['deadlineTime', 'date', 'format' => 'php:Y-m-d', 'min' => date('Y-m-d')],
             ['deadlineTime', 'default', 'value' => null]

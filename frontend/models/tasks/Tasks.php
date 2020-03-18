@@ -8,9 +8,9 @@ use frontend\models\Cities;
 use frontend\models\users\Users;
 use frontend\models\Files;
 use frontend\models\tasks\actions\CancelAction;
-use frontend\models\tasks\actions\StartAction;
 use frontend\models\tasks\actions\RefuseAction;
 use frontend\models\tasks\actions\CompleteAction;
+use frontend\models\tasks\actions\AddResponseAction;
 
 /**
  * This is the model class for table "tasks".
@@ -217,31 +217,32 @@ class Tasks extends ActiveRecord
         return "/task/view/$this->id";
     }
 
-    public function getTasksResponseByUser($userId): array
+    public function getTasksResponseByUser($user): array
     {
-        return $this->getTasksResponse()->where(['executor_id' => $userId])->all();
+        return $this->getTasksResponse()->where(['executor_id' => $user->id])->all();
     }
 
-    public function getAvailableActions($initiatorId): array
+    public function getAvailableActions($user): array
     {
         $result = [];
-        if (StartAction::verifyAction($this, $initiatorId)) {
-            $result[] = StartAction::getActionName();
+        if (AddResponseAction::verifyAction($this, $user)) {
+            $result[AddResponseAction::getActionName()] = AddResponseAction::getActionDescription() ;
         }
-        if (CancelAction::verifyAction($this, $initiatorId)) {
-            $result[] = CancelAction::getActionName();
+        if (CancelAction::verifyAction($this, $user)) {
+            $result[CancelAction::getActionName()] = CancelAction::getActionDescription();
         }
-        if (RefuseAction::verifyAction($this, $initiatorId)) {
-            $result[] = RefuseAction::getActionName();
+        if (RefuseAction::verifyAction($this, $user)) {
+            $result[RefuseAction::getActionName()] = RefuseAction::getActionDescription();
         }
-        if (CompleteAction::verifyAction($this, $initiatorId)) {
-            $result[] = CompleteAction::getActionName();
+        if (CompleteAction::verifyAction($this, $user)) {
+            $result[CompleteAction::getActionName()] = CompleteAction::getActionDescription();
         }
         return $result;
     }
 
     public function start(): int
     {
+
         return $this->status = self::STATUS_EXECUTION;
     }
 

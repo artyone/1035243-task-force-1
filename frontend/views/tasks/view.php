@@ -1,6 +1,7 @@
 <?php
 
 use frontend\helpers\WordHelper;
+use frontend\models\tasks\actions\StartAction;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
@@ -13,6 +14,7 @@ use frontend\models\tasks\TasksResponse;
  * @var $availableActions
  * @var \frontend\models\users\Users $user
  * @var \frontend\models\tasks\TasksResponseForm $taskResponseForm
+ * @var \frontend\models\tasks\TasksCompleteForm $taskCompleteForm
  */
 
 ?>
@@ -56,36 +58,17 @@ use frontend\models\tasks\TasksResponse;
                 </div>
             </div>
         </div>
-        <div class="content-view__action-buttons">
-            <?php if ($user->canResponse($task)): ?>
-                <?= Html::button('Откликнуться', [
-                    'class' => 'button button__big-color response-button open-modal',
-                    'type' => 'button',
-                    'data-for' => 'response-form'
-                ]) ?>
-            <?php endif; ?>
-            <?php if (in_array('cancel', $availableActions)): ?>
-                <?= Html::button('Отменить', [
-                    'class' => 'button button__big-color cancel-button open-modal',
-                    'type' => 'button',
-                    'data-for' => 'cancel-form'
-                ]) ?>
-            <?php endif; ?>
-            <?php if (in_array('refuse', $availableActions)): ?>
-                <?= Html::button('Отказаться', [
-                    'class' => 'button button__big-color refuse-button open-modal',
-                    'type' => 'button',
-                    'data-for' => 'refuse-form'
-                ]) ?>
-            <?php endif; ?>
-            <?php if (in_array('complete', $availableActions)): ?>
-                <?= Html::button('Завершить', [
-                    'class' => 'button button__big-color complete-button open-modal',
-                    'type' => 'button',
-                    'data-for' => 'complete-form'
-                ]) ?>
-            <?php endif; ?>
-        </div>
+        <? if ($availableActions): ?>
+            <div class="content-view__action-buttons">
+                <?php foreach ($availableActions as $action => $description): ?>
+                    <?= Html::button($description, [
+                        'class' => "button button__big-color $action-button open-modal",
+                        'type' => 'button',
+                        'data-for' => "$action-form"
+                    ]); ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </div>
     <?php if (!empty($responses)): ?>
         <div class="content-view__feedback">
@@ -111,14 +94,15 @@ use frontend\models\tasks\TasksResponse;
                         </div>
                         <div class="feedback-card__content">
                             <p><?= $response->description ?></p>
-                            <span><?= $response->price ?> ₽</span>
+                            <?= $response->price ? "<span>$response->price ₽</span>" : '' ?>
                         </div>
-                        <?php if (in_array('start',
-                                $availableActions) && $response->status == TasksResponse::STATUS_NEW): ?>
+                        <?php if (StartAction::verifyAction($task, $user)): ?>
                             <div class="feedback-card__actions">
-                                <?= Html::a('Подтвердить', ['tasks/response', 'id' => $response->id, 'status' => 'accept'],
+                                <?= Html::a('Подтвердить',
+                                    ['tasks/response', 'id' => $response->id, 'status' => 'accept'],
                                     ['class' => 'button__small-color request-button button', 'type' => 'button']) ?>
-                                <?= Html::a('Отказать', ['tasks/response', 'id' => $response->id, 'status' => 'decline'],
+                                <?= Html::a('Отказать',
+                                    ['tasks/response', 'id' => $response->id, 'status' => 'decline'],
                                     ['class' => 'button__small-color refusal-button button', 'type' => 'button']) ?>
                             </div>
                         <?php endif; ?>
@@ -129,49 +113,67 @@ use frontend\models\tasks\TasksResponse;
     <?php endif; ?>
 </section>
 <section class="connect-desk">
-    <div class="connect-desk__profile-mini">
-        <div class="profile-mini__wrapper">
-            <h3>Заказчик</h3>
-            <div class="profile-mini__top">
-                <img src="<?= $task->customer->fileAvatar ? $task->customer->fileAvatar->link : '/img/user-photo.png' ?>"
-                     width="62" height="62" alt="Аватар заказчика">
-                <div class="profile-mini__name five-stars__rate">
-                    <p><?= $task->customer->name ?></p>
+    <?php if ($user->isExecutor()): ?>
+        <div class="connect-desk__profile-mini">
+            <div class="profile-mini__wrapper">
+                <h3>Заказчик</h3>
+                <div class="profile-mini__top" >
+                    <img src="<?= $task->customer->fileAvatar ? $task->customer->fileAvatar->link : '/img/user-photo.png' ?>"
+                         width="62" height="62" alt="Аватар заказчика">
+                    <div class="profile-mini__name five-stars__rate">
+                        <p><?= $task->customer->name ?></p>
+                    </div>
                 </div>
             </div>
-            <p class="info-customer">
-                <span><?= WordHelper::getStringTasks(count($task->customer->tasksCustomer)) ?></span>
-                <span class="last-"><?= WordHelper::getStringTimeAgo($task->customer->creation_time) ?> на сайте</span>
-            </p>
-            <a href="<?= Url::to(['users/view', 'id' => $task->customer->id]) ?>" class="link-regular">Смотреть
-                профиль</a>
         </div>
-    </div>
-    <div class="connect-desk__chat">
-        <h3>Переписка</h3>
-        <div class="chat__overflow">
-            <div class="chat__message chat__message--out">
-                <p class="chat__message-time">10.05.2019, 14:56</p>
-                <p class="chat__message-text">Привет. Во сколько сможешь
-                    приступить к работе?</p>
-            </div>
-            <div class="chat__message chat__message--in">
-                <p class="chat__message-time">10.05.2019, 14:57</p>
-                <p class="chat__message-text">На задание
-                    выделены всего сутки, так что через час</p>
-            </div>
-            <div class="chat__message chat__message--out">
-                <p class="chat__message-time">10.05.2019, 14:57</p>
-                <p class="chat__message-text">Хорошо. Думаю, мы справимся</p>
+    <?php endif; ?>
+    <?php if ($user->isAuthor($task) && $task->executor): ?>
+        <div class="connect-desk__profile-mini">
+            <div class="profile-mini__wrapper">
+                <h3>Исполнитель</h3>
+                <div class="profile-mini__top">
+                    <img src="<?= $task->executor->fileAvatar ? $task->executor->fileAvatar->link : '/img/user-photo.png' ?>"
+                         width="62" height="62" alt="Аватар заказчика">
+                    <div class="profile-mini__name five-stars__rate">
+                        <p><?= $task->executor->name ?></p>
+                    </div>
+                </div>
+                <p class="info-customer">
+                    <span><?= WordHelper::getStringTasks(count($task->customer->tasksCustomer)) ?></span>
+                    <span class="last-"><?= WordHelper::getStringTimeAgo($task->customer->creation_time) ?> на сайте</span>
+                </p>
+                <?= Html::a('Смотреть профиль', ['users/view', 'id' => $task->customer->id],
+                    ['class' => 'link-regular']) ?>
             </div>
         </div>
-        <p class="chat__your-message">Ваше сообщение</p>
-        <form class="chat__form">
+    <?php endif; ?>
+    <?php if (($user->isAuthor($task) || $user->isContractor($task)) && $task->executor): ?>
+        <div class="connect-desk__chat">
+            <h3>Переписка</h3>
+            <div class="chat__overflow">
+                <div class="chat__message chat__message--out">
+                    <p class="chat__message-time">10.05.2019, 14:56</p>
+                    <p class="chat__message-text">Привет. Во сколько сможешь
+                        приступить к работе?</p>
+                </div>
+                <div class="chat__message chat__message--in">
+                    <p class="chat__message-time">10.05.2019, 14:57</p>
+                    <p class="chat__message-text">На задание
+                        выделены всего сутки, так что через час</p>
+                </div>
+                <div class="chat__message chat__message--out">
+                    <p class="chat__message-time">10.05.2019, 14:57</p>
+                    <p class="chat__message-text">Хорошо. Думаю, мы справимся</p>
+                </div>
+            </div>
+            <p class="chat__your-message">Ваше сообщение</p>
+            <form class="chat__form">
             <textarea class="input textarea textarea-chat" rows="2" name="message-text"
                       placeholder="Текст сообщения"></textarea>
-            <button class="button chat__button" type="submit">Отправить</button>
-        </form>
-    </div>
+                <button class="button chat__button" type="submit">Отправить</button>
+            </form>
+        </div>
+    <?php endif; ?>
 </section>
 <section class="modal response-form form-modal" id="response-form">
     <h2>Отклик на задание</h2>
@@ -193,7 +195,7 @@ use frontend\models\tasks\TasksResponse;
         ])
         ->error(['tag' => 'span']) ?>
 
-    <?= $form->field($taskResponseForm, 'description', [
+    <?= $form->field($taskResponseForm, 'descriptionResponse', [
         'options' => ['class' => ''],
         'labelOptions' => ['class' => 'form-modal-description', 'style' => ['display' => 'inline-block']],
         'template' => '{label}<br>{input}<br>{error}'
@@ -214,38 +216,23 @@ use frontend\models\tasks\TasksResponse;
     <?= Html::button('', ['class' => 'form-modal-close', 'type' => 'button']) ?>
 
 </section>
-<section class="modal completion-form form-modal" id="complete-form">
-    <h2>Завершение задания</h2>
-    <p class="form-modal-description">Задание выполнено?</p>
-    <form action="#" method="post">
-        <input class="visually-hidden completion-input completion-input--yes" type="radio" id="completion-radio--yes"
-               name="completion" value="yes">
-        <label class="completion-label completion-label--yes" for="completion-radio--yes">Да</label>
-        <input class="visually-hidden completion-input completion-input--difficult" type="radio"
-               id="completion-radio--yet" name="completion" value="difficulties">
-        <label class="completion-label completion-label--difficult" for="completion-radio--yet">Возникли
-            проблемы</label>
-        <p>
-            <label class="form-modal-description" for="completion-comment">Комментарий</label>
-            <textarea class="input textarea" rows="4" id="completion-comment" name="completion-comment"
-                      placeholder="Place your text"></textarea>
-        </p>
-        <p class="form-modal-description">
-            Оценка
-        </p>
-        <div class="feedback-card__top--name completion-form-star">
-            <span class="star-disabled"></span>
-            <span class="star-disabled"></span>
-            <span class="star-disabled"></span>
-            <span class="star-disabled"></span>
-            <span class="star-disabled"></span>
-        </div>
-        <p></p>
-        <input type="hidden" name="rating" id="rating" value="0">
-        <button class="button modal-button" type="submit">Отправить</button>
+
+
+<section class="modal form-modal refusal-form" id="cancel-form">
+    <h2>Отмена задания</h2>
+    <p>
+        Вы собираетесь отменить задание.
+        Вы уверены?
+    </p>
+    <?= Html::button('Отмена', ['class' => 'button__form-modal button', 'id' => 'close-modal', 'type' => 'button']) ?>
+    <form action="/task/cancel/<?= $task->id ?>">
+        <?= Html::button('Отменить задание',
+            ['class' => 'button__form-modal cancel-button button', 'type' => 'submit']) ?>
     </form>
-    <button class="form-modal-close" type="button">Закрыть</button>
+    <?= Html::button('Закрыть', ['class' => 'form-modal-close', 'type' => 'button']) ?>
 </section>
+
+
 <section class="modal form-modal refusal-form" id="refuse-form">
     <h2>Отказ от задания</h2>
     <p>
@@ -253,8 +240,75 @@ use frontend\models\tasks\TasksResponse;
         Это действие приведёт к снижению вашего рейтинга.
         Вы уверены?
     </p>
-    <button class="button__form-modal button" id="close-modal" type="button">Отмена</button>
-    <button class="button__form-modal refusal-button button" type="button">Отказаться</button>
+    <?= Html::button('Отмена',
+        ['class' => 'button__form-modal button', 'id' => 'close-modal', 'type' => 'button']) ?>
+    <form action="/task/refuse/<?= $task->id ?>">
+        <?= Html::button('Отказаться', ['class' => 'button__form-modal refusal-button button', 'type' => 'submit']) ?>
+    </form>
+    <?= Html::button('Закрыть', ['class' => 'form-modal-close', 'type' => 'button']) ?>
+</section>
+
+<section class="modal completion-form form-modal" id="complete-form">
+    <h2>Завершение задания</h2>
+    <p class="form-modal-description">Задание выполнено?</p>
+    <?php $form = ActiveForm::begin([
+        'options' => ['class' => ''],
+        'action' => [$task->link],
+        'method' => 'post'
+    ]) ?>
+
+    <?= $form->field($taskCompleteForm, 'isComplete')
+        ->radioList([
+            'yes' => 'Да',
+            'difficult' => 'Возникли проблемы'
+        ], [
+            'item' => function ($index, $label, $name, $checked, $value) {
+                return "<input class=\"visually-hidden completion-input completion-input--$value\" 
+                        type=\"radio\" id=\"completion-radio--$value\" name=\"$name\" value=\"$value\">
+                        <label class=\"completion-label completion-label--$value\" style=\"display:inline-block\"
+                        for=\"completion-radio--$value\">$label</label>";
+            }
+        ])
+        ->label(false) ?>
+
+    <?= $form->field($taskCompleteForm, 'descriptionComplete', [
+        'options' => ['class' => ''],
+        'labelOptions' => ['class' => 'form-modal-description', 'style' => ['display' => 'inline-block']]
+    ])
+        ->textarea([
+            'class' => 'input textarea',
+            'style' => 'width: 90%',
+            'rows' => '4',
+            'placeholder' => 'Place your text'
+        ])
+        ->error(['tag' => 'span']) ?>
+
+    <p class="form-modal-description">
+        Оценка
+    </p>
+    <div class="feedback-card__top--name completion-form-star">
+        <span class="star-disabled"></span>
+        <span class="star-disabled"></span>
+        <span class="star-disabled"></span>
+        <span class="star-disabled"></span>
+        <span class="star-disabled"></span>
+    </div>
+
+    <?= $form->field($taskCompleteForm, 'rating', [
+        'options' => ['class' => ''],
+        'template' => '{input}'
+    ])
+        ->textinput([
+            'type' => 'hidden',
+            'name' => 'rating',
+            'id' => 'rating'
+        ]) ?>
+    <?= Html::submitButton('Отправить',
+        ['class' => 'button modal-button', 'type' => 'submit']) ?>
+
+    <?php ActiveForm::end(); ?>
     <button class="form-modal-close" type="button">Закрыть</button>
 </section>
+
+
 <div class="overlay"></div>
