@@ -45,6 +45,7 @@ class UsersController extends SecuredController
             ->limit($pagination->limit);
 
         $users = $query
+            ->groupBy('users.id')
             ->all();
 
         return $this->render('index', [
@@ -79,6 +80,7 @@ class UsersController extends SecuredController
         $query->limit($pagination->limit);
 
         $users = $query
+            ->groupBy('users.id')
             ->all();
 
         return $this->render('index', [
