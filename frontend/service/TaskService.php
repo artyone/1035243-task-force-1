@@ -43,6 +43,7 @@ class TaskService extends Model
         $task->deadline_time = $model->deadlineTime;
         $task->customer_id = $user->id;
         $task->status = Tasks::STATUS_NEW;
+        $task->city_id = $user->userData->city_id;
 
         if (!$task->save()) {
             $transaction->rollBack();
@@ -146,7 +147,9 @@ class TaskService extends Model
         if (!$task->save()) {
             return false;
         }
-        //@TODO Реализовать запись проваленного задания пользователю (вопрос только зачем, если это нигде не учитывается?)
+
+        $user->userData->updateTaskCount();
+
         return true;
     }
 
@@ -183,6 +186,9 @@ class TaskService extends Model
         }
 
         $transaction->commit();
+
+        $task->executor->userData->updateTaskCount();
+        $task->executor->userData->updateRating();
 
         return true;
 

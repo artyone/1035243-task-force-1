@@ -355,4 +355,18 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
         return false;
     }
 
+    public function getLink(): string
+    {
+        return "/user/view/$this->id";
+    }
+
+    public function getUserFavorite($favoriteUser): ?UsersFavorite
+    {
+        $favorite = $this->getUsersFavorite()->where(['favorite_id' => $favoriteUser->id])->one();
+        if (!$favorite) {
+            return null;
+        }
+        return $favorite;
+    }
+
 }

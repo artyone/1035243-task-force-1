@@ -22,7 +22,8 @@ use yii\helpers\Url;
                 <div class="new-task__title">
                     <a href="<?= Url::to(['tasks/view', 'id' => $task->id]) ?>" class="link-regular">
                         <h2><?= $task->name ?></h2></a>
-                    <a class="new-task__type link-regular" href="#"><p><?= $task->category->name ?></p></a>
+                    <?= Html::a($task->category->name, ['/tasks', 'categories[]' => $task->category->id],
+                        ['class' => 'new-task__type link-regular']) ?>
                 </div>
                 <div class="new-task__icon new-task__icon--<?= $task->category->icon ?>"></div>
                 <p class="new-task_description">
@@ -31,7 +32,8 @@ use yii\helpers\Url;
                 <b class="new-task__price new-task__price--<?= $task->category->icon ?>">
                     <?= $task->price ? $task->price . ' <b> ₽</b>' : '' ?></b>
                 <p class="new-task__place">
-                    <?= $task->city ? $task->city->name : 'Удаленная работа' ?>
+                    <?= $task->city_id ? $task->city->name : '' ?>,
+                    <?= $task->latitude !== null && $task->longitude !== null ? 'Район' : 'Удаленная работа' ?>
                 </p>
                 <span class="new-task__time"><?= WordHelper::getStringTimeAgo($task->creation_time) ?> назад</span>
             </div>

@@ -26,7 +26,8 @@ use frontend\models\tasks\TasksResponse;
                     <h1><?= $task->name ?></h1>
                     <span>
                         Размещено в категории
-                        <?= Html::a($task->category->name, ['#'], ['class' => 'link-regular']) ?>
+                        <?= Html::a($task->category->name, ['/tasks', 'categories[]' => $task->category->id],
+                            ['class' => 'link-regular']) ?>
                         <?= WordHelper::getStringTimeAgo($task->creation_time) ?> назад
                     </span>
                 </div>
@@ -37,12 +38,14 @@ use frontend\models\tasks\TasksResponse;
                 <h3 class="content-view__h3">Общее описание</h3>
                 <p><?= $task->description ?></p>
             </div>
+            <?php if ($task->tasksFile): ?>
             <div class="content-view__attach">
                 <h3 class="content-view__h3">Вложения</h3>
                 <?php foreach ($task->tasksFile as $file): ?>
                     <?= Html::a(pathinfo($file->link, PATHINFO_FILENAME), [$file->link], ['download' => '']) ?>
                 <?php endforeach; ?>
             </div>
+            <?php endif; ?>
             <div class="content-view__location">
                 <h3 class="content-view__h3">Расположение</h3>
                 <div class="content-view__location-wrapper">
@@ -51,7 +54,8 @@ use frontend\models\tasks\TasksResponse;
                                          alt="Москва, Новый арбат, 23 к. 1"></a>
                     </div>
                     <div class="content-view__address">
-                        <span class="address__town"><?= $task->city_id ? $task->city->name : '' ?></span><br>
+                        <span class="address__town"><?= $task->city_id ? $task->city->name : '' ?></span>
+                        <br>
                         <span><?= $task->longitude ?>-<?= $task->latitude ?></span>
                         <p><?= $task->address_comments ?></p>
                     </div>
@@ -117,7 +121,7 @@ use frontend\models\tasks\TasksResponse;
         <div class="connect-desk__profile-mini">
             <div class="profile-mini__wrapper">
                 <h3>Заказчик</h3>
-                <div class="profile-mini__top" >
+                <div class="profile-mini__top">
                     <img src="<?= $task->customer->fileAvatar ? $task->customer->fileAvatar->link : '/img/user-photo.png' ?>"
                          width="62" height="62" alt="Аватар заказчика">
                     <div class="profile-mini__name five-stars__rate">
@@ -184,7 +188,6 @@ use frontend\models\tasks\TasksResponse;
         'action' => [$task->getLink()],
         'method' => 'post'
     ]) ?>
-
     <?= $form->field($taskResponseForm, 'price', [
         'options' => ['class' => ''],
         'labelOptions' => ['class' => 'form-modal-description', 'style' => ['display' => 'inline-block']],
@@ -194,7 +197,6 @@ use frontend\models\tasks\TasksResponse;
             'class' => 'response-form-payment input input-middle input-money',
         ])
         ->error(['tag' => 'span']) ?>
-
     <?= $form->field($taskResponseForm, 'descriptionResponse', [
         'options' => ['class' => ''],
         'labelOptions' => ['class' => 'form-modal-description', 'style' => ['display' => 'inline-block']],
@@ -206,15 +208,10 @@ use frontend\models\tasks\TasksResponse;
             'rows' => '4'
         ])
         ->error(['tag' => 'span']) ?>
-
-
-    <?= Html::submitButton('Отправить',
-        ['class' => 'button modal-button', 'name' => 'send-button']) ?>
-
+    <?= Html::submitButton('Отправить', ['class' => 'button modal-button', 'name' => 'send-button']) ?>
     <?php ActiveForm::end(); ?>
 
-    <?= Html::button('', ['class' => 'form-modal-close', 'type' => 'button']) ?>
-
+    <?= Html::button('', ['class' => 'form-modal-close']) ?>
 </section>
 
 
@@ -224,11 +221,15 @@ use frontend\models\tasks\TasksResponse;
         Вы собираетесь отменить задание.
         Вы уверены?
     </p>
-    <?= Html::button('Отмена', ['class' => 'button__form-modal button', 'id' => 'close-modal', 'type' => 'button']) ?>
-    <form action="/task/cancel/<?= $task->id ?>">
-        <?= Html::button('Отменить задание',
-            ['class' => 'button__form-modal cancel-button button', 'type' => 'submit']) ?>
-    </form>
+    <?= Html::button('Отмена', ['class' => 'button__form-modal button', 'id' => 'close-modal']) ?>
+
+    <?php $form = ActiveForm::begin([
+        'options' => ['class' => ''],
+        'action' => ['/task/cancel/' . $task->id],
+    ]) ?>
+    <?= Html::submitButton('Отменить задание', ['class' => 'button__form-modal cancel-button button']) ?>
+    <?php ActiveForm::end(); ?>
+
     <?= Html::button('Закрыть', ['class' => 'form-modal-close', 'type' => 'button']) ?>
 </section>
 
@@ -240,23 +241,27 @@ use frontend\models\tasks\TasksResponse;
         Это действие приведёт к снижению вашего рейтинга.
         Вы уверены?
     </p>
-    <?= Html::button('Отмена',
-        ['class' => 'button__form-modal button', 'id' => 'close-modal', 'type' => 'button']) ?>
-    <form action="/task/refuse/<?= $task->id ?>">
-        <?= Html::button('Отказаться', ['class' => 'button__form-modal refusal-button button', 'type' => 'submit']) ?>
-    </form>
-    <?= Html::button('Закрыть', ['class' => 'form-modal-close', 'type' => 'button']) ?>
+    <?= Html::button('Отмена', ['class' => 'button__form-modal button', 'id' => 'close-modal']) ?>
+
+    <?php $form = ActiveForm::begin([
+        'options' => ['class' => ''],
+        'action' => ['/task/refuse/' . $task->id],
+    ]) ?>
+    <?= Html::submitButton('Отказаться', ['class' => 'button__form-modal refusal-button button']) ?>
+    <?php ActiveForm::end(); ?>
+
+    <?= Html::button('Закрыть', ['class' => 'form-modal-close']) ?>
 </section>
 
 <section class="modal completion-form form-modal" id="complete-form">
     <h2>Завершение задания</h2>
     <p class="form-modal-description">Задание выполнено?</p>
+
     <?php $form = ActiveForm::begin([
         'options' => ['class' => ''],
         'action' => [$task->link],
         'method' => 'post'
     ]) ?>
-
     <?= $form->field($taskCompleteForm, 'isComplete')
         ->radioList([
             'yes' => 'Да',
@@ -270,7 +275,6 @@ use frontend\models\tasks\TasksResponse;
             }
         ])
         ->label(false) ?>
-
     <?= $form->field($taskCompleteForm, 'descriptionComplete', [
         'options' => ['class' => ''],
         'labelOptions' => ['class' => 'form-modal-description', 'style' => ['display' => 'inline-block']]
@@ -282,7 +286,6 @@ use frontend\models\tasks\TasksResponse;
             'placeholder' => 'Place your text'
         ])
         ->error(['tag' => 'span']) ?>
-
     <p class="form-modal-description">
         Оценка
     </p>
@@ -293,7 +296,6 @@ use frontend\models\tasks\TasksResponse;
         <span class="star-disabled"></span>
         <span class="star-disabled"></span>
     </div>
-
     <?= $form->field($taskCompleteForm, 'rating', [
         'options' => ['class' => ''],
         'template' => '{input}'
@@ -303,12 +305,9 @@ use frontend\models\tasks\TasksResponse;
             'name' => 'rating',
             'id' => 'rating'
         ]) ?>
-    <?= Html::submitButton('Отправить',
-        ['class' => 'button modal-button', 'type' => 'submit']) ?>
-
+    <?= Html::submitButton('Отправить', ['class' => 'button modal-button', 'type' => 'submit']) ?>
     <?php ActiveForm::end(); ?>
-    <button class="form-modal-close" type="button">Закрыть</button>
+
+    <?= Html::button('Закрыть', ['class' => 'form-modal-close']) ?>
 </section>
-
-
 <div class="overlay"></div>

@@ -86,7 +86,7 @@ class TasksFilterForm extends Model
             $query->andWhere(['tasks_response.executor_id' => NULL]);
         }
         if ($this->remoteWork) {
-            $query->andWhere(['tasks.city_id' => NULL]);
+            $query->andWhere(['or', ['tasks.latitude' => NULL], ['tasks.longitude' => NULL]]);
         }
         if ($this->period) {
             $query->andWhere(['>', 'tasks.creation_time', $this->getPeriodTime($this->period)]);

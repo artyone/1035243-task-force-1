@@ -47,7 +47,7 @@ CREATE TABLE users_data /*Таблица данных пользователей
     id               INT(11) NOT NULL AUTO_INCREMENT, /*сквозной айди*/
     user_id          INT(11) NOT NULL, /*айди пользователя*/
     city_id          INT(11), /*локация пользователя*/
-    rating           TINYINT,
+    rating           DOUBLE,
     popularity       INT(11),
     tasks_count      INT(11),
     address          VARCHAR(500),
@@ -123,7 +123,7 @@ CREATE TABLE tasks /*Общая таблица заданий*/
 (
     id               INT(11)      NOT NULL AUTO_INCREMENT, /*сквозной айди задания, уникальный*/
     creation_time    DATETIME              DEFAULT CURRENT_TIMESTAMP, /*дата создания криэйшн тайм*/
-    name             VARCHAR(500) NOT NULL, /*имя задания*/
+    name             VARCHAR(50) NOT NULL, /*имя задания*/
     category_id      INT(11)      NOT NULL, /*айди категории задания*/
     city_id          INT(11),
     latitude         INT,

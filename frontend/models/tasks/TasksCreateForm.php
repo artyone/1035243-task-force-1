@@ -48,8 +48,10 @@ class TasksCreateForm extends Model
         return [
             [['name', 'description', 'categoryId', 'files', 'location', 'price', 'deadlineTime'], 'safe'],
             [['name', 'description', 'categoryId'], 'required'],
-            ['name', 'string', 'length' => [10, 30]],
-            ['description', 'string', 'length' => [30, 200]],
+            ['name', 'string', 'max' => 50],
+            ['description', 'string', 'max' => 500],
+            ['name', 'checkName'],
+            ['description', 'checkDescription'],
             [
                 'categoryId',
                 'exist',
@@ -72,6 +74,20 @@ class TasksCreateForm extends Model
     public function formName()
     {
         return '';
+    }
+
+    public function checkName()
+    {
+        if (strlen(str_replace(' ', '', $this->name)) < 10) {
+            $this->addError('name', 'Поле должно содержать не менее 10 непробельных символов');
+        }
+    }
+
+    public function checkDescription()
+    {
+        if (strlen(str_replace(' ', '', $this->description)) < 30) {
+            $this->addError('description', 'Поле должно содержать не менее 30 непробельных символов');
+        }
     }
 
 

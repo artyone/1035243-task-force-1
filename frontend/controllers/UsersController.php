@@ -4,6 +4,7 @@
 namespace frontend\controllers;
 
 use frontend\models\users\Users;
+use frontend\service\UserService;
 use yii\data\Pagination;
 use frontend\models\users\UsersFilterForm;
 use yii;
@@ -101,9 +102,41 @@ class UsersController extends SecuredController
         if (!$user) {
             throw new HttpException(404, 'Пользователь не найден');
         }
+        if (!$user->isExecutor()) {
+            throw new HttpException(404, 'Пользователь не исполнитель');
+        }
+
+        if (Yii::$app->user->getId() != $id) {
+            $user->userData->addPopularity();
+        }
+
         return $this->render('view', [
             'user' => $user
         ]);
+    }
+
+    public function actionFavorite($id)
+    {
+        $user = Yii::$app->user->identity;
+        $favoriteUser = Users::findOne($id);
+
+        if (!$favoriteUser) {
+            throw new HttpException(404, 'Пользователь не найден');
+        }
+
+        if ($favorite = $user->getUserFavorite($favoriteUser)) {
+            $removeFavorite = new UserService();
+            if (!$removeFavorite->removeFavorite($favorite)) {
+                return $this->redirect('/users');
+            }
+        } else {
+            $addFavorite = new UserService();
+            if (!$addFavorite->addFavorite($user, $favoriteUser)) {
+                return $this->redirect('/users');
+            }
+        }
+
+        return $this->redirect($favoriteUser->link);
     }
 
 

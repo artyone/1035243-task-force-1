@@ -2,6 +2,7 @@
 
 use frontend\helpers\WordHelper;
 use yii\helpers\Url;
+use yii\helpers\Html;
 
 /**
  * @var $user
@@ -16,7 +17,7 @@ use yii\helpers\Url;
             <div class="content-view__headline">
                 <h1><?= $user->name ?></h1>
                 <p><?= $user->userData->city->name ?>
-                    , <?= WordHelper::getStringTimeAgo($user->userData->birthday) ?></p>
+                    <?= $user->userData->birthday ? ', ' . WordHelper::getStringTimeAgo($user->userData->birthday) : '' ?></p>
                 <div class="profile-mini__name five-stars__rate">
                     <?php foreach (range(1, 5) as $value): ?>
                         <span <?= $value <= $user->userData->rating ? '' : 'class="star-disabled"' ?>></span>
@@ -27,9 +28,9 @@ use yii\helpers\Url;
                 <b class="done-task">Выполнил <?= WordHelper::getStringTasks($user->userData->tasks_count) ?></b>
                 <b class="done-review">Получил <?= WordHelper::getStringFeedbacks(count($user->tasksFeedbackExecutor)) ?></b>
             </div>
-            <div class="content-view__headline user__card-bookmark user__card-bookmark--current">
+            <div class="content-view__headline user__card-bookmark user__card-bookmark<?= Yii::$app->user->identity->getUserFavorite($user) ? '--current' : '' ?>">
                 <span><?= WordHelper::getStringTimeAgo($user->userData->last_online_time) ?> назад</span>
-                <a href="#"><b></b></a>
+                <?= Html::a('<b></b>', ['users/favorite', 'id' => $user->id]) ?>
             </div>
         </div>
         <div class="content-view__description">
@@ -39,8 +40,9 @@ use yii\helpers\Url;
             <div class="user__card-info">
                 <h3 class="content-view__h3">Специализации</h3>
                 <div class="link-specialization">
-                    <?php foreach ($user->userCategories as $userCategory): ?>
-                        <a href="#" class="link-regular"><?= $userCategory->name ?></a>
+                    <?php foreach ($user->userCategories as $category): ?>
+                        <?= Html::a($category->name, ['/users', 'categories[]' => $category->id],
+                            ['class' => 'link-regular']) ?>
                     <?php endforeach; ?>
                 </div>
                 <h3 class="content-view__h3">Контакты</h3>
@@ -50,13 +52,16 @@ use yii\helpers\Url;
                     <a class="user__card-link--skype link-regular" href="#"><?= $user->userData->skype ?></a>
                 </div>
             </div>
+            <?php if ($user->usersPhoto): ?>
             <div class="user__card-photo">
                 <h3 class="content-view__h3">Фото работ</h3>
                 <?php foreach ($user->usersPhoto as $photo): ?>
-                    <a href="<?= $photo->link ?>"><img src="<?= $photo->link ?>" width="85" height="86"
-                                                       alt="Фото работы"></a>
+                    <a href="<?= $photo->link ?>">
+                        <img src="<?= $photo->link ?>" width="85" height="86" alt="Фото работ">
+                    </a>
                 <?php endforeach; ?>
             </div>
+            <?php endif; ?>
         </div>
     </div>
     <div class="content-view__feedback">

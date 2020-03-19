@@ -3,10 +3,8 @@
 
 namespace frontend\controllers;
 
-use frontend\models\users\Users;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use Yii;
 
 abstract class SecuredController extends Controller
 {
@@ -17,49 +15,27 @@ abstract class SecuredController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => [
-                            'index',
-                            'view',
-                            'logout',
-                            'sort',
-                            'error',
-                            'response',
-                            'cancel',
-                            'refuse',
-                            'complete'
-                        ],
+                        'controllers' => ['tasks', 'users'],
                         'allow' => true,
                         'roles' => ['@'],
 
                     ],
                     [
-                        'actions' => ['create'],
+                        'controllers' => ['site'],
+                        'actions' => ['error', 'logout', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
-                        'matchCallback' => function ($rule, $action) {
-                            return Yii::$app->user->identity->isCustomer();
-                        }
 
                     ],
                     [
-                        'actions' => ['login', 'registration', 'landing'],
+                        'controllers' => ['site'],
+                        'actions' => ['login', 'registration', 'landing', 'error'],
                         'allow' => true,
                         'roles' => ['?'],
 
                     ],
                     [
-                        'actions' => [
-                            'index',
-                            'view',
-                            'logout',
-                            'sort',
-                            'error',
-                            'response',
-                            'cancel',
-                            'refuse',
-                            'complete',
-                            'create'
-                        ],
+                        'controllers' => ['tasks', 'users'],
                         'allow' => false,
                         'roles' => ['?'],
                         'denyCallback' => function ($rule, $action) {
@@ -67,6 +43,7 @@ abstract class SecuredController extends Controller
                         }
                     ],
                     [
+                        'controllers' => ['site'],
                         'actions' => ['login', 'registration', 'landing'],
                         'allow' => false,
                         'roles' => ['@'],

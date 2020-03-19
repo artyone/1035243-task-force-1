@@ -50,6 +50,7 @@ return [
                 'task/refuse/<id:\d+>' => 'tasks/refuse',
                 'users' => 'users/index',
                 'user/view/<id:\d+>' => 'users/view',
+                'user/favorite/<id:\d+>' => 'users/favorite',
                 'users/sort/<sort:\w+>' => 'users/sort',
                 'registration' => 'site/registration',
                 'login' => 'site/login',

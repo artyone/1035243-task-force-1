@@ -56,8 +56,9 @@ use yii\helpers\Url;
                     <span class="new-task__time">Был на сайте <?= WordHelper::getStringTimeAgo($user->userData->last_online_time) ?> назад</span>
                 </div>
                 <div class="link-specialization user__search-link--bottom">
-                    <?php foreach ($user->userCategories as $userCategory): ?>
-                        <?= Html::a($userCategory->name, ['#'], ['class' => 'link-regular']) ?>
+                    <?php foreach ($user->userCategories as $category): ?>
+                        <?= Html::a($category->name, ['/users', 'categories[]' => $category->id],
+                            ['class' => 'link-regular']) ?>
                     <?php endforeach; ?>
                 </div>
             </div>
