@@ -115,12 +115,12 @@ MainAsset::register($this);
             </div>
             <div class="header__account">
                 <a class="header__account-photo">
-                    <img src="<?= Yii::$app->user->getIdentity()->fileAvatar ? Yii::$app->user->getIdentity()->fileAvatar->link : '/img/user-photo.png' ?>"
+                    <img src="<?= Yii::$app->user->identity->fileAvatar ? Yii::$app->user->identity->fileAvatar->link : '/img/user-photo.png' ?>"
                          width="43" height="44"
                          alt="Аватар пользователя">
                 </a>
                 <span class="header__account-name">
-                 <?= Yii::$app->user->getIdentity()->name ?>
+                 <?= Yii::$app->user->identity->name ?>
              </span>
             </div>
             <div class="account__pop-up">
@@ -164,7 +164,7 @@ MainAsset::register($this);
                         <a href="<?= Url::to(['tasks/index']) ?>">Задания</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Мой профиль</a>
+                        <a href="<?= Url::to(['users/profile']) ?>">Мой профиль</a>
                     </li>
                     <li class="links__item">
                         <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
@@ -173,7 +173,7 @@ MainAsset::register($this);
                         <a href="<?= Url::to(['site/registration']) ?>">Регистрация</a>
                     </li>
                     <li class="links__item">
-                        <a href="">Создать задание</a>
+                        <a href="<?= Url::to(['tasks/create']) ?>">Создать задание</a>
                     </li>
                     <li class="links__item">
                         <a href="">Справка</a>
@@ -188,6 +188,20 @@ MainAsset::register($this);
                          alt="Логотип HTML Academy">
                 </a>
             </div>
+            <?php if (Yii::$app->controller->route == 'site/registration'): ?>
+            <div class="clipart-woman">
+                <img src="/img/clipart-woman.png" width="238" height="450" alt="Промо фото">
+            </div>
+            <div class="clipart-message">
+                <div class="clipart-message-text">
+                    <h2>Знаете ли вы, что?</h2>
+                    <p>После регистрации вам будет доступно более
+                        двух тысяч заданий из двадцати разных категорий.</p>
+                    <p>В среднем, наши исполнители зарабатывают
+                        от 500 рублей в час.</p>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
     </footer>
 </div>

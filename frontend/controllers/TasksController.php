@@ -30,8 +30,8 @@ class TasksController extends SecuredController
     public function actionIndex()
     {
         $query = Tasks::find()
-            ->orderBy(['creation_time' => SORT_DESC])
-            ->where(['status' => Tasks::STATUS_NEW]);
+            ->orderBy(['tasks.creation_time' => SORT_DESC])
+            ->where(['tasks.status' => Tasks::STATUS_NEW]);
 
         $tasksFilterForm = new TasksFilterForm();
         $tasksFilterForm->load(Yii::$app->request->get());
