@@ -51,7 +51,7 @@ use frontend\models\tasks\TasksResponse;
                                          alt="Москва, Новый арбат, 23 к. 1"></a>
                     </div>
                     <div class="content-view__address">
-                        <span class="address__town"><?= $task->city->name ?></span><br>
+                        <span class="address__town"><?= $task->city_id ? $task->city->name : '' ?></span><br>
                         <span><?= $task->longitude ?>-<?= $task->latitude ?></span>
                         <p><?= $task->address_comments ?></p>
                     </div>
@@ -127,7 +127,7 @@ use frontend\models\tasks\TasksResponse;
             </div>
         </div>
     <?php endif; ?>
-    <?php if ($user->isAuthor($task) && $task->executor): ?>
+    <?php if ($user->isAuthor($task) && $task->executor_id): ?>
         <div class="connect-desk__profile-mini">
             <div class="profile-mini__wrapper">
                 <h3>Исполнитель</h3>
@@ -147,7 +147,7 @@ use frontend\models\tasks\TasksResponse;
             </div>
         </div>
     <?php endif; ?>
-    <?php if (($user->isAuthor($task) || $user->isContractor($task)) && $task->executor): ?>
+    <?php if (($user->isAuthor($task) || $user->isContractor($task)) && $task->executor_id): ?>
         <div class="connect-desk__chat">
             <h3>Переписка</h3>
             <div class="chat__overflow">
