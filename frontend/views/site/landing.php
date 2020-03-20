@@ -182,7 +182,8 @@ MainAsset::register($this);
                             <div class="landing-task-description">
                                 <h3><a href="<?= Url::to(['tasks/view', 'id' => $task->id]) ?>" class="link-regular">
                                         <?= WordHelper::longWordBreaker(StringHelper::truncate($task->name, 20), 20) ?>
-                                    </a></h3>
+                                    </a>
+                                </h3>
                                 <p>
                                     <?= WordHelper::longWordBreaker(StringHelper::truncate($task->description, 70),
                                         20) ?>
@@ -193,11 +194,10 @@ MainAsset::register($this);
                                     <p><a href="" class="link-regular"><?= $task->category->name ?></a></p>
                                     <p><?= WordHelper::getStringTimeAgo($task->creation_time) . ' назад' ?></p>
                                 </div>
-                                <span><?= $task->price ?><b>₽</b></span>
+                                <span><?= $task->price ? $task->price . '<b>₽</b>' : '' ?></span>
                             </div>
                         </div>
                     <?php endforeach; ?>
-
                 </div>
                 <div class="landing-bottom-container">
                     <a class="button red-button" href="<?= Url::to(['tasks/index']) ?>">смотреть все задания</a>
