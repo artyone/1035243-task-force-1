@@ -22,7 +22,7 @@ abstract class SecuredController extends Controller
                     ],
                     [
                         'controllers' => ['site'],
-                        'actions' => ['error', 'logout', 'index'],
+                        'actions' => ['error', 'logout', 'index', 'landing'],
                         'allow' => true,
                         'roles' => ['@'],
 
@@ -44,7 +44,7 @@ abstract class SecuredController extends Controller
                     ],
                     [
                         'controllers' => ['site'],
-                        'actions' => ['login', 'registration', 'landing'],
+                        'actions' => ['login', 'registration'],
                         'allow' => false,
                         'roles' => ['@'],
                         'denyCallback' => function ($rule, $action) {

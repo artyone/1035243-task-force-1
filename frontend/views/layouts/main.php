@@ -7,7 +7,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use frontend\assets\MainAsset;
-use frontend\models\tasks\actions\NewAction;
+use frontend\models\Cities;
 
 MainAsset::register($this);
 ?>
@@ -88,11 +88,12 @@ MainAsset::register($this);
             </div>
             <div class="header__town">
                 <select class="multiple-select input town-select" size="1" name="town[]">
-                    <option value="Moscow">Москва</option>
-                    <option selected value="SPB">Санкт-Петербург</option>
-                    <option value="Krasnodar">Краснодар</option>
-                    <option value="Irkutsk">Иркутск</option>
-                    <option value="Vladivostok">Владивосток</option>
+                    <?php foreach (Cities::find()->all() as $city): ?>
+                        <option value="<?= $city->id ?>"
+                            <?= Yii::$app->user->identity->userData->city_id === $city->id ? 'selected' : '' ?>>
+                            <?= $city->name ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <div class="header__lightbulb"></div>
@@ -159,22 +160,22 @@ MainAsset::register($this);
             <div class="page-footer__links">
                 <ul class="links__list">
                     <li class="links__item">
-                        <a href="<?= Url::to(['tasks/index']) ?>">Задания</a>
+                        <?= Html::a('Задания', ['tasks/index']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['users/profile']) ?>">Мой профиль</a>
+                        <?= Html::a('Мой профиль', ['users/profile']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
+                        <?= Html::a('Исполнители', ['users/index']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['site/registration']) ?>">Регистрация</a>
+                        <?= Html::a('Регистрация', ['site/registration']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['tasks/create']) ?>">Создать задание</a>
+                        <?= Html::a('Создать задание', ['tasks/create']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="">Справка</a>
+                        <?= Html::a('Справка', ['site/landing']) ?>
                     </li>
                 </ul>
             </div>
@@ -187,18 +188,18 @@ MainAsset::register($this);
                 </a>
             </div>
             <?php if (Yii::$app->controller->route == 'site/registration'): ?>
-            <div class="clipart-woman">
-                <img src="/img/clipart-woman.png" width="238" height="450" alt="Промо фото">
-            </div>
-            <div class="clipart-message">
-                <div class="clipart-message-text">
-                    <h2>Знаете ли вы, что?</h2>
-                    <p>После регистрации вам будет доступно более
-                        двух тысяч заданий из двадцати разных категорий.</p>
-                    <p>В среднем, наши исполнители зарабатывают
-                        от 500 рублей в час.</p>
+                <div class="clipart-woman">
+                    <img src="/img/clipart-woman.png" width="238" height="450" alt="Промо фото">
                 </div>
-            </div>
+                <div class="clipart-message">
+                    <div class="clipart-message-text">
+                        <h2>Знаете ли вы, что?</h2>
+                        <p>После регистрации вам будет доступно более
+                            двух тысяч заданий из двадцати разных категорий.</p>
+                        <p>В среднем, наши исполнители зарабатывают
+                            от 500 рублей в час.</p>
+                    </div>
+                </div>
             <?php endif; ?>
         </div>
     </footer>

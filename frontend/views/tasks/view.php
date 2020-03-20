@@ -23,7 +23,7 @@ use frontend\models\tasks\TasksResponse;
         <div class="content-view__card-wrapper">
             <div class="content-view__header">
                 <div class="content-view__headline">
-                    <h1><?= $task->name ?></h1>
+                    <h1><?= WordHelper::longWordBreaker($task->name, 50) ?></h1>
                     <span>
                         Размещено в категории
                         <?= Html::a($task->category->name, ['/tasks', 'categories[]' => $task->category->id],
@@ -36,15 +36,15 @@ use frontend\models\tasks\TasksResponse;
             </div>
             <div class="content-view__description">
                 <h3 class="content-view__h3">Общее описание</h3>
-                <p><?= $task->description ?></p>
+                <p><?= WordHelper::longWordBreaker($task->description, 100) ?></p>
             </div>
             <?php if ($task->tasksFile): ?>
-            <div class="content-view__attach">
-                <h3 class="content-view__h3">Вложения</h3>
-                <?php foreach ($task->tasksFile as $file): ?>
-                    <?= Html::a(pathinfo($file->link, PATHINFO_FILENAME), [$file->link], ['download' => '']) ?>
-                <?php endforeach; ?>
-            </div>
+                <div class="content-view__attach">
+                    <h3 class="content-view__h3">Вложения</h3>
+                    <?php foreach ($task->tasksFile as $file): ?>
+                        <?= Html::a(pathinfo($file->link, PATHINFO_FILENAME), [$file->link], ['download' => '']) ?>
+                    <?php endforeach; ?>
+                </div>
             <?php endif; ?>
             <div class="content-view__location">
                 <h3 class="content-view__h3">Расположение</h3>
@@ -86,7 +86,7 @@ use frontend\models\tasks\TasksResponse;
                                      width="55" height="55" alt="Аватар исполнителя"></a>
                             <div class="feedback-card__top--name">
                                 <p>
-                                    <?= Html::a($response->executor->name,
+                                    <?= Html::a(WordHelper::longWordBreaker($response->executor->name, 50),
                                         ['users/view', 'id' => $response->executor_id], ['class' => 'link-regular']) ?>
                                 </p>
                                 <?php foreach (range(1, 5) as $value): ?>
@@ -97,7 +97,7 @@ use frontend\models\tasks\TasksResponse;
                             <span class="new-task__time"><?= WordHelper::getStringTimeAgo($response->creation_time) ?> назад</span>
                         </div>
                         <div class="feedback-card__content">
-                            <p><?= $response->description ?></p>
+                            <p><?= WordHelper::longWordBreaker($response->description, 100) ?></p>
                             <?= $response->price ? "<span>$response->price ₽</span>" : '' ?>
                         </div>
                         <?php if (StartAction::verifyAction($task, $user)): ?>
@@ -139,7 +139,7 @@ use frontend\models\tasks\TasksResponse;
                     <img src="<?= $task->executor->fileAvatar ? $task->executor->fileAvatar->link : '/img/user-photo.png' ?>"
                          width="62" height="62" alt="Аватар заказчика">
                     <div class="profile-mini__name five-stars__rate">
-                        <p><?= $task->executor->name ?></p>
+                        <p><?= WordHelper::longWordBreaker($task->executor->name, 20) ?></p>
                     </div>
                 </div>
                 <p class="info-customer">

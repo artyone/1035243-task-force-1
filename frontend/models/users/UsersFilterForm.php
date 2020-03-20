@@ -5,6 +5,7 @@ namespace frontend\models\users;
 
 use frontend\models\tasks\Tasks;
 use yii\base\Model;
+use Yii;
 
 /**
  * Users filter form
@@ -95,7 +96,8 @@ class UsersFilterForm extends Model
             $query->andWhere(['is not', 'tasks_feedback.executor_id', null]);
         }
         if ($this->inFavorites) {
-            //@todo разработать по созданию аккаунта
+            $query->joinWith('usersInFavorite');
+            $query->andWhere(['users_favorite.user_id' => Yii::$app->user->getId()]);
         }
         if ($this->sort) {
             $query->joinWith('userData');

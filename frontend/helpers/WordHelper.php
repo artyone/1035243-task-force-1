@@ -10,6 +10,7 @@ use frontend\formatter\FeedbacksFormatter;
 use frontend\formatter\MonthFormatter;
 use frontend\formatter\TasksFormatter;
 use frontend\formatter\YearFormatter;
+use yii\helpers\Html;
 
 
 class WordHelper
@@ -77,5 +78,11 @@ class WordHelper
         $word = new TasksFormatter($number);
         $result = $word->getWordForm();
         return $result;
+    }
+
+    static function longWordBreaker(?string $string, int $symbols): ?string
+    {
+        $string = Html::encode(preg_replace('/([^\s]{' . $symbols . '})[^\s]+/', '$1...', $string));
+        return $string;
     }
 }

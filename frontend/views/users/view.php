@@ -15,7 +15,7 @@ use yii\helpers\Html;
             <img src="<?= $user->fileAvatar ? $user->fileAvatar->link : '/img/user-photo.png' ?>" width="120"
                  height="120" alt="Аватар пользователя">
             <div class="content-view__headline">
-                <h1><?= $user->name ?></h1>
+                <h1><?= WordHelper::longWordBreaker($user->name, 50) ?></h1>
                 <p><?= $user->userData->city->name ?>
                     <?= $user->userData->birthday ? ', ' . WordHelper::getStringTimeAgo($user->userData->birthday) : '' ?></p>
                 <div class="profile-mini__name five-stars__rate">
@@ -34,7 +34,7 @@ use yii\helpers\Html;
             </div>
         </div>
         <div class="content-view__description">
-            <p><?= $user->userData->about ?></p>
+            <p><?= WordHelper::longWordBreaker($user->userData->about, 100) ?></p>
         </div>
         <div class="user__card-general-information">
             <div class="user__card-info">
@@ -47,20 +47,20 @@ use yii\helpers\Html;
                 </div>
                 <h3 class="content-view__h3">Контакты</h3>
                 <div class="user__card-link">
+                    <?= Html::mailto($user->email, $user->email, ['class' => 'user__card-link--email link-regular']) ?>
                     <a class="user__card-link--tel link-regular" href="#"><?= $user->userData->phone ?></a>
-                    <a class="user__card-link--email link-regular" href="#"><?= $user->email ?></a>
                     <a class="user__card-link--skype link-regular" href="#"><?= $user->userData->skype ?></a>
                 </div>
             </div>
             <?php if ($user->usersPhoto): ?>
-            <div class="user__card-photo">
-                <h3 class="content-view__h3">Фото работ</h3>
-                <?php foreach ($user->usersPhoto as $photo): ?>
-                    <a href="<?= $photo->link ?>">
-                        <img src="<?= $photo->link ?>" width="85" height="86" alt="Фото работ">
-                    </a>
-                <?php endforeach; ?>
-            </div>
+                <div class="user__card-photo">
+                    <h3 class="content-view__h3">Фото работ</h3>
+                    <?php foreach ($user->usersPhoto as $photo): ?>
+                        <a href="<?= $photo->link ?>">
+                            <img src="<?= $photo->link ?>" width="85" height="86" alt="Фото работ">
+                        </a>
+                    <?php endforeach; ?>
+                </div>
             <?php endif; ?>
         </div>
     </div>
@@ -71,7 +71,7 @@ use yii\helpers\Html;
                 <div class="feedback-card__reviews">
                     <p class="link-task link">Задание
                         <a href="<?= Url::to(['tasks/view', 'id' => $feedback->task->id]) ?>"
-                           class="link-regular"><?= $feedback->task->name ?></a>
+                           class="link-regular"><?= WordHelper::longWordBreaker($feedback->task->name, 50) ?></a>
                     </p>
                     <div class="card__review">
                         <a href="#">
@@ -82,9 +82,9 @@ use yii\helpers\Html;
                             <p class="link-name link">
                                 <a href="<?= Url::to(['users/view', 'id' => $feedback->task->customer->id]) ?>"
                                    class="link-regular">
-                                    <?= $feedback->task->customer->name ?></a></p>
+                                    <?= WordHelper::longWordBreaker($feedback->task->customer->name, 50) ?></a></p>
                             <p class="review-text">
-                                <?= $feedback->description ?>
+                                <?= WordHelper::longWordBreaker($feedback->description, 100) ?>
                             </p>
                         </div>
                         <div class="card__review-rate">

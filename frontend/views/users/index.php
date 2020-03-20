@@ -45,13 +45,16 @@ use yii\helpers\Url;
                     </div>
                     <div class="feedback-card__top--name user__search-card">
                         <p class="link-name">
-                            <?= Html::a($user->name, ['users/view', 'id' => $user->id], ['class' => 'link-regular']) ?>
+                            <?= Html::a(WordHelper::longWordBreaker($user->name, 50),
+                                ['users/view', 'id' => $user->id], ['class' => 'link-regular']) ?>
                         </p>
                         <?php foreach (range(1, 5) as $value): ?>
                             <span <?= $value <= $user->userData->rating ? '' : 'class="star-disabled"' ?>></span>
                         <?php endforeach; ?>
                         <b><?= $user->userData->rating ?></b>
-                        <p class="user__search-content"><?= $user->userData->about ?></p>
+                        <p class="user__search-content">
+                            <?= WordHelper::longWordBreaker($user->userData->about, 100) ?>
+                        </p>
                     </div>
                     <span class="new-task__time">Был на сайте <?= WordHelper::getStringTimeAgo($user->userData->last_online_time) ?> назад</span>
                 </div>

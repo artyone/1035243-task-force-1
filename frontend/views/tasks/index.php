@@ -21,13 +21,14 @@ use yii\helpers\Url;
             <div class="new-task__card">
                 <div class="new-task__title">
                     <a href="<?= Url::to(['tasks/view', 'id' => $task->id]) ?>" class="link-regular">
-                        <h2><?= $task->name ?></h2></a>
-                    <?= Html::a($task->category->name, ['/tasks', 'categories[]' => $task->category->id],
+                        <h2><?= WordHelper::longWordBreaker($task->name, 50) ?></h2></a>
+                    <?= Html::a('<p>' . $task->category->name . '</p>',
+                        ['/tasks', 'categories[]' => $task->category->id],
                         ['class' => 'new-task__type link-regular']) ?>
                 </div>
                 <div class="new-task__icon new-task__icon--<?= $task->category->icon ?>"></div>
                 <p class="new-task_description">
-                    <?= $task->description ?>
+                    <?= WordHelper::longWordBreaker($task->description, 100) ?>
                 </p>
                 <b class="new-task__price new-task__price--<?= $task->category->icon ?>">
                     <?= $task->price ? $task->price . ' <b> ₽</b>' : '' ?></b>
