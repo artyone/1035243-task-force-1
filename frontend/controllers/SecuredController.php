@@ -5,6 +5,7 @@ namespace frontend\controllers;
 
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use Yii;
 
 abstract class SecuredController extends Controller
 {
@@ -14,6 +15,15 @@ abstract class SecuredController extends Controller
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
+                    [
+                        'controllers' => ['tasks'],
+                        'actions' => ['create'],
+                        'allow' => false,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->identity->isExecutor();
+                        }
+                    ],
                     [
                         'controllers' => ['tasks', 'users'],
                         'allow' => true,
