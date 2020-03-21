@@ -20,7 +20,7 @@ class UserService extends Model
      * @return bool true - регистрация прошла успешно, false - регистрация не удалась
      * @throws yii\db\Exception
      */
-    public static function registration(RegistrationForm $model): bool
+    public function registration(RegistrationForm $model): bool
     {
         $transaction = Yii::$app->db->beginTransaction();
 
@@ -41,14 +41,6 @@ class UserService extends Model
         }
         $transaction->commit();
         return true;
-    }
-
-/*    public static function login($user) {
-        return Yii::$app->user->login($user);
-    }*/
-
-    public function logout() {
-        //@TODO реализовать в следующем задании
     }
 
 }

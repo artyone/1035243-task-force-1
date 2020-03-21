@@ -20,7 +20,7 @@ use yii\helpers\Url;
                         <?= WordHelper::getStringTimeAgo($task->creation_time) ?> назад
                     </span>
                 </div>
-                <b class="new-task__price new-task__price--clean content-view-price"><?= $task->price ?><b> ₽</b></b>
+                <b class="new-task__price new-task__price--clean content-view-price"><?= $task->price ? $task->price . '<b> ₽</b>' : '' ?></b>
                 <div class="new-task__icon new-task__icon--clean content-view-icon"></div>
             </div>
             <div class="content-view__description">

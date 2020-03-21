@@ -3,8 +3,10 @@
 
 namespace frontend\controllers;
 
+use frontend\models\users\Users;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use Yii;
 
 abstract class SecuredController extends Controller
 {
@@ -13,12 +15,20 @@ abstract class SecuredController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'logout', 'sort'],
+                        'actions' => ['index', 'view', 'logout', 'sort', 'error'],
                         'allow' => true,
                         'roles' => ['@'],
+
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Users::findOne(Yii::$app->user->getIdentity()->id)->isCustomer();
+                        }
 
                     ],
                     [
@@ -28,7 +38,7 @@ abstract class SecuredController extends Controller
 
                     ],
                     [
-                        'actions' => ['index', 'view', 'logout', 'sort'],
+                        'actions' => ['index', 'view', 'logout', 'sort', 'create'],
                         'allow' => false,
                         'roles' => ['?'],
                         'denyCallback' => function ($rule, $action) {

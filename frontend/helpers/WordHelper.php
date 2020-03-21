@@ -44,6 +44,9 @@ class WordHelper
             $word = new MinutesFormatter($interval->i);
             return $word->getWordForm();
         }
+        if ($interval->s >= 0) {
+            return 'меньше минуты';
+        }
         return '';
     }
 

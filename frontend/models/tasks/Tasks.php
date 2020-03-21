@@ -207,4 +207,9 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TasksResponse::className(), ['task_id' => 'id']);
     }
+
+    public function getTaskLink()
+    {
+        return "/task/view/$this->id";
+    }
 }

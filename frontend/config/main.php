@@ -43,14 +43,15 @@ return [
             'rules' => [
                 '//' => '/',
                 'tasks' => 'tasks/index',
+                'task/view/<id:\d+>' => 'tasks/view',
+                'task/create' => 'tasks/create',
                 'users' => 'users/index',
+                'user/view/<id:\d+>' => 'users/view',
+                'users/sort/<sort:\w+>' => 'users/sort',
                 'registration' => 'site/registration',
                 'login' => 'site/login',
                 'logout' => 'site/logout',
                 'landing' => 'site/landing',
-                'task/view/<id:\d+>' => 'tasks/view',
-                'user/view/<id:\d+>' => 'users/view',
-                'users/sort/<sort:\w+>' => 'users/sort',
 
             ]
         ]
