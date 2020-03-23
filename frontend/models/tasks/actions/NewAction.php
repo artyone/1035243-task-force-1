@@ -26,9 +26,9 @@ class NewAction implements ActionInterface
 
     public static function verifyAction(?Tasks $task, IdentityInterface $user): bool
     {
-/*        if (!$user->isCustomer()) {
+        if (!$user->isCustomer()) {
             return false;
-        }*/
+        }
         return true;
     }
 }

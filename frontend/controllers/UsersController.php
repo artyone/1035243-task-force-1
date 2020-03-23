@@ -125,13 +125,11 @@ class UsersController extends SecuredController
         }
 
         if ($favorite = $user->getUserFavorite($favoriteUser)) {
-            $removeFavorite = new UserService();
-            if (!$removeFavorite->removeFavorite($favorite)) {
+            if (!(new UserService)->removeFavorite($favorite)) {
                 return $this->redirect('/users');
             }
         } else {
-            $addFavorite = new UserService();
-            if (!$addFavorite->addFavorite($user, $favoriteUser)) {
+            if (!(new UserService)->addFavorite($user, $favoriteUser)) {
                 return $this->redirect('/users');
             }
         }

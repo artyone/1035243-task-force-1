@@ -79,16 +79,14 @@ class TasksController extends SecuredController
 
         $taskResponseForm = new TasksResponseForm();
         if ($taskResponseForm->load(Yii::$app->request->post()) && $taskResponseForm->validate()) {
-            $newResponse = new TaskService();
-            if ($newResponse->createResponse($task, $taskResponseForm, $user)) {
+            if ((new TaskService)->createResponse($task, $taskResponseForm, $user)) {
                 return $this->redirect($task->link);
             }
         }
 
         $taskCompleteForm = new TasksCompleteForm();
         if ($taskCompleteForm->load(Yii::$app->request->post()) && $taskCompleteForm->validate()) {
-            $taskComplete = new TaskService();
-            if ($taskComplete->taskComplete($task, $taskCompleteForm, $user)) {
+            if ((new TaskService)->taskComplete($task, $taskCompleteForm, $user)) {
                 return $this->redirect($task->link);
             }
         }
@@ -110,8 +108,7 @@ class TasksController extends SecuredController
         $taskCreateForm = new TasksCreateForm();
         if ($taskCreateForm->load(Yii::$app->request->post()) && $taskCreateForm->validate()) {
             $taskCreateForm->files = UploadedFile::getInstances($taskCreateForm, 'files');
-            $newTask = new TaskService();
-            if ($task = $newTask->createTask($taskCreateForm, $user)) {
+            if ($task = (new TaskService)->createTask($taskCreateForm, $user)) {
                 return $this->redirect($task->link);
             }
         } else {
@@ -133,15 +130,13 @@ class TasksController extends SecuredController
         }
 
         if ($status == 'decline') {
-            $responseDecline = new TaskService();
-            if ($responseDecline->declineResponse($response,$user)) {
+            if ((new TaskService)->declineResponse($response,$user)) {
                 return $this->redirect($response->task->link);
             }
         }
 
         if ($status == 'accept') {
-            $taskStart = new TaskService();
-            if ($taskStart->taskStart($response, $user)) {
+            if ((new TaskService)->taskStart($response, $user)) {
                 return $this->redirect($response->task->link);
             }
         }
@@ -157,8 +152,7 @@ class TasksController extends SecuredController
             throw new HttpException(404, 'Задание не найдено');
         }
 
-        $cancelTask = new TaskService();
-        if ($cancelTask->taskCancel($task, $user)) {
+        if ((new TaskService)->taskCancel($task, $user)) {
             return $this->goHome();
         }
         return $this->redirect($task->link);
@@ -175,7 +169,7 @@ class TasksController extends SecuredController
         }
 
         $refuseTask = new TaskService();
-        if ($refuseTask->taskRefuse($task, $user)) {
+        if ((new TaskService)->taskRefuse($task, $user)) {
             return $this->goHome();
         }
         return $this->redirect($task->link);

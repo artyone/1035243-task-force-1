@@ -20,12 +20,15 @@ MainAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=e666f398-c983-4bde-8f14-e3fec900592a&lang=ru_RU" type="text/javascript">
+    </script>
+
     <?php $this->head() ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
 <div class="table-layout">
-    <?php if (!in_array(Yii::$app->controller->route, ['site/registration', 'site/login'])): ?>
+    <?php if (!in_array(Yii::$app->controller->route, ['site/registration', 'site/login']) && !Yii::$app->user->isGuest): ?>
     <header class="page-header">
         <div class="main-container page-header__container">
             <div class="page-header__logo">
