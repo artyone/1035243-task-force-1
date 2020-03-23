@@ -3,7 +3,9 @@
 
 namespace frontend\models\users;
 
+use frontend\models\tasks\Tasks;
 use yii\base\Model;
+use Yii;
 
 /**
  * Users filter form
@@ -83,8 +85,7 @@ class UsersFilterForm extends Model
         }
         if ($this->free) {
             $query->joinWith('tasksExecutor');
-            $query->andWhere(['or', ['tasks.id' => null], ['tasks.status' => Tasks::STATUS_DONE]]);
-            $query->groupBy('users.id');
+            $query->andWhere("(SELECT COUNT(*) FROM tasks WHERE tasks.executor_id = users.id AND tasks.status = " . Tasks::STATUS_EXECUTION . ") = 0");
         }
         if ($this->online) {
             $query->joinWith('userData');
@@ -93,10 +94,10 @@ class UsersFilterForm extends Model
         if ($this->hasFeedback) {
             $query->joinWith('tasksFeedbackExecutor');
             $query->andWhere(['is not', 'tasks_feedback.executor_id', null]);
-            $query->groupBy('users.id');
         }
         if ($this->inFavorites) {
-            //@todo разработать по созданию аккаунта
+            $query->joinWith('usersInFavorite');
+            $query->andWhere(['users_favorite.user_id' => Yii::$app->user->getId()]);
         }
         if ($this->sort) {
             $query->joinWith('userData');

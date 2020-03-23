@@ -20,13 +20,14 @@ use yii\helpers\Url;
         <p>Сортировать по:</p>
         <ul class="user__search-list">
             <li class="user__search-item <?= $usersFilterForm->sort == 'rating' ? 'user__search-item--current' : '' ?>">
-                <a href="<?= Url::to(['users/sort', 'sort' => 'rating']) ?>" class="link-regular">Рейтингу</a>
+                <?= Html::a('Рейтингу', ['users/sort', 'sort' => 'rating'], ['class' => 'link-regular']) ?>
             </li>
             <li class="user__search-item <?= $usersFilterForm->sort == 'tasks_count' ? 'user__search-item--current' : '' ?>">
-                <a href="<?= Url::to(['users/sort', 'sort' => 'tasks_count']) ?>" class="link-regular">Числу заказов</a>
+                <?= Html::a('Числу заказов', ['users/sort', 'sort' => 'tasks_count'], ['class' => 'link-regular']) ?>
+
             </li>
             <li class="user__search-item <?= $usersFilterForm->sort == 'popularity' ? 'user__search-item--current' : '' ?>">
-                <a href="<?= Url::to(['users/sort', 'sort' => 'popularity']) ?>" class="link-regular">Популярности</a>
+                <?= Html::a('Популярности', ['users/sort', 'sort' => 'popularity'], ['class' => 'link-regular']) ?>
             </li>
         </ul>
     </div>
@@ -43,25 +44,30 @@ use yii\helpers\Url;
                         <span><?= WordHelper::getStringFeedbacks(count($user->tasksFeedbackExecutor)) ?></span>
                     </div>
                     <div class="feedback-card__top--name user__search-card">
-                        <p class="link-name"><a href="<?= Url::to(['users/view', 'id' => $user->id]) ?>"
-                                                class="link-regular"><?= $user->name ?></a></p>
+                        <p class="link-name">
+                            <?= Html::a(WordHelper::longWordBreaker($user->name, 50),
+                                ['users/view', 'id' => $user->id], ['class' => 'link-regular']) ?>
+                        </p>
                         <?php foreach (range(1, 5) as $value): ?>
                             <span <?= $value <= $user->userData->rating ? '' : 'class="star-disabled"' ?>></span>
                         <?php endforeach; ?>
                         <b><?= $user->userData->rating ?></b>
-                        <p class="user__search-content"><?= $user->userData->about ?></p>
+                        <p class="user__search-content">
+                            <?= WordHelper::longWordBreaker($user->userData->about, 100) ?>
+                        </p>
                     </div>
                     <span class="new-task__time">Был на сайте <?= WordHelper::getStringTimeAgo($user->userData->last_online_time) ?> назад</span>
                 </div>
                 <div class="link-specialization user__search-link--bottom">
-                    <?php foreach ($user->userCategories as $userCategory): ?>
-                        <a href="#" class="link-regular"><?= $userCategory->name ?></a>
+                    <?php foreach ($user->userCategories as $category): ?>
+                        <?= Html::a($category->name, ['/users', 'categories[]' => $category->id],
+                            ['class' => 'link-regular']) ?>
                     <?php endforeach; ?>
                 </div>
             </div>
         <?php endif; ?>
     <?php endforeach; ?>
-    <div class="pagination">
+    <div class="new-user__pagination">
         <?= LinkPager::widget([
             'pagination' => $pagination,
             'options' => [

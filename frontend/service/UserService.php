@@ -6,6 +6,8 @@ namespace frontend\service;
 use frontend\models\RegistrationForm;
 use frontend\models\users\Users;
 use frontend\models\users\UsersData;
+use frontend\models\users\UsersFavorite;
+use yii\web\IdentityInterface;
 use yii\base\Model;
 use yii;
 
@@ -40,6 +42,26 @@ class UserService extends Model
             return false;
         }
         $transaction->commit();
+        return true;
+    }
+
+    public function addFavorite(IdentityInterface $user, Users $favoriteUser): bool
+    {
+        $newUserFavorite = new UsersFavorite();
+        $newUserFavorite->user_id = $user->id;
+        $newUserFavorite->favorite_id = $favoriteUser->id;
+
+        if (!$newUserFavorite->save()) {
+            return false;
+        }
+        return true;
+    }
+
+    public function removeFavorite(UsersFavorite $favorite): bool
+    {
+        if (!$favorite->delete()) {
+            return false;
+        }
         return true;
     }
 

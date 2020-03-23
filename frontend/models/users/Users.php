@@ -325,18 +325,48 @@ class Users extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function isCustomer()
     {
-        if ($this->userCategories) {
-            return false;
+        if (!$this->userCategories) {
+            return true;
         }
-        return true;
+        return false;
     }
 
-    public function isExecutor()
+    public function isExecutor(): bool
     {
         if ($this->userCategories) {
             return true;
         }
         return false;
+    }
+
+    public function isAuthor(Tasks $task): bool
+    {
+        if ($this->id == $task->customer_id) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isContractor(Tasks $task): bool
+    {
+        if ($this->id == $task->executor_id) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getLink(): string
+    {
+        return "/user/view/$this->id";
+    }
+
+    public function getUserFavorite($favoriteUser): ?UsersFavorite
+    {
+        $favorite = $this->getUsersFavorite()->where(['favorite_id' => $favoriteUser->id])->one();
+        if (!$favorite) {
+            return null;
+        }
+        return $favorite;
     }
 
 }

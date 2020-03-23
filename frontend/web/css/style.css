@@ -815,6 +815,15 @@ footer {
   background-color: #ff4757;
   padding: 20px; }
 
+.cancel-button {
+  background-color: #ff4757; }
+
+.complete-button {
+  background-color: #3366ff; }
+
+.refuse-button {
+  background-color: #ff3d71; }
+
 .response-button {
   background-color: #ffaa00; }
 
@@ -825,8 +834,7 @@ footer {
   background-color: #00e096; }
 
 .request-button {
-  background-color: #3366ff;
-}
+  background-color: #3366ff; }
 
 
 .button__chat {
@@ -878,6 +886,12 @@ footer {
   padding-top: 15px;
   background-color: #f8f8f8;
   border-top: 1px solid #c8c5c5; }
+
+.new-user__pagination {
+  padding-left: 20px;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  background-color: #ffffff; }
 
 .new-task__pagination-list {
   list-style: none;

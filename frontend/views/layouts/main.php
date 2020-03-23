@@ -7,7 +7,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use frontend\assets\MainAsset;
-use frontend\models\users\Users;
+use frontend\models\Cities;
 
 MainAsset::register($this);
 ?>
@@ -20,12 +20,15 @@ MainAsset::register($this);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=e666f398-c983-4bde-8f14-e3fec900592a&lang=ru_RU" type="text/javascript">
+    </script>
+
     <?php $this->head() ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
 <div class="table-layout">
-    <?php if (!in_array(Yii::$app->controller->action->id, ['registration', 'landing', 'login'])): ?>
+    <?php if (!in_array(Yii::$app->controller->route, ['site/registration', 'site/login']) && !Yii::$app->user->isGuest): ?>
     <header class="page-header">
         <div class="main-container page-header__container">
             <div class="page-header__logo">
@@ -88,11 +91,12 @@ MainAsset::register($this);
             </div>
             <div class="header__town">
                 <select class="multiple-select input town-select" size="1" name="town[]">
-                    <option value="Moscow">Москва</option>
-                    <option selected value="SPB">Санкт-Петербург</option>
-                    <option value="Krasnodar">Краснодар</option>
-                    <option value="Irkutsk">Иркутск</option>
-                    <option value="Vladivostok">Владивосток</option>
+                    <?php foreach (Cities::find()->all() as $city): ?>
+                        <option value="<?= $city->id ?>"
+                            <?= Yii::$app->user->identity->userData->city_id === $city->id ? 'selected' : '' ?>>
+                            <?= $city->name ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <div class="header__lightbulb"></div>
@@ -113,12 +117,12 @@ MainAsset::register($this);
             </div>
             <div class="header__account">
                 <a class="header__account-photo">
-                    <img src="<?= Yii::$app->user->getIdentity()->fileAvatar ? Yii::$app->user->getIdentity()->fileAvatar->link : '/img/user-photo.png' ?>"
+                    <img src="<?= Yii::$app->user->identity->fileAvatar ? Yii::$app->user->identity->fileAvatar->link : '/img/user-photo.png' ?>"
                          width="43" height="44"
                          alt="Аватар пользователя">
                 </a>
                 <span class="header__account-name">
-                 <?= Yii::$app->user->getIdentity()->name ?>
+                 <?= Yii::$app->user->identity->name ?>
              </span>
             </div>
             <div class="account__pop-up">
@@ -159,22 +163,22 @@ MainAsset::register($this);
             <div class="page-footer__links">
                 <ul class="links__list">
                     <li class="links__item">
-                        <a href="<?= Url::to(['tasks/index']) ?>">Задания</a>
+                        <?= Html::a('Задания', ['tasks/index']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="">Мой профиль</a>
+                        <?= Html::a('Мой профиль', ['users/profile']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
+                        <?= Html::a('Исполнители', ['users/index']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['site/registration']) ?>">Регистрация</a>
+                        <?= Html::a('Регистрация', ['site/registration']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="">Создать задание</a>
+                        <?= Html::a('Создать задание', ['tasks/create']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="">Справка</a>
+                        <?= Html::a('Справка', ['site/landing']) ?>
                     </li>
                 </ul>
             </div>
@@ -186,7 +190,7 @@ MainAsset::register($this);
                          alt="Логотип HTML Academy">
                 </a>
             </div>
-            <?php if (Yii::$app->controller->action->id == 'registration'): ?>
+            <?php if (Yii::$app->controller->route == 'site/registration'): ?>
                 <div class="clipart-woman">
                     <img src="/img/clipart-woman.png" width="238" height="450" alt="Промо фото">
                 </div>

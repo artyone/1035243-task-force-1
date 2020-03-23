@@ -5,6 +5,7 @@ use frontend\assets\MainAsset;
 use frontend\helpers\WordHelper;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+use \yii\helpers\StringHelper;
 
 /**
  * @var $userLoginForm
@@ -179,20 +180,24 @@ MainAsset::register($this);
                         <div class="landing-task">
                             <div class="landing-task-top task-<?= $task->category->icon ?>"></div>
                             <div class="landing-task-description">
-                                <h3><a href="<?= Url::to(['tasks/view', 'id' => $task->id]) ?>"
-                                       class="link-regular"><?= $task->name ?></a></h3>
-                                <p><?= substr($task->description, 0, 73) . '...' ?></p>
+                                <h3><a href="<?= Url::to(['tasks/view', 'id' => $task->id]) ?>" class="link-regular">
+                                        <?= WordHelper::longWordBreaker(StringHelper::truncate($task->name, 20), 20) ?>
+                                    </a>
+                                </h3>
+                                <p>
+                                    <?= WordHelper::longWordBreaker(StringHelper::truncate($task->description, 70),
+                                        20) ?>
+                                </p>
                             </div>
                             <div class="landing-task-info">
                                 <div class="task-info-left">
                                     <p><a href="" class="link-regular"><?= $task->category->name ?></a></p>
                                     <p><?= WordHelper::getStringTimeAgo($task->creation_time) . ' назад' ?></p>
                                 </div>
-                                <span><?= $task->price ?><b>₽</b></span>
+                                <span><?= $task->price ? $task->price . '<b>₽</b>' : '' ?></span>
                             </div>
                         </div>
                     <?php endforeach; ?>
-
                 </div>
                 <div class="landing-bottom-container">
                     <a class="button red-button" href="<?= Url::to(['tasks/index']) ?>">смотреть все задания</a>
@@ -215,22 +220,22 @@ MainAsset::register($this);
             <div class="page-footer__links">
                 <ul class="links__list">
                     <li class="links__item">
-                        <a href="<?= Url::to(['tasks/index']) ?>">Задания</a>
+                        <?= Html::a('Задания', ['tasks/index']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="">Мой профиль</a>
+                        <?= Html::a('Мой профиль', ['users/profile']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['users/index']) ?>">Исполнители</a>
+                        <?= Html::a('Исполнители', ['users/index']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="<?= Url::to(['site/registration']) ?>">Регистрация</a>
+                        <?= Html::a('Регистрация', ['site/registration']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="">Создать задание</a>
+                        <?= Html::a('Создать задание', ['tasks/create']) ?>
                     </li>
                     <li class="links__item">
-                        <a href="">Справка</a>
+                        <?= Html::a('Справка', ['site/landing']) ?>
                     </li>
                 </ul>
             </div>
@@ -244,53 +249,55 @@ MainAsset::register($this);
             </div>
         </div>
     </footer>
-    <section class="modal enter-form form-modal" id="enter-form">
-        <h2>Вход на сайт</h2>
-        <?php $form = ActiveForm::begin([
-            'id' => 'user-login-form',
-            'action' => ['/landing'],
-            'method' => 'post',
-            'enableAjaxValidation' => true
-        ]) ?>
+    <?php if (Yii::$app->user->isGuest): ?>
+        <section class="modal enter-form form-modal" id="enter-form">
+            <h2>Вход на сайт</h2>
+            <?php $form = ActiveForm::begin([
+                'id' => 'user-login-form',
+                'action' => ['/landing'],
+                'method' => 'post',
+                'enableAjaxValidation' => true
+            ]) ?>
 
-        <?= $form->field($userLoginForm, 'email', [
-            'options' => ['class' => ''],
-            'labelOptions' => [
+            <?= $form->field($userLoginForm, 'email', [
+                'options' => ['class' => ''],
+                'labelOptions' => [
                     'class' => 'form-modal-description form-control',
                     'style' => 'display:inline-block'
-            ]
-        ])
-            ->textinput([
-                'class' => 'enter-form-email input input-middle',
-                'style' => 'width: 90%; margin-bottom:5px',
+                ]
             ])
-            ->error(['tag' => 'span', 'style' => 'display:inline-block; margin-bottom:12px']) ?>
+                ->textinput([
+                    'class' => 'enter-form-email input input-middle',
+                    'style' => 'width: 90%; margin-bottom:5px',
+                ])
+                ->error(['tag' => 'span', 'style' => 'display:inline-block; margin-bottom:12px']) ?>
 
-        <?= $form->field($userLoginForm, 'password', [
-            'options' => ['class' => ''],
-            'labelOptions' => [
-                'class' => 'form-modal-description form-control',
-                'style' => 'display:inline-block'
-            ]
-
-        ])
-            ->passwordInput([
-                'class' => 'enter-form-email input input-middle',
-                'style' => 'width: 90%; margin-bottom:10px; border-color: #e4e9f2',
-                'type' => 'password'
+            <?= $form->field($userLoginForm, 'password', [
+                'options' => ['class' => ''],
+                'labelOptions' => [
+                    'class' => 'form-modal-description form-control',
+                    'style' => 'display:inline-block'
+                ]
             ])
-            ->error(['tag' => 'span', 'style' => 'display:inline-block; margin-bottom:12px']) ?>
+                ->passwordInput([
+                    'class' => 'enter-form-email input input-middle',
+                    'style' => 'width: 90%; margin-bottom:10px; border-color: #e4e9f2',
+                    'type' => 'password'
+                ])
+                ->error(['tag' => 'span', 'style' => 'display:inline-block; margin-bottom:12px']) ?>
 
 
-        <div class="form-group">
-            <?= Html::submitButton('Войти',
-                ['class' => 'button', 'name' => 'login-button']) ?>
-        </div>
+            <div class="form-group">
+                <?= Html::submitButton('Войти',
+                    ['class' => 'button', 'name' => 'login-button']) ?>
+            </div>
 
-        <?php ActiveForm::end(); ?>
+            <?php ActiveForm::end(); ?>
 
-        <button class="form-modal-close" type="button">Закрыть</button>
-    </section>
+            <button class="form-modal-close" type="button">Закрыть</button>
+        </section>
+        <div class="overlay"></div>
+    <?php endif; ?>
 </div>
 <?php $this->endBody() ?>
 </body>

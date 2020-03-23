@@ -14,12 +14,16 @@ use frontend\models\users\Users;
  * @property int $executor_id
  * @property string|null $description
  * @property int|null $price
+ * @property int $status
  *
  * @property Tasks $task
  * @property Users $executor
+ *
  */
 class TasksResponse extends \yii\db\ActiveRecord
 {
+    const STATUS_NEW = 0;
+    const STATUS_DECLINE = 1;
     /**
      * {@inheritdoc}
      */
@@ -36,7 +40,7 @@ class TasksResponse extends \yii\db\ActiveRecord
         return [
             [['creation_time'], 'safe'],
             [['task_id', 'executor_id'], 'required'],
-            [['task_id', 'executor_id', 'price'], 'integer'],
+            [['task_id', 'executor_id', 'price', 'status'], 'integer'],
             [['description'], 'string', 'max' => 500],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::className(), 'targetAttribute' => ['task_id' => 'id']],
             [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['executor_id' => 'id']],
@@ -55,6 +59,7 @@ class TasksResponse extends \yii\db\ActiveRecord
             'executor_id' => 'Executor ID',
             'description' => 'Description',
             'price' => 'Price',
+            'status' => 'Status'
         ];
     }
 
@@ -77,4 +82,5 @@ class TasksResponse extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::className(), ['id' => 'executor_id']);
     }
+
 }

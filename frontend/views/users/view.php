@@ -2,6 +2,7 @@
 
 use frontend\helpers\WordHelper;
 use yii\helpers\Url;
+use yii\helpers\Html;
 
 /**
  * @var $user
@@ -14,9 +15,9 @@ use yii\helpers\Url;
             <img src="<?= $user->fileAvatar ? $user->fileAvatar->link : '/img/user-photo.png' ?>" width="120"
                  height="120" alt="Аватар пользователя">
             <div class="content-view__headline">
-                <h1><?= $user->name ?></h1>
+                <h1><?= WordHelper::longWordBreaker($user->name, 50) ?></h1>
                 <p><?= $user->userData->city->name ?>
-                    , <?= WordHelper::getStringTimeAgo($user->userData->birthday) ?></p>
+                    <?= $user->userData->birthday ? ', ' . WordHelper::getStringTimeAgo($user->userData->birthday) : '' ?></p>
                 <div class="profile-mini__name five-stars__rate">
                     <?php foreach (range(1, 5) as $value): ?>
                         <span <?= $value <= $user->userData->rating ? '' : 'class="star-disabled"' ?>></span>
@@ -27,36 +28,40 @@ use yii\helpers\Url;
                 <b class="done-task">Выполнил <?= WordHelper::getStringTasks($user->userData->tasks_count) ?></b>
                 <b class="done-review">Получил <?= WordHelper::getStringFeedbacks(count($user->tasksFeedbackExecutor)) ?></b>
             </div>
-            <div class="content-view__headline user__card-bookmark user__card-bookmark--current">
+            <div class="content-view__headline user__card-bookmark user__card-bookmark<?= Yii::$app->user->identity->getUserFavorite($user) ? '--current' : '' ?>">
                 <span><?= WordHelper::getStringTimeAgo($user->userData->last_online_time) ?> назад</span>
-                <a href="#"><b></b></a>
+                <?= Html::a('<b></b>', ['users/favorite', 'id' => $user->id]) ?>
             </div>
         </div>
         <div class="content-view__description">
-            <p><?= $user->userData->about ?></p>
+            <p><?= WordHelper::longWordBreaker($user->userData->about, 100) ?></p>
         </div>
         <div class="user__card-general-information">
             <div class="user__card-info">
                 <h3 class="content-view__h3">Специализации</h3>
                 <div class="link-specialization">
-                    <?php foreach ($user->userCategories as $userCategory): ?>
-                        <a href="#" class="link-regular"><?= $userCategory->name ?></a>
+                    <?php foreach ($user->userCategories as $category): ?>
+                        <?= Html::a($category->name, ['/users', 'categories[]' => $category->id],
+                            ['class' => 'link-regular']) ?>
                     <?php endforeach; ?>
                 </div>
                 <h3 class="content-view__h3">Контакты</h3>
                 <div class="user__card-link">
+                    <?= Html::mailto($user->email, $user->email, ['class' => 'user__card-link--email link-regular']) ?>
                     <a class="user__card-link--tel link-regular" href="#"><?= $user->userData->phone ?></a>
-                    <a class="user__card-link--email link-regular" href="#"><?= $user->email ?></a>
                     <a class="user__card-link--skype link-regular" href="#"><?= $user->userData->skype ?></a>
                 </div>
             </div>
-            <div class="user__card-photo">
-                <h3 class="content-view__h3">Фото работ</h3>
-                <?php foreach ($user->usersPhoto as $photo): ?>
-                    <a href="<?= $photo->link ?>"><img src="<?= $photo->link ?>" width="85" height="86"
-                                                       alt="Фото работы"></a>
-                <?php endforeach; ?>
-            </div>
+            <?php if ($user->usersPhoto): ?>
+                <div class="user__card-photo">
+                    <h3 class="content-view__h3">Фото работ</h3>
+                    <?php foreach ($user->usersPhoto as $photo): ?>
+                        <a href="<?= $photo->link ?>">
+                            <img src="<?= $photo->link ?>" width="85" height="86" alt="Фото работ">
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
     <div class="content-view__feedback">
@@ -66,7 +71,7 @@ use yii\helpers\Url;
                 <div class="feedback-card__reviews">
                     <p class="link-task link">Задание
                         <a href="<?= Url::to(['tasks/view', 'id' => $feedback->task->id]) ?>"
-                           class="link-regular"><?= $feedback->task->name ?></a>
+                           class="link-regular"><?= WordHelper::longWordBreaker($feedback->task->name, 50) ?></a>
                     </p>
                     <div class="card__review">
                         <a href="#">
@@ -77,9 +82,9 @@ use yii\helpers\Url;
                             <p class="link-name link">
                                 <a href="<?= Url::to(['users/view', 'id' => $feedback->task->customer->id]) ?>"
                                    class="link-regular">
-                                    <?= $feedback->task->customer->name ?></a></p>
+                                    <?= WordHelper::longWordBreaker($feedback->task->customer->name, 50) ?></a></p>
                             <p class="review-text">
-                                <?= $feedback->description ?>
+                                <?= WordHelper::longWordBreaker($feedback->description, 100) ?>
                             </p>
                         </div>
                         <div class="card__review-rate">

@@ -2,6 +2,7 @@
 
 namespace frontend\models\users;
 
+use frontend\models\tasks\Tasks;
 use Yii;
 use frontend\models\Cities;
 
@@ -11,7 +12,7 @@ use frontend\models\Cities;
  * @property int $id
  * @property int $user_id
  * @property int|null $city_id
- * @property int $rating
+ * @property double $rating
  * @property int $popularity
  * @property int $tasks_count
  * @property string|null $address
@@ -41,7 +42,8 @@ class UsersData extends \yii\db\ActiveRecord
     {
         return [
             [['user_id'], 'required'],
-            [['user_id', 'city_id','rating','popularity','tasks_count'], 'integer'],
+            [['user_id', 'city_id','popularity','tasks_count'], 'integer'],
+            [['rating'], 'double'],
             [['birthday', 'last_online_time'], 'safe'],
             [['address', 'about'], 'string', 'max' => 500],
             [['phone'], 'string', 'max' => 20],
@@ -90,5 +92,50 @@ class UsersData extends \yii\db\ActiveRecord
     public function getCity()
     {
         return $this->hasOne(Cities::className(), ['id' => 'city_id']);
+    }
+
+    public function updateRating()
+    {
+
+        $feedbacks = $this->user->tasksFeedbackExecutor;
+        if (!$feedbacks) {
+            return false;
+        }
+        $countFeedback = count($feedbacks);
+        $countRating = 0;
+        foreach ($feedbacks as $feedback) {
+            $countRating += $feedback->rating;
+        }
+        $this->rating = round($countRating / $countFeedback, 1);
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function addPopularity()
+    {
+        $this->popularity += 1;
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function updateTaskCount()
+    {
+        $tasks = $this->user->getTasksExecutor()->where(['tasks.status' => [Tasks::STATUS_DONE, Tasks::STATUS_FAILED]])->all();
+        $tasksCount = count($tasks);
+        $this->tasks_count = $tasksCount;
+
+        if (!$this->save()) {
+            return false;
+        }
+
+        return true;
     }
 }

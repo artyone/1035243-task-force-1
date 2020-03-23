@@ -2,11 +2,15 @@
 
 namespace frontend\models\tasks;
 
-use Yii;
+use yii\db\ActiveRecord;
 use frontend\models\Categories;
 use frontend\models\Cities;
 use frontend\models\users\Users;
 use frontend\models\Files;
+use frontend\models\tasks\actions\CancelAction;
+use frontend\models\tasks\actions\RefuseAction;
+use frontend\models\tasks\actions\CompleteAction;
+use frontend\models\tasks\actions\AddResponseAction;
 
 /**
  * This is the model class for table "tasks".
@@ -35,7 +39,7 @@ use frontend\models\Files;
  * @property TasksFile[] $tasksFile
  * @property TasksResponse[] $tasksResponse
  */
-class Tasks extends \yii\db\ActiveRecord
+class Tasks extends ActiveRecord
 {
     const STATUS_NEW = 1;
     const STATUS_EXECUTION = 2;
@@ -208,8 +212,52 @@ class Tasks extends \yii\db\ActiveRecord
         return $this->hasMany(TasksResponse::className(), ['task_id' => 'id']);
     }
 
-    public function getTaskLink()
+    public function getLink(): string
     {
         return "/task/view/$this->id";
+    }
+
+    public function getTasksResponseByUser($user): array
+    {
+        return $this->getTasksResponse()->where(['executor_id' => $user->id])->all();
+    }
+
+    public function getAvailableActions($user): array
+    {
+        $result = [];
+        if (AddResponseAction::verifyAction($this, $user)) {
+            $result[AddResponseAction::getActionName()] = AddResponseAction::getActionDescription() ;
+        }
+        if (CancelAction::verifyAction($this, $user)) {
+            $result[CancelAction::getActionName()] = CancelAction::getActionDescription();
+        }
+        if (RefuseAction::verifyAction($this, $user)) {
+            $result[RefuseAction::getActionName()] = RefuseAction::getActionDescription();
+        }
+        if (CompleteAction::verifyAction($this, $user)) {
+            $result[CompleteAction::getActionName()] = CompleteAction::getActionDescription();
+        }
+        return $result;
+    }
+
+    public function start(): int
+    {
+
+        return $this->status = self::STATUS_EXECUTION;
+    }
+
+    public function cancel(): int
+    {
+        return $this->status = self::STATUS_CANCELED;
+    }
+
+    public function refuse(): int
+    {
+        return $this->status = self::STATUS_FAILED;
+    }
+
+    public function complete(): int
+    {
+        return $this->status = self::STATUS_DONE;
     }
 }
