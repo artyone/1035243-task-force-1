@@ -175,5 +175,4 @@ class TasksController extends SecuredController
         return $this->redirect($task->link);
 
     }
-
 }
