@@ -7,9 +7,11 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use frontend\assets\MainAsset;
+use frontend\assets\AutoCompleteAssets;
 use frontend\models\Cities;
 
 MainAsset::register($this);
+AutoCompleteAssets::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

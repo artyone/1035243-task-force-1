@@ -67,14 +67,19 @@ class Tasks extends ActiveRecord
                 [
                     'category_id',
                     'city_id',
-                    'latitude',
-                    'longitude',
                     'price',
                     'customer_id',
                     'executor_id',
                     'status'
                 ],
                 'integer'
+            ],
+            [
+              [
+                  'latitude',
+                  'longitude'
+              ],
+                'double'
             ],
             [['name', 'address_comments', 'description'], 'string', 'max' => 500],
             [

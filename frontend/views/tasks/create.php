@@ -66,6 +66,8 @@ use frontend\models\Categories;
 
         <?= $form->field($taskCreateForm, 'location')
             ->textInput([
+                'id' => 'autoComplete',
+                'tabindex' => '1',
                 'class' => 'input-navigation input-middle input',
                 'style' => ['width' => '95%'],
                 'placeholder' => 'Санкт-Петербург, Калининский район'

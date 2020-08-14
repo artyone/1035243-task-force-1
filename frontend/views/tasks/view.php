@@ -47,40 +47,48 @@ use frontend\models\tasks\TasksResponse;
                 </div>
             <?php endif; ?>
             <?php if ($task->latitude && $task->longitude): ?>
-            <div class="content-view__location">
-                <h3 class="content-view__h3">Расположение</h3>
-                <div class="content-view__location-wrapper">
-                    <div class="content-view__map">
-<!--                        <a href="#"><img src="/img/map.jpg" width="361" height="292"
-                                         alt="Москва, Новый арбат, 23 к. 1"></a>-->
-                        <script type="text/javascript">
-                            // Функция ymaps.ready() будет вызвана, когда
-                            // загрузятся все компоненты API, а также когда будет готово DOM-дерево.
-                            ymaps.ready(init);
-                            function init(){
-                                // Создание карты.
-                                var myMap = new ymaps.Map("map", {
-                                    // Координаты центра карты.
-                                    // Порядок по умолчанию: «широта, долгота».
-                                    // Чтобы не определять координаты центра карты вручную,
-                                    // воспользуйтесь инструментом Определение координат.
-                                    center: [<?= $task->latitude ?>,<?= $task->longitude ?>],
-                                    // Уровень масштабирования. Допустимые значения:
-                                    // от 0 (весь мир) до 19.
-                                    zoom: 14
-                                });
-                            }
-                        </script>
-                        <div id="map" style="width: 600px; height: 400px"></div>
-                    </div>
-                    <div class="content-view__address">
-                        <span class="address__town"><?= $task->city_id ? $task->city->name : '' ?></span>
-                        <br>
-                        <span><?= $task->longitude ?>-<?= $task->latitude ?></span>
-                        <p><?= $task->address_comments ?></p>
+                <div class="content-view__location">
+                    <h3 class="content-view__h3">Расположение</h3>
+                    <div class="content-view__location-wrapper">
+                        <div class="content-view__map">
+                            <!--                        <a href="#"><img src="/img/map.jpg" width="361" height="292"
+                                                                     alt="Москва, Новый арбат, 23 к. 1"></a>-->
+                            <script type="text/javascript">
+                                // Функция ymaps.ready() будет вызвана, когда
+                                // загрузятся все компоненты API, а также когда будет готово DOM-дерево.
+                                ymaps.ready(init);
+
+                                function init() {
+                                    // Создание карты.
+                                    var map = new ymaps.Map("map", {
+                                        // Координаты центра карты.
+                                        // Порядок по умолчанию: «широта, долгота».
+                                        // Чтобы не определять координаты центра карты вручную,
+                                        // воспользуйтесь инструментом Определение координат.
+                                        center: [<?= $task->latitude ?>,<?= $task->longitude ?>],
+                                        // Уровень масштабирования. Допустимые значения:
+                                        // от 0 (весь мир) до 19.
+                                        zoom: 15
+                                    });
+                                    map.geoObjects
+                                        .add(new ymaps.Placemark([<?= $task->latitude ?>,<?= $task->longitude ?>], {
+                                            balloonContent: 'цвет <strong>воды пляжа бонди</strong>'
+                                        }, {
+                                            preset: 'islands#icon',
+                                            iconColor: '#0095b6'
+                                        }))
+                                }
+                            </script>
+                            <div id="map" style="width: 600px; height: 400px"></div>
+                        </div>
+                        <div class="content-view__address">
+                            <span class="address__town"><?= $task->city_id ? $task->city->name : '' ?></span>
+                            <br>
+                            <span><?= $task->longitude ?>-<?= $task->latitude ?></span>
+                            <p><?= $task->address_comments ?></p>
+                        </div>
                     </div>
                 </div>
-            </div>
             <?php endif; ?>
         </div>
         <? if ($availableActions): ?>

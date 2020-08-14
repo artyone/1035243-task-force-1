@@ -20,6 +20,7 @@ use frontend\models\tasks\TasksResponseForm;
 use yii\base\Model;
 use yii;
 use yii\web\IdentityInterface;
+use frontend\service\YandexMaps;
 
 /**
  * Task service
@@ -44,6 +45,12 @@ class TaskService extends Model
         $task->customer_id = $user->id;
         $task->status = Tasks::STATUS_NEW;
         $task->city_id = $user->userData->city_id;
+        $task->address_comments = $model->location;
+
+        $coordinates = (new YandexMaps())->getCoordinate($model->location);
+
+        $task->latitude = (float) $coordinates['latitude'];
+        $task->longitude = (float) $coordinates['longitude'];
 
         if (!$task->save()) {
             $transaction->rollBack();

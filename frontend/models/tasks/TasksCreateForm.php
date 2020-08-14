@@ -51,6 +51,7 @@ class TasksCreateForm extends Model
             ['name', 'string', 'max' => 50],
             ['description', 'string', 'max' => 500],
             ['name', 'checkName'],
+            ['location','string', 'min' => 10, 'max' => 100],
             ['description', 'checkDescription'],
             [
                 'categoryId',
